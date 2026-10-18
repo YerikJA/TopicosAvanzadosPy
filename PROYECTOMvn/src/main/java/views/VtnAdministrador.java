@@ -1,15 +1,64 @@
 package views;
+
 import controller.*;
+
 public class VtnAdministrador extends javax.swing.JFrame
 {
+
     private AlumnoController controllerAdministracion;
+
     public VtnAdministrador(AlumnoController controller)
     {
         initComponents();
-        controllerAdministracion= controller;
+        jP_Encabezado.setPreferredSize(new java.awt.Dimension(0, 48));
+        controllerAdministracion = controller;
         setTitle("Administracion");
-        setLocationRelativeTo(null);
-        
+        // ---- FORMATO GENERAL ----
+        Estilos.estilizarVentana(this);
+
+        Estilos.estilizarTitulo(jLabel1);
+        jLabel1.setFont(Estilos.fuente(java.awt.Font.PLAIN, 48));
+
+        // Menú: ningún botón marcado al inicio
+        Estilos.estilizarMenu(jBttn_Alta1, jBttn_Consulta, jBttn_Edicion, jBttn_Baja);
+        Estilos.estilizarBoton(jBttn_Regresar);
+
+        // ---- PANELES ----
+        Estilos.estilizarFondo(jp_Contenedor);   // sin borde: cada pantalla lleva el suyo
+        Estilos.estilizarFondo(jP_Alta);
+        Estilos.estilizarPanelConSombra(jP_Consulta);
+        Estilos.estilizarPanelConSombra(jP_Edicion);
+        Estilos.estilizarPanelConSombra(jP_Baja);
+
+        // ---- ALTA: PESTAÑAS ARRIBA, CAJA DEBAJO ----
+        jP_Alta.add(jP_Encabezado, java.awt.BorderLayout.NORTH);
+        jP_Alta.add(jP_AltCard, java.awt.BorderLayout.CENTER);
+
+        jP_Encabezado.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 6, 0));
+        jP_Encabezado.setPreferredSize(new java.awt.Dimension(0, 48));
+        Estilos.estilizarFondo(jP_Encabezado);
+
+        Estilos.estilizarPanelConSombra(jP_AltCard);
+
+        javax.swing.JPanel[] pantallasAlta =
+        {
+            jP_DatosPrincipales, jP_MateriasProm, jP_CuentasExtr
+        };
+        for (javax.swing.JPanel p : pantallasAlta)
+        {
+            p.setOpaque(true);
+            p.setBackground(Estilos.CREMA_CLARO);
+        }
+
+        Estilos.estilizarPestanas(jBttn_DatosPrincipales, jBttn_MateriasProm, jBttn_CuentasExtr);
+
+        java.awt.CardLayout tarjetas = (java.awt.CardLayout) jP_AltCard.getLayout();
+        jBttn_DatosPrincipales.addActionListener(e -> tarjetas.show(jP_AltCard, "card2"));
+        jBttn_MateriasProm.addActionListener(e -> tarjetas.show(jP_AltCard, "card3"));
+        jBttn_CuentasExtr.addActionListener(e -> tarjetas.show(jP_AltCard, "card4"));
+
+        tarjetas.show(jP_AltCard, "card2");
+        Estilos.seleccionar(jBttn_DatosPrincipales);
     }
 
     /**
@@ -30,6 +79,9 @@ public class VtnAdministrador extends javax.swing.JFrame
         jp_Contenedor = new javax.swing.JPanel();
         jP_Alta = new javax.swing.JPanel();
         jP_Encabezado = new javax.swing.JPanel();
+        jBttn_DatosPrincipales = new javax.swing.JButton();
+        jBttn_MateriasProm = new javax.swing.JButton();
+        jBttn_CuentasExtr = new javax.swing.JButton();
         jP_AltCard = new javax.swing.JPanel();
         jP_MateriasProm = new javax.swing.JPanel();
         jP_CuentasExtr = new javax.swing.JPanel();
@@ -37,6 +89,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_Consulta = new javax.swing.JPanel();
         jP_Edicion = new javax.swing.JPanel();
         jP_Baja = new javax.swing.JPanel();
+        jBttn_Regresar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -59,18 +112,16 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jP_Alta.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout jP_EncabezadoLayout = new javax.swing.GroupLayout(jP_Encabezado);
-        jP_Encabezado.setLayout(jP_EncabezadoLayout);
-        jP_EncabezadoLayout.setHorizontalGroup(
-            jP_EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 892, Short.MAX_VALUE)
-        );
-        jP_EncabezadoLayout.setVerticalGroup(
-            jP_EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 12, Short.MAX_VALUE)
-        );
+        jBttn_DatosPrincipales.setText("1. DATOS PRINCIPALES");
+        jP_Encabezado.add(jBttn_DatosPrincipales);
 
-        jP_Alta.add(jP_Encabezado, java.awt.BorderLayout.CENTER);
+        jBttn_MateriasProm.setText("2. MATERIAS Y PROMEDIO");
+        jP_Encabezado.add(jBttn_MateriasProm);
+
+        jBttn_CuentasExtr.setText("3. CUENTA Y EXTRAS");
+        jP_Encabezado.add(jBttn_CuentasExtr);
+
+        jP_Alta.add(jP_Encabezado, java.awt.BorderLayout.NORTH);
 
         jP_AltCard.setLayout(new java.awt.CardLayout());
 
@@ -156,6 +207,16 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jp_Contenedor.add(jP_Baja, "card5");
 
+        jBttn_Regresar.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jBttn_Regresar.setText("REGRESAR");
+        jBttn_Regresar.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jBttn_RegresarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -168,15 +229,16 @@ public class VtnAdministrador extends javax.swing.JFrame
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jBttn_Consulta, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jBttn_Baja, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jBttn_Edicion, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(63, 63, 63)
+                            .addComponent(jBttn_Edicion, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jBttn_Regresar, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(130, 130, 130)
                         .addComponent(jp_Contenedor, javax.swing.GroupLayout.PREFERRED_SIZE, 892, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(87, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(37, 37, 37)
                     .addComponent(jBttn_Alta1, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(994, Short.MAX_VALUE)))
+                    .addContainerGap(1109, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,28 +252,40 @@ public class VtnAdministrador extends javax.swing.JFrame
                         .addGap(34, 34, 34)
                         .addComponent(jBttn_Edicion, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(32, 32, 32)
-                        .addComponent(jBttn_Baja, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jBttn_Baja, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(jBttn_Regresar, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                        .addGap(170, 170, 170))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jp_Contenedor, javax.swing.GroupLayout.PREFERRED_SIZE, 454, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(167, Short.MAX_VALUE))
+                        .addComponent(jp_Contenedor, javax.swing.GroupLayout.PREFERRED_SIZE, 454, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(114, 114, 114)
                     .addComponent(jBttn_Alta1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(545, Short.MAX_VALUE)))
+                    .addContainerGap(580, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-  
+    private void jBttn_RegresarActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_RegresarActionPerformed
+    {//GEN-HEADEREND:event_jBttn_RegresarActionPerformed
+        // TODO add your handling code here:
+        new VtnHome(controllerAdministracion).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jBttn_RegresarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBttn_Alta1;
     private javax.swing.JButton jBttn_Baja;
     private javax.swing.JButton jBttn_Consulta;
+    private javax.swing.JButton jBttn_CuentasExtr;
+    private javax.swing.JButton jBttn_DatosPrincipales;
     private javax.swing.JButton jBttn_Edicion;
+    private javax.swing.JButton jBttn_MateriasProm;
+    private javax.swing.JButton jBttn_Regresar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jP_AltCard;
     private javax.swing.JPanel jP_Alta;
