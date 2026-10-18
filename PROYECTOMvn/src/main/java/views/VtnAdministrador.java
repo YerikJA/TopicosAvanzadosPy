@@ -22,17 +22,184 @@ public class VtnAdministrador extends javax.swing.JFrame
     private void initComponents()
     {
 
+        jLabel1 = new javax.swing.JLabel();
+        jBttn_Edicion = new javax.swing.JButton();
+        jBttn_Alta1 = new javax.swing.JButton();
+        jBttn_Consulta = new javax.swing.JButton();
+        jBttn_Baja = new javax.swing.JButton();
+        jp_Contenedor = new javax.swing.JPanel();
+        jP_Alta = new javax.swing.JPanel();
+        jP_Encabezado = new javax.swing.JPanel();
+        jP_AltCard = new javax.swing.JPanel();
+        jP_MateriasProm = new javax.swing.JPanel();
+        jP_CuentasExtr = new javax.swing.JPanel();
+        jP_DatosPrincipales = new javax.swing.JPanel();
+        jP_Consulta = new javax.swing.JPanel();
+        jP_Edicion = new javax.swing.JPanel();
+        jP_Baja = new javax.swing.JPanel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        jLabel1.setText("ADMINISTRACION");
+
+        jBttn_Edicion.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jBttn_Edicion.setText("EDICIÓN");
+
+        jBttn_Alta1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jBttn_Alta1.setText("ALTA");
+
+        jBttn_Consulta.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jBttn_Consulta.setText("CONSULTA");
+
+        jBttn_Baja.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jBttn_Baja.setText("BAJA");
+
+        jp_Contenedor.setLayout(new java.awt.CardLayout());
+
+        jP_Alta.setLayout(new java.awt.BorderLayout());
+
+        javax.swing.GroupLayout jP_EncabezadoLayout = new javax.swing.GroupLayout(jP_Encabezado);
+        jP_Encabezado.setLayout(jP_EncabezadoLayout);
+        jP_EncabezadoLayout.setHorizontalGroup(
+            jP_EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 892, Short.MAX_VALUE)
+        );
+        jP_EncabezadoLayout.setVerticalGroup(
+            jP_EncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 12, Short.MAX_VALUE)
+        );
+
+        jP_Alta.add(jP_Encabezado, java.awt.BorderLayout.CENTER);
+
+        jP_AltCard.setLayout(new java.awt.CardLayout());
+
+        javax.swing.GroupLayout jP_MateriasPromLayout = new javax.swing.GroupLayout(jP_MateriasProm);
+        jP_MateriasProm.setLayout(jP_MateriasPromLayout);
+        jP_MateriasPromLayout.setHorizontalGroup(
+            jP_MateriasPromLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 892, Short.MAX_VALUE)
+        );
+        jP_MateriasPromLayout.setVerticalGroup(
+            jP_MateriasPromLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 442, Short.MAX_VALUE)
+        );
+
+        jP_AltCard.add(jP_MateriasProm, "card3");
+
+        javax.swing.GroupLayout jP_CuentasExtrLayout = new javax.swing.GroupLayout(jP_CuentasExtr);
+        jP_CuentasExtr.setLayout(jP_CuentasExtrLayout);
+        jP_CuentasExtrLayout.setHorizontalGroup(
+            jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 892, Short.MAX_VALUE)
+        );
+        jP_CuentasExtrLayout.setVerticalGroup(
+            jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 442, Short.MAX_VALUE)
+        );
+
+        jP_AltCard.add(jP_CuentasExtr, "card4");
+
+        javax.swing.GroupLayout jP_DatosPrincipalesLayout = new javax.swing.GroupLayout(jP_DatosPrincipales);
+        jP_DatosPrincipales.setLayout(jP_DatosPrincipalesLayout);
+        jP_DatosPrincipalesLayout.setHorizontalGroup(
+            jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 892, Short.MAX_VALUE)
+        );
+        jP_DatosPrincipalesLayout.setVerticalGroup(
+            jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 442, Short.MAX_VALUE)
+        );
+
+        jP_AltCard.add(jP_DatosPrincipales, "card2");
+
+        jP_Alta.add(jP_AltCard, java.awt.BorderLayout.PAGE_START);
+
+        jp_Contenedor.add(jP_Alta, "card2");
+
+        javax.swing.GroupLayout jP_ConsultaLayout = new javax.swing.GroupLayout(jP_Consulta);
+        jP_Consulta.setLayout(jP_ConsultaLayout);
+        jP_ConsultaLayout.setHorizontalGroup(
+            jP_ConsultaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 892, Short.MAX_VALUE)
+        );
+        jP_ConsultaLayout.setVerticalGroup(
+            jP_ConsultaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 454, Short.MAX_VALUE)
+        );
+
+        jp_Contenedor.add(jP_Consulta, "card3");
+
+        javax.swing.GroupLayout jP_EdicionLayout = new javax.swing.GroupLayout(jP_Edicion);
+        jP_Edicion.setLayout(jP_EdicionLayout);
+        jP_EdicionLayout.setHorizontalGroup(
+            jP_EdicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 892, Short.MAX_VALUE)
+        );
+        jP_EdicionLayout.setVerticalGroup(
+            jP_EdicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 454, Short.MAX_VALUE)
+        );
+
+        jp_Contenedor.add(jP_Edicion, "card4");
+
+        javax.swing.GroupLayout jP_BajaLayout = new javax.swing.GroupLayout(jP_Baja);
+        jP_Baja.setLayout(jP_BajaLayout);
+        jP_BajaLayout.setHorizontalGroup(
+            jP_BajaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 892, Short.MAX_VALUE)
+        );
+        jP_BajaLayout.setVerticalGroup(
+            jP_BajaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 454, Short.MAX_VALUE)
+        );
+
+        jp_Contenedor.add(jP_Baja, "card5");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jBttn_Consulta, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jBttn_Baja, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jBttn_Edicion, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(63, 63, 63)
+                        .addComponent(jp_Contenedor, javax.swing.GroupLayout.PREFERRED_SIZE, 892, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(39, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(37, 37, 37)
+                    .addComponent(jBttn_Alta1, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(994, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(123, 123, 123)
+                        .addComponent(jBttn_Consulta, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
+                        .addComponent(jBttn_Edicion, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32)
+                        .addComponent(jBttn_Baja, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jp_Contenedor, javax.swing.GroupLayout.PREFERRED_SIZE, 454, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(167, Short.MAX_VALUE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(114, 114, 114)
+                    .addComponent(jBttn_Alta1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(545, Short.MAX_VALUE)))
         );
 
         pack();
@@ -41,5 +208,20 @@ public class VtnAdministrador extends javax.swing.JFrame
   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBttn_Alta1;
+    private javax.swing.JButton jBttn_Baja;
+    private javax.swing.JButton jBttn_Consulta;
+    private javax.swing.JButton jBttn_Edicion;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jP_AltCard;
+    private javax.swing.JPanel jP_Alta;
+    private javax.swing.JPanel jP_Baja;
+    private javax.swing.JPanel jP_Consulta;
+    private javax.swing.JPanel jP_CuentasExtr;
+    private javax.swing.JPanel jP_DatosPrincipales;
+    private javax.swing.JPanel jP_Edicion;
+    private javax.swing.JPanel jP_Encabezado;
+    private javax.swing.JPanel jP_MateriasProm;
+    private javax.swing.JPanel jp_Contenedor;
     // End of variables declaration//GEN-END:variables
 }
