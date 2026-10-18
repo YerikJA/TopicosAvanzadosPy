@@ -1,6 +1,5 @@
 package views;
 
-import java.awt.Color;
 import controller.AlumnoController;
 
 public class VtnHome extends javax.swing.JFrame
@@ -12,9 +11,15 @@ public class VtnHome extends javax.swing.JFrame
     {
         initComponents();
         controllerGeneral = controller;
-        getContentPane().setBackground(Color.BLACK);
-        setLocationRelativeTo(null);
+        Estilos.estilizarVentana(this);   // fondo crema + centrada
         setTitle("Inicio");
+
+        Estilos.estilizarTitulo(jL_Tituo);
+        jL_Tituo.setFont(Estilos.fuente(java.awt.Font.PLAIN, 38)); // más chico para que quepa
+
+        Estilos.estilizarBoton(jBtt_Estudiante);
+        Estilos.estilizarBoton(jBtt_Profesor);
+        Estilos.estilizarBoton(jBtt_Administrador);
 
     }
 
@@ -122,14 +127,14 @@ public class VtnHome extends javax.swing.JFrame
 
     private void jBtt_EstudianteActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBtt_EstudianteActionPerformed
     {//GEN-HEADEREND:event_jBtt_EstudianteActionPerformed
-     
+
     }//GEN-LAST:event_jBtt_EstudianteActionPerformed
 
     private void jBtt_EstudianteMouseEntered(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jBtt_EstudianteMouseEntered
     {//GEN-HEADEREND:event_jBtt_EstudianteMouseEntered
         // TODO add your handling code here:
         jL_Tituo.setText("BIENVENIDO ESTUDIANTE");
-        
+
     }//GEN-LAST:event_jBtt_EstudianteMouseEntered
 
     private void jBtt_EstudianteMouseExited(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jBtt_EstudianteMouseExited
@@ -164,7 +169,7 @@ public class VtnHome extends javax.swing.JFrame
 
     private void jBtt_AdministradorActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBtt_AdministradorActionPerformed
     {//GEN-HEADEREND:event_jBtt_AdministradorActionPerformed
-        VtnAdministrador administrador= new VtnAdministrador(controllerGeneral);
+        VtnAdministrador administrador = new VtnAdministrador(controllerGeneral);
         administrador.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jBtt_AdministradorActionPerformed
@@ -172,7 +177,6 @@ public class VtnHome extends javax.swing.JFrame
     /**
      * @param args the command line arguments
      */
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBtt_Administrador;
     private javax.swing.JButton jBtt_Estudiante;
