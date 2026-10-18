@@ -1,0 +1,445 @@
+package views;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
+import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Arrays;
+import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.text.JTextComponent;
+
+/**
+ * Estilos compartidos de todo el proyecto (basado en el diseño "ALUMNOS").
+ * Llamar SIEMPRE despues de initComponents().
+ *
+ * RESUMEN Ventana ........ estilizarVentana Paneles ........ estilizarPanel,
+ * estilizarPanelConSombra, estilizarFondo Textos ......... estilizarTitulo,
+ * estilizarSubtitulo, estilizarEtiqueta, estilizarBarraSeccion,
+ * estilizarEtiquetaOpcional Botones ........ estilizarBoton,
+ * estilizarBotonPrincipal Menu lateral ... estilizarMenu, agregarSubtitulo,
+ * seleccionar Pestañas ....... estilizarPestanas, seleccionar Campos .........
+ * estilizarCampo, estilizarCombo, estilizarTabla
+ */
+public class Estilos
+{
+
+    // ---------- COLORES ----------
+    public static final Color CREMA = new Color(0xEDE8D8); // fondo general
+    public static final Color CREMA_CLARO = new Color(0xFFFCF2); // paneles y campos
+    public static final Color AZUL = new Color(0x2B9FEF); // titulos grandes, sombra
+    public static final Color AZUL_OSCURO = new Color(0x0B5394); // etiquetas, pestañas
+    public static final Color NARANJA = new Color(0xFF6B14); // acento, boton principal
+    public static final Color NEGRO = new Color(0x1A1A1A); // texto y bordes
+    public static final Color GRIS_TEXTO = new Color(0x8A8A8A); // placeholders
+
+    // ---------- FUENTES ----------
+    private static final String FAMILIA = elegirFamilia(
+            "Bebas Neue", "Barlow Condensed", "Impact", "Arial Narrow", "Arial");
+
+    private static String elegirFamilia(String... candidatas)
+    {
+        List<String> instaladas = Arrays.asList(
+                GraphicsEnvironment.getLocalGraphicsEnvironment()
+                        .getAvailableFontFamilyNames());
+        for (String f : candidatas)
+        {
+            if (instaladas.contains(f))
+            {
+                return f;
+            }
+        }
+        return Font.SANS_SERIF;
+    }
+
+    public static Font fuente(int estilo, int tam)
+    {
+        return new Font(FAMILIA, estilo, tam);
+    }
+
+    // ---------- BORDES ----------
+    public static Border borde(int grosor)
+    {
+        return BorderFactory.createLineBorder(NEGRO, grosor);
+    }
+
+    private static Border bordeConPadding(Color color, int grosor, int vertical, int horizontal)
+    {
+        return BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(color, grosor),
+                BorderFactory.createEmptyBorder(vertical, horizontal, vertical, horizontal));
+    }
+
+    /**
+     * Borde negro con sombra azul desplazada abajo y a la derecha.
+     */
+    private static class BordeSombra implements Border
+    {
+
+        private final int grosor;
+        private final int desfase;
+
+        BordeSombra(int grosor, int desfase)
+        {
+            this.grosor = grosor;
+            this.desfase = desfase;
+        }
+
+        @Override
+        public void paintBorder(Component c, Graphics g, int x, int y, int w, int h)
+        {
+            // 1) limpiar las franjas donde va la sombra
+            g.setColor(CREMA);
+            g.fillRect(x + w - desfase, y, desfase, h);
+            g.fillRect(x, y + h - desfase, w, desfase);
+            // 2) sombra azul
+            g.setColor(AZUL);
+            g.fillRect(x + w - desfase, y + desfase, desfase, h - desfase);
+            g.fillRect(x + desfase, y + h - desfase, w - desfase, desfase);
+            // 3) borde negro
+            g.setColor(NEGRO);
+            int cw = w - desfase;
+            int ch = h - desfase;
+            g.fillRect(x, y, cw, grosor);
+            g.fillRect(x, y + ch - grosor, cw, grosor);
+            g.fillRect(x, y, grosor, ch);
+            g.fillRect(x + cw - grosor, y, grosor, ch);
+        }
+
+        @Override
+        public Insets getBorderInsets(Component c)
+        {
+            return new Insets(grosor, grosor, grosor + desfase, grosor + desfase);
+        }
+
+        @Override
+        public boolean isBorderOpaque()
+        {
+            return true;
+        }
+    }
+
+    // ---------- VENTANA ----------
+    /**
+     * Fondo crema, centrada en pantalla.
+     */
+    public static void estilizarVentana(JFrame ventana)
+    {
+        ventana.getContentPane().setBackground(CREMA);
+        ventana.setLocationRelativeTo(null);
+    }
+
+    // ---------- PANELES ----------
+    /**
+     * Panel de contenido: fondo crema claro con borde negro.
+     */
+    public static void estilizarPanel(JPanel p)
+    {
+        p.setOpaque(true);
+        p.setBackground(CREMA_CLARO);
+        p.setBorder(borde(3));
+    }
+
+    /**
+     * Panel de contenido con borde negro y sombra azul (como el diseño).
+     */
+    public static void estilizarPanelConSombra(JPanel p)
+    {
+        p.setOpaque(true);
+        p.setBackground(CREMA_CLARO);
+        p.setBorder(new BordeSombra(3, 10));
+    }
+
+    /**
+     * Panel sin borde con el fondo crema general (contenedores).
+     */
+    public static void estilizarFondo(JPanel p)
+    {
+        p.setOpaque(true);
+        p.setBackground(CREMA);
+    }
+
+    // ---------- TEXTOS ----------
+    /**
+     * Titulo grande azul (ej. "ALUMNOS", "BIENVENIDO").
+     */
+    public static void estilizarTitulo(JLabel l)
+    {
+        l.setFont(fuente(Font.PLAIN, 64));
+        l.setForeground(AZUL);
+    }
+
+    /**
+     * Subtitulo de pantalla en negro (ej. "CUENTA Y EXTRAS").
+     */
+    public static void estilizarSubtitulo(JLabel l)
+    {
+        l.setFont(fuente(Font.PLAIN, 36));
+        l.setForeground(NEGRO);
+    }
+
+    /**
+     * Etiqueta de campo en azul oscuro (ej. "TELEFONO", "ESTATUS").
+     */
+    public static void estilizarEtiqueta(JLabel l)
+    {
+        l.setFont(fuente(Font.BOLD, 14));
+        l.setForeground(AZUL_OSCURO);
+        l.setText(l.getText().toUpperCase());
+    }
+
+    /**
+     * Barra negra de seccion (ej. "CUENTA DE LA PLATAFORMA"). Se usa sobre un
+     * JLabel.
+     */
+    public static void estilizarBarraSeccion(JLabel l)
+    {
+        l.setOpaque(true);
+        l.setBackground(NEGRO);
+        l.setForeground(Color.WHITE);
+        l.setFont(fuente(Font.PLAIN, 20));
+        l.setBorder(BorderFactory.createEmptyBorder(6, 10, 6, 10));
+    }
+
+    /**
+     * Etiqueta naranja pequeña (ej. "OPCIONAL").
+     */
+    public static void estilizarEtiquetaOpcional(JLabel l)
+    {
+        l.setOpaque(true);
+        l.setBackground(NARANJA);
+        l.setForeground(NEGRO);
+        l.setFont(fuente(Font.BOLD, 12));
+        l.setHorizontalAlignment(SwingConstants.CENTER);
+        l.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 8));
+        l.setText(l.getText().toUpperCase());
+    }
+
+    // ---------- BOTONES ----------
+    /**
+     * Boton normal: crema, borde negro, naranja al pasar el mouse.
+     */
+    public static void estilizarBoton(JButton b)
+    {
+        aplicarBoton(b, CREMA_CLARO, NEGRO);
+    }
+
+    /**
+     * Boton principal (ej. "DAR DE ALTA", "GUARDAR Y CONTINUAR"): naranja.
+     */
+    public static void estilizarBotonPrincipal(JButton b)
+    {
+        aplicarBoton(b, NARANJA, NEGRO);
+    }
+
+    private static void aplicarBoton(JButton b, Color fondo, Color texto)
+    {
+        baseBoton(b, 22);
+        b.setBackground(fondo);
+        b.setForeground(texto);
+        b.setBorder(bordeConPadding(NEGRO, 3, 6, 16));
+        b.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                b.setBackground(fondo == NARANJA ? NEGRO : NARANJA);
+                b.setForeground(fondo == NARANJA ? Color.WHITE : NEGRO);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                b.setBackground(fondo);
+                b.setForeground(texto);
+            }
+        });
+    }
+
+    private static void baseBoton(JButton b, int tam)
+    {
+        b.setFont(fuente(Font.PLAIN, tam));
+        b.setFocusPainted(false);
+        // Estas dos lineas quitan el degradado azul de Swing:
+        b.setContentAreaFilled(false);
+        b.setOpaque(true);
+        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        b.setHorizontalAlignment(SwingConstants.CENTER);
+    }
+
+    // ---------- GRUPOS DE BOTONES: MENU Y PESTAÑAS ----------
+    /**
+     * Menu lateral (ALTA, CONSULTA, EDICION, BAJA). Ninguno queda marcado al
+     * inicio. Al hacer clic, el boton queda activo: fondo negro, texto y borde
+     * naranja.
+     */
+    public static void estilizarMenu(JButton... botones)
+    {
+        estilizarGrupo(botones, 22,
+                CREMA_CLARO, NEGRO, NEGRO, // normal: fondo, texto, borde
+                NARANJA, // hover
+                NEGRO, NARANJA, NARANJA);     // activo: fondo, texto, borde
+    }
+
+    /**
+     * Pestañas (1. DATOS PRINCIPALES, 2. MATERIAS Y PROMEDIO, 3. CUENTA Y
+     * EXTRAS). Normal: azul oscuro con texto blanco. Activa: negro con texto
+     * naranja.
+     */
+    public static void estilizarPestanas(JButton... botones)
+    {
+        estilizarGrupo(botones, 20,
+                AZUL_OSCURO, Color.WHITE, NEGRO,
+                AZUL,
+                NEGRO, NARANJA, NEGRO);
+    }
+
+    /**
+     * Subtitulo en cursiva que aparece debajo del texto SOLO cuando el boton
+     * del menu esta activo (ej. "REGISTRAR ALUMNO NUEVO" bajo ALTA).
+     */
+    public static void agregarSubtitulo(JButton b, String subtitulo)
+    {
+        b.putClientProperty("subtitulo", subtitulo);
+    }
+
+    /**
+     * Marca un boton de menu o pestaña como activo desde codigo (y desmarca los
+     * demas de su grupo). Util al avanzar con "GUARDAR Y CONTINUAR" o "ATRAS".
+     */
+    public static void seleccionar(JButton b)
+    {
+        Object g = b.getClientProperty("grupo");
+        if (g instanceof JButton[])
+        {
+            for (JButton otro : (JButton[]) g)
+            {
+                pintar(otro, otro == b);
+            }
+        }
+    }
+
+    private static void estilizarGrupo(JButton[] botones, int tam,
+            Color bg, Color fg, Color borde, Color hover,
+            Color bgAct, Color fgAct, Color bordeAct)
+    {
+        Color[] tema =
+        {
+            bg, fg, borde, bgAct, fgAct, bordeAct
+        };
+        for (JButton b : botones)
+        {
+            b.putClientProperty("grupo", botones);
+            b.putClientProperty("tema", tema);
+            b.putClientProperty("texto", b.getText());
+            b.putClientProperty("activo", Boolean.FALSE);
+            baseBoton(b, tam);
+            pintar(b, false);
+            b.addMouseListener(new MouseAdapter()
+            {
+                @Override
+                public void mouseEntered(MouseEvent e)
+                {
+                    if (!esActivo(b))
+                    {
+                        b.setBackground(hover);
+                    }
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e)
+                {
+                    if (!esActivo(b))
+                    {
+                        b.setBackground(bg);
+                    }
+                }
+            });
+            b.addActionListener(e -> seleccionar(b));
+        }
+    }
+
+    private static boolean esActivo(JButton b)
+    {
+        return Boolean.TRUE.equals(b.getClientProperty("activo"));
+    }
+
+    private static void pintar(JButton b, boolean activo)
+    {
+        Color[] t = (Color[]) b.getClientProperty("tema");
+        b.putClientProperty("activo", activo);
+        b.setBackground(activo ? t[3] : t[0]);
+        b.setForeground(activo ? t[4] : t[1]);
+        b.setBorder(bordeConPadding(activo ? t[5] : t[2], 3, 3, 14));
+        String base = (String) b.getClientProperty("texto");
+        String sub = (String) b.getClientProperty("subtitulo");
+        if (activo && sub != null)
+        {
+            b.setText("<html><center>" + base
+                    + "<br><i><span style='font-size:9px'>" + sub
+                    + "</span></i></center></html>");
+        } else
+        {
+            b.setText(base);
+        }
+    }
+
+    // ---------- CAMPOS ----------
+    /**
+     * Sirve para JTextField, JPasswordField, JTextArea, etc.
+     */
+    public static void estilizarCampo(JTextComponent c)
+    {
+        c.setFont(fuente(Font.PLAIN, 18));
+        c.setBackground(CREMA_CLARO);
+        c.setForeground(NEGRO);
+        c.setCaretColor(NEGRO);
+        c.setSelectionColor(NARANJA);
+        c.setBorder(bordeConPadding(NEGRO, 2, 6, 8));
+    }
+
+    public static void estilizarCombo(JComboBox<?> c)
+    {
+        c.setFont(fuente(Font.PLAIN, 18));
+        c.setBackground(CREMA_CLARO);
+        c.setForeground(NEGRO);
+        c.setBorder(borde(2));
+        c.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+
+    // ---------- TABLAS ----------
+    /**
+     * Encabezado negro, filas separadas, seleccion naranja.
+     */
+    public static void estilizarTabla(JTable t)
+    {
+        t.setFont(fuente(Font.PLAIN, 16));
+        t.setForeground(NEGRO);
+        t.setBackground(CREMA_CLARO);
+        t.setRowHeight(32);
+        t.setGridColor(NEGRO);
+        t.setShowVerticalLines(false);
+        t.setSelectionBackground(NARANJA);
+        t.setSelectionForeground(NEGRO);
+
+        JComponent header = t.getTableHeader();
+        header.setFont(fuente(Font.PLAIN, 18));
+        header.setBackground(NEGRO);
+        header.setForeground(Color.WHITE);
+        header.setOpaque(true);
+    }
+}
