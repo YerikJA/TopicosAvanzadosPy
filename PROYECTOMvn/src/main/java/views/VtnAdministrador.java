@@ -94,8 +94,7 @@ public class VtnAdministrador extends javax.swing.JFrame
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
 
         jL_TituloGeneral = new javax.swing.JLabel();
         jBttn_Edicion = new javax.swing.JButton();
@@ -124,6 +123,11 @@ public class VtnAdministrador extends javax.swing.JFrame
         jBttn_Continuar = new javax.swing.JButton();
         jP_MateriasProm = new javax.swing.JPanel();
         jP_CuentasExtr = new javax.swing.JPanel();
+        jLbl_CuentaExtras = new javax.swing.JLabel();
+        jLbl_Contra = new javax.swing.JLabel();
+        jLbl_Estatus1 = new javax.swing.JLabel();
+        jCb_Estatus1 = new javax.swing.JComboBox<>();
+        jTextField1 = new javax.swing.JTextField();
         jP_Consulta = new javax.swing.JPanel();
         jP_Edicion = new javax.swing.JPanel();
         jP_Baja = new javax.swing.JPanel();
@@ -139,10 +143,8 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jBttn_Alta.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Alta.setText("ALTA");
-        jBttn_Alta.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jBttn_Alta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBttn_AltaActionPerformed(evt);
             }
         });
@@ -180,10 +182,8 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_Alta.setLayout(new java.awt.BorderLayout());
 
         jBttn_DatosPrincipales.setText("1. DATOS PRINCIPALES");
-        jBttn_DatosPrincipales.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jBttn_DatosPrincipales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBttn_DatosPrincipalesActionPerformed(evt);
             }
         });
@@ -219,10 +219,8 @@ public class VtnAdministrador extends javax.swing.JFrame
         jBttn_Cancelar.setText("Cancelar");
 
         jBttn_Continuar.setText("Continuar");
-        jBttn_Continuar.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jBttn_Continuar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBttn_ContinuarActionPerformed(evt);
             }
         });
@@ -279,12 +277,12 @@ public class VtnAdministrador extends javax.swing.JFrame
                 .addComponent(jL_Fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jDC_Nacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addContainerGap(95, Short.MAX_VALUE))
             .addGroup(jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jP_DatosPrincipalesLayout.createSequentialGroup()
                     .addGap(91, 91, 91)
                     .addComponent(jBttn_Continuar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(291, Short.MAX_VALUE)))
+                    .addContainerGap(316, Short.MAX_VALUE)))
         );
 
         jP_AltCard.add(jP_DatosPrincipales, "card2");
@@ -297,20 +295,60 @@ public class VtnAdministrador extends javax.swing.JFrame
         );
         jP_MateriasPromLayout.setVerticalGroup(
             jP_MateriasPromLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 442, Short.MAX_VALUE)
+            .addGap(0, 467, Short.MAX_VALUE)
         );
 
         jP_AltCard.add(jP_MateriasProm, "card3");
+
+        jLbl_CuentaExtras.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLbl_CuentaExtras.setText("Cuenta y Extras");
+        jLbl_CuentaExtras.setToolTipText("");
+
+        jLbl_Contra.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLbl_Contra.setText("Contraseña:");
+
+        jLbl_Estatus1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLbl_Estatus1.setText("Estatus:");
+
+        jCb_Estatus1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCb_Estatus1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jP_CuentasExtrLayout = new javax.swing.GroupLayout(jP_CuentasExtr);
         jP_CuentasExtr.setLayout(jP_CuentasExtrLayout);
         jP_CuentasExtrLayout.setHorizontalGroup(
             jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 892, Short.MAX_VALUE)
+            .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
+                .addGap(53, 53, 53)
+                .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLbl_CuentaExtras)
+                    .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLbl_Contra)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(75, 75, 75)
+                        .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLbl_Estatus1)
+                            .addComponent(jCb_Estatus1, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
         jP_CuentasExtrLayout.setVerticalGroup(
             jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 442, Short.MAX_VALUE)
+            .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(jLbl_CuentaExtras)
+                .addGap(39, 39, 39)
+                .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLbl_Contra)
+                    .addComponent(jLbl_Estatus1))
+                .addGap(18, 18, 18)
+                .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jCb_Estatus1, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                    .addComponent(jTextField1))
+                .addContainerGap(274, Short.MAX_VALUE))
         );
 
         jP_AltCard.add(jP_CuentasExtr, "card4");
@@ -360,10 +398,8 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jBttn_Regresar.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Regresar.setText("REGRESAR");
-        jBttn_Regresar.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jBttn_Regresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBttn_RegresarActionPerformed(evt);
             }
         });
@@ -462,16 +498,20 @@ public class VtnAdministrador extends javax.swing.JFrame
             JOptionPane.showMessageDialog(this, "El formato del apellido materno no es valido. Ingerese un apellido válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if(validaciones.ValidadorAlumno.fechaPasada(fechaNacimiento))
+/*        if(validaciones.ValidadorAlumno.fechaPasada(fechaNacimiento))
         {
             JOptionPane.showMessageDialog(this, "No puede ingresar una fecha tan antigua. Ingerese una fecha válida", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
             
-        }
+        }*/
         String nombreCompleto= nombre + apellidoPat + apellidoMat ;
         
         
     }//GEN-LAST:event_jBttn_ContinuarActionPerformed
+
+    private void jCb_Estatus1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCb_Estatus1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCb_Estatus1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBttn_Alta;
@@ -484,6 +524,7 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JButton jBttn_Edicion;
     private javax.swing.JButton jBttn_MateriasProm;
     private javax.swing.JButton jBttn_Regresar;
+    private javax.swing.JComboBox<String> jCb_Estatus1;
     private com.toedter.calendar.JDateChooser jDC_Nacimiento;
     private javax.swing.JLabel jL_ApellidoMat;
     private javax.swing.JLabel jL_ApellidoPat;
@@ -491,6 +532,9 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JLabel jL_Nombres1;
     private javax.swing.JLabel jL_TituloGeneral;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLbl_Contra;
+    private javax.swing.JLabel jLbl_CuentaExtras;
+    private javax.swing.JLabel jLbl_Estatus1;
     private javax.swing.JPanel jP_AltCard;
     private javax.swing.JPanel jP_Alta;
     private javax.swing.JPanel jP_Baja;
@@ -501,6 +545,7 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JPanel jP_Edicion;
     private javax.swing.JPanel jP_Encabezado;
     private javax.swing.JPanel jP_MateriasProm;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTxt_ApellidoMat;
     private javax.swing.JTextField jTxt_ApellidoPat;
     private javax.swing.JTextField jTxt_nombre;
