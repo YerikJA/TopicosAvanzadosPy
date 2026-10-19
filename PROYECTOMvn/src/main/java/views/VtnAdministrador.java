@@ -65,7 +65,8 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.estilizarFondo(jP_Encabezado);
 
         Estilos.estilizarPanelConSombra(jP_AltCard);
-
+        Estilos.estilizarPanel(jP_CONSULTA_COMP);
+        
         javax.swing.JPanel[] pantallasAlta =
         {
             jP_DatosPrincipales, jP_MateriasProm, jP_CuentasExtr
@@ -129,6 +130,26 @@ public class VtnAdministrador extends javax.swing.JFrame
         jCb_Estatus1 = new javax.swing.JComboBox<>();
         jTextField1 = new javax.swing.JTextField();
         jP_Consulta = new javax.swing.JPanel();
+        jP_ConsultaC = new javax.swing.JPanel();
+        jP_CONSULTA_COMP = new javax.swing.JPanel();
+        jLb_Consulta_buscar = new javax.swing.JLabel();
+        jTxt_Consulta_Buscar = new javax.swing.JTextField();
+        jLb_CONSULTA_CARR = new javax.swing.JLabel();
+        jCb_CONSULTA_CARR = new javax.swing.JComboBox<>();
+        jLb_CONSULTA_ORDENAR = new javax.swing.JLabel();
+        jComboBox2 = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        jComboBox3 = new javax.swing.JComboBox<>();
+        jLb_CONSULTA_PROM = new javax.swing.JLabel();
+        jSpinner1 = new javax.swing.JSpinner();
+        jLabel6 = new javax.swing.JLabel();
+        jSpinner2 = new javax.swing.JSpinner();
+        jLabel7 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
         jP_Edicion = new javax.swing.JPanel();
         jP_Baja = new javax.swing.JPanel();
         jBttn_Regresar = new javax.swing.JButton();
@@ -151,6 +172,11 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jBttn_Consulta.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Consulta.setText("CONSULTA");
+        jBttn_Consulta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBttn_ConsultaActionPerformed(evt);
+            }
+        });
 
         jBttn_Baja.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Baja.setText("BAJA");
@@ -204,9 +230,6 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jL_Nombres1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jL_Nombres1.setText("Nombre(s)");
-        jL_Nombres1.setMaximumSize(null);
-        jL_Nombres1.setMinimumSize(null);
-        jL_Nombres1.setPreferredSize(null);
 
         jL_ApellidoPat.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jL_ApellidoPat.setText("Apellido paterno");
@@ -357,16 +380,132 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jp_Contenedor.add(jP_Alta, "card2");
 
-        javax.swing.GroupLayout jP_ConsultaLayout = new javax.swing.GroupLayout(jP_Consulta);
-        jP_Consulta.setLayout(jP_ConsultaLayout);
-        jP_ConsultaLayout.setHorizontalGroup(
-            jP_ConsultaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 892, Short.MAX_VALUE)
+        jP_Consulta.setLayout(new java.awt.BorderLayout());
+
+        jP_ConsultaC.setLayout(new java.awt.CardLayout());
+
+        jLb_Consulta_buscar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLb_Consulta_buscar.setText("BUSCAR");
+
+        jTxt_Consulta_Buscar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTxt_Consulta_Buscar.setText("Ej. Luis Estrada");
+
+        jLb_CONSULTA_CARR.setText("CARRERA DEL ALUMNO");
+
+        jCb_CONSULTA_CARR.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLb_CONSULTA_ORDENAR.setText("ORDENAR POR:");
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel4.setText("MATERIAS");
+
+        jComboBox3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLb_CONSULTA_PROM.setText("PROMEDIO(0 A 100)");
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel6.setText("A");
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel7.setText("SITUACIÓN ACADÉMICA");
+
+        jButton1.setText("TODOS");
+
+        jButton2.setText("SOBRESALIENTE");
+
+        jButton3.setText("APROBADO");
+
+        jButton4.setText("EN RIESGO");
+
+        jButton5.setText("REPROBADO");
+
+        javax.swing.GroupLayout jP_CONSULTA_COMPLayout = new javax.swing.GroupLayout(jP_CONSULTA_COMP);
+        jP_CONSULTA_COMP.setLayout(jP_CONSULTA_COMPLayout);
+        jP_CONSULTA_COMPLayout.setHorizontalGroup(
+            jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
+                        .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jComboBox3, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTxt_Consulta_Buscar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+                                .addComponent(jLb_Consulta_buscar, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(jLabel4))
+                        .addGap(35, 35, 35)
+                        .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLb_CONSULTA_PROM)
+                            .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
+                                    .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jCb_CONSULTA_CARR, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLb_CONSULTA_CARR)
+                                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
+                                            .addGap(18, 18, 18)
+                                            .addComponent(jLabel6)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
+                                            .addGap(39, 39, 39)
+                                            .addComponent(jLb_CONSULTA_ORDENAR, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                    .addComponent(jLabel7)
+                    .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton2)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton3)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton4)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton5)))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
-        jP_ConsultaLayout.setVerticalGroup(
-            jP_ConsultaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 454, Short.MAX_VALUE)
+        jP_CONSULTA_COMPLayout.setVerticalGroup(
+            jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLb_Consulta_buscar)
+                    .addComponent(jLb_CONSULTA_CARR)
+                    .addComponent(jLb_CONSULTA_ORDENAR))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTxt_Consulta_Buscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCb_CONSULTA_CARR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLb_CONSULTA_PROM))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6)
+                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4)
+                    .addComponent(jButton5))
+                .addContainerGap(271, Short.MAX_VALUE))
         );
+
+        jP_ConsultaC.add(jP_CONSULTA_COMP, "card2");
+
+        jP_Consulta.add(jP_ConsultaC, java.awt.BorderLayout.CENTER);
 
         jp_Contenedor.add(jP_Consulta, "card3");
 
@@ -513,6 +652,12 @@ public class VtnAdministrador extends javax.swing.JFrame
         // TODO add your handling code here:
     }//GEN-LAST:event_jCb_Estatus1ActionPerformed
 
+    private void jBttn_ConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttn_ConsultaActionPerformed
+        java.awt.CardLayout cl = (java.awt.CardLayout) jp_Contenedor.getLayout();
+        cl.show(jp_Contenedor, "card3");
+        Estilos.seleccionar(jBttn_Consulta);
+    }//GEN-LAST:event_jBttn_ConsultaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBttn_Alta;
     private javax.swing.JButton jBttn_Baja;
@@ -524,7 +669,15 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JButton jBttn_Edicion;
     private javax.swing.JButton jBttn_MateriasProm;
     private javax.swing.JButton jBttn_Regresar;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JComboBox<String> jCb_CONSULTA_CARR;
     private javax.swing.JComboBox<String> jCb_Estatus1;
+    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<String> jComboBox3;
     private com.toedter.calendar.JDateChooser jDC_Nacimiento;
     private javax.swing.JLabel jL_ApellidoMat;
     private javax.swing.JLabel jL_ApellidoPat;
@@ -532,6 +685,13 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JLabel jL_Nombres1;
     private javax.swing.JLabel jL_TituloGeneral;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLb_CONSULTA_CARR;
+    private javax.swing.JLabel jLb_CONSULTA_ORDENAR;
+    private javax.swing.JLabel jLb_CONSULTA_PROM;
+    private javax.swing.JLabel jLb_Consulta_buscar;
     private javax.swing.JLabel jLbl_Contra;
     private javax.swing.JLabel jLbl_CuentaExtras;
     private javax.swing.JLabel jLbl_Estatus1;
@@ -539,15 +699,20 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JPanel jP_Alta;
     private javax.swing.JPanel jP_Baja;
     private javax.swing.JPanel jP_Bienvenida;
+    private javax.swing.JPanel jP_CONSULTA_COMP;
     private javax.swing.JPanel jP_Consulta;
+    private javax.swing.JPanel jP_ConsultaC;
     private javax.swing.JPanel jP_CuentasExtr;
     private javax.swing.JPanel jP_DatosPrincipales;
     private javax.swing.JPanel jP_Edicion;
     private javax.swing.JPanel jP_Encabezado;
     private javax.swing.JPanel jP_MateriasProm;
+    private javax.swing.JSpinner jSpinner1;
+    private javax.swing.JSpinner jSpinner2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTxt_ApellidoMat;
     private javax.swing.JTextField jTxt_ApellidoPat;
+    private javax.swing.JTextField jTxt_Consulta_Buscar;
     private javax.swing.JTextField jTxt_nombre;
     private javax.swing.JPanel jp_Contenedor;
     // End of variables declaration//GEN-END:variables
