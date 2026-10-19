@@ -442,4 +442,36 @@ public class Estilos
         header.setForeground(Color.WHITE);
         header.setOpaque(true);
     }
+    //Estilos
+    public static void estilizarFecha(com.toedter.calendar.JDateChooser dateChooser)
+    {
+        // Fuente y colores generales del contenedor
+        dateChooser.setFont(fuente(Font.PLAIN, 18));
+        dateChooser.setBackground(CREMA_CLARO);
+        dateChooser.setForeground(NEGRO);
+        dateChooser.setBorder(borde(2));
+
+        // Personalizar el componente de texto interno y el botón desplegable del calendario
+        for (Component comp : dateChooser.getComponents())
+        {
+            if (comp instanceof javax.swing.JTextField)
+            {
+                javax.swing.JTextField txt = (javax.swing.JTextField) comp;
+                txt.setFont(fuente(Font.PLAIN, 18));
+                txt.setBackground(CREMA_CLARO);
+                txt.setForeground(NEGRO);
+                txt.setCaretColor(NEGRO);
+                txt.setSelectionColor(NARANJA);
+                txt.setBorder(BorderFactory.createEmptyBorder(4, 6, 4, 6));
+            } 
+            else if (comp instanceof JButton)
+            {
+                JButton btn = (JButton) comp;
+                btn.setBackground(CREMA_CLARO);
+                btn.setFocusPainted(false);
+                btn.setBorder(BorderFactory.createLineBorder(NEGRO, 1));
+                btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+        }
+    }
 }

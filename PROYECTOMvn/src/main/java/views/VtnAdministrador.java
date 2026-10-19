@@ -1,6 +1,8 @@
 package views;
 
 import controller.*;
+import java.util.Date;
+import javax.swing.JOptionPane;
 
 public class VtnAdministrador extends javax.swing.JFrame
 {
@@ -13,19 +15,43 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_Encabezado.setPreferredSize(new java.awt.Dimension(0, 48));
         controllerAdministracion = controller;
         setTitle("Administracion");
+
         // ---- FORMATO GENERAL ----
         Estilos.estilizarVentana(this);
 
-        Estilos.estilizarTitulo(jLabel1);
-        jLabel1.setFont(Estilos.fuente(java.awt.Font.PLAIN, 48));
+        Estilos.estilizarTitulo(jL_TituloGeneral);
+        jL_TituloGeneral.setFont(Estilos.fuente(java.awt.Font.PLAIN, 48));
+        Estilos.estilizarTitulo(jLabel2);
+        jL_TituloGeneral.setFont(Estilos.fuente(java.awt.Font.PLAIN, 48));
 
         // Menú: ningún botón marcado al inicio
-        Estilos.estilizarMenu(jBttn_Alta1, jBttn_Consulta, jBttn_Edicion, jBttn_Baja);
+        Estilos.estilizarMenu(jBttn_Alta, jBttn_Consulta, jBttn_Edicion, jBttn_Baja);
         Estilos.estilizarBoton(jBttn_Regresar);
 
         // ---- PANELES ----
-        Estilos.estilizarFondo(jp_Contenedor);   // sin borde: cada pantalla lleva el suyo
+        Estilos.estilizarFondo(jp_Contenedor); // sin borde: cada pantalla lleva el suyo
+        Estilos.estilizarFondo(jP_Bienvenida);
+        //Panel de alta
         Estilos.estilizarFondo(jP_Alta);
+        //--Fuentes
+        Estilos.estilizarEtiqueta(jL_Nombres1);
+        jL_Nombres1.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
+        Estilos.estilizarEtiqueta(jL_ApellidoPat);
+        jL_ApellidoPat.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
+        Estilos.estilizarEtiqueta(jL_ApellidoMat);
+        jL_ApellidoMat.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
+        Estilos.estilizarEtiqueta(jL_Fecha);
+        jL_Fecha.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
+        //---Txt fields
+        Estilos.estilizarCampo(jTxt_ApellidoMat);
+        Estilos.estilizarCampo(jTxt_ApellidoPat);
+        Estilos.estilizarCampo(jTxt_nombre);
+        Estilos.estilizarFecha(jDC_Nacimiento);
+        //----Botones
+        Estilos.estilizarBoton(jBttn_Continuar);
+        Estilos.estilizarBoton(jBttn_Cancelar);
+
+        Estilos.estilizarPanelConSombra(jP_Bienvenida);
         Estilos.estilizarPanelConSombra(jP_Consulta);
         Estilos.estilizarPanelConSombra(jP_Edicion);
         Estilos.estilizarPanelConSombra(jP_Baja);
@@ -71,21 +97,33 @@ public class VtnAdministrador extends javax.swing.JFrame
     private void initComponents()
     {
 
-        jLabel1 = new javax.swing.JLabel();
+        jL_TituloGeneral = new javax.swing.JLabel();
         jBttn_Edicion = new javax.swing.JButton();
-        jBttn_Alta1 = new javax.swing.JButton();
+        jBttn_Alta = new javax.swing.JButton();
         jBttn_Consulta = new javax.swing.JButton();
         jBttn_Baja = new javax.swing.JButton();
         jp_Contenedor = new javax.swing.JPanel();
+        jP_Bienvenida = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
         jP_Alta = new javax.swing.JPanel();
         jP_Encabezado = new javax.swing.JPanel();
         jBttn_DatosPrincipales = new javax.swing.JButton();
         jBttn_MateriasProm = new javax.swing.JButton();
         jBttn_CuentasExtr = new javax.swing.JButton();
         jP_AltCard = new javax.swing.JPanel();
+        jP_DatosPrincipales = new javax.swing.JPanel();
+        jL_ApellidoMat = new javax.swing.JLabel();
+        jTxt_nombre = new javax.swing.JTextField();
+        jL_Nombres1 = new javax.swing.JLabel();
+        jL_ApellidoPat = new javax.swing.JLabel();
+        jTxt_ApellidoMat = new javax.swing.JTextField();
+        jTxt_ApellidoPat = new javax.swing.JTextField();
+        jL_Fecha = new javax.swing.JLabel();
+        jDC_Nacimiento = new com.toedter.calendar.JDateChooser();
+        jBttn_Cancelar = new javax.swing.JButton();
+        jBttn_Continuar = new javax.swing.JButton();
         jP_MateriasProm = new javax.swing.JPanel();
         jP_CuentasExtr = new javax.swing.JPanel();
-        jP_DatosPrincipales = new javax.swing.JPanel();
         jP_Consulta = new javax.swing.JPanel();
         jP_Edicion = new javax.swing.JPanel();
         jP_Baja = new javax.swing.JPanel();
@@ -93,14 +131,21 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        jLabel1.setText("ADMINISTRACION");
+        jL_TituloGeneral.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        jL_TituloGeneral.setText("ADMINISTRACION");
 
         jBttn_Edicion.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Edicion.setText("EDICIÓN");
 
-        jBttn_Alta1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jBttn_Alta1.setText("ALTA");
+        jBttn_Alta.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jBttn_Alta.setText("ALTA");
+        jBttn_Alta.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jBttn_AltaActionPerformed(evt);
+            }
+        });
 
         jBttn_Consulta.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Consulta.setText("CONSULTA");
@@ -110,9 +155,38 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jp_Contenedor.setLayout(new java.awt.CardLayout());
 
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        jLabel2.setText("BIENVENIDO");
+
+        javax.swing.GroupLayout jP_BienvenidaLayout = new javax.swing.GroupLayout(jP_Bienvenida);
+        jP_Bienvenida.setLayout(jP_BienvenidaLayout);
+        jP_BienvenidaLayout.setHorizontalGroup(
+            jP_BienvenidaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_BienvenidaLayout.createSequentialGroup()
+                .addGap(245, 245, 245)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(270, Short.MAX_VALUE))
+        );
+        jP_BienvenidaLayout.setVerticalGroup(
+            jP_BienvenidaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_BienvenidaLayout.createSequentialGroup()
+                .addGap(153, 153, 153)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(224, Short.MAX_VALUE))
+        );
+
+        jp_Contenedor.add(jP_Bienvenida, "card6");
+
         jP_Alta.setLayout(new java.awt.BorderLayout());
 
         jBttn_DatosPrincipales.setText("1. DATOS PRINCIPALES");
+        jBttn_DatosPrincipales.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jBttn_DatosPrincipalesActionPerformed(evt);
+            }
+        });
         jP_Encabezado.add(jBttn_DatosPrincipales);
 
         jBttn_MateriasProm.setText("2. MATERIAS Y PROMEDIO");
@@ -124,6 +198,96 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_Alta.add(jP_Encabezado, java.awt.BorderLayout.NORTH);
 
         jP_AltCard.setLayout(new java.awt.CardLayout());
+
+        jL_ApellidoMat.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jL_ApellidoMat.setText("Apellido materno");
+
+        jL_Nombres1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jL_Nombres1.setText("Nombre(s)");
+        jL_Nombres1.setMaximumSize(null);
+        jL_Nombres1.setMinimumSize(null);
+        jL_Nombres1.setPreferredSize(null);
+
+        jL_ApellidoPat.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jL_ApellidoPat.setText("Apellido paterno");
+
+        jL_Fecha.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jL_Fecha.setText("Fecha de nacimiento");
+
+        jDC_Nacimiento.setDateFormatString("dd/mm/yyyy");
+
+        jBttn_Cancelar.setText("Cancelar");
+
+        jBttn_Continuar.setText("Continuar");
+        jBttn_Continuar.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jBttn_ContinuarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jP_DatosPrincipalesLayout = new javax.swing.GroupLayout(jP_DatosPrincipales);
+        jP_DatosPrincipales.setLayout(jP_DatosPrincipalesLayout);
+        jP_DatosPrincipalesLayout.setHorizontalGroup(
+            jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_DatosPrincipalesLayout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addGroup(jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jP_DatosPrincipalesLayout.createSequentialGroup()
+                        .addGroup(jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTxt_nombre)
+                            .addComponent(jL_Nombres1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jL_Fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jDC_Nacimiento, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jP_DatosPrincipalesLayout.createSequentialGroup()
+                        .addComponent(jL_ApellidoPat, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(113, 113, 113)
+                        .addComponent(jL_ApellidoMat, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                        .addGap(379, 379, 379))
+                    .addGroup(jP_DatosPrincipalesLayout.createSequentialGroup()
+                        .addComponent(jTxt_ApellidoPat, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jTxt_ApellidoMat, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(142, 142, 142)
+                        .addComponent(jBttn_Cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(68, 68, 68))))
+            .addGroup(jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_DatosPrincipalesLayout.createSequentialGroup()
+                    .addContainerGap(659, Short.MAX_VALUE)
+                    .addComponent(jBttn_Continuar, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(72, 72, 72)))
+        );
+        jP_DatosPrincipalesLayout.setVerticalGroup(
+            jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_DatosPrincipalesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jL_Nombres1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTxt_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jL_ApellidoPat, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jL_ApellidoMat, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTxt_ApellidoPat, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTxt_ApellidoMat, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBttn_Cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jL_Fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jDC_Nacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(70, Short.MAX_VALUE))
+            .addGroup(jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jP_DatosPrincipalesLayout.createSequentialGroup()
+                    .addGap(91, 91, 91)
+                    .addComponent(jBttn_Continuar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(291, Short.MAX_VALUE)))
+        );
+
+        jP_AltCard.add(jP_DatosPrincipales, "card2");
 
         javax.swing.GroupLayout jP_MateriasPromLayout = new javax.swing.GroupLayout(jP_MateriasProm);
         jP_MateriasProm.setLayout(jP_MateriasPromLayout);
@@ -150,19 +314,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         );
 
         jP_AltCard.add(jP_CuentasExtr, "card4");
-
-        javax.swing.GroupLayout jP_DatosPrincipalesLayout = new javax.swing.GroupLayout(jP_DatosPrincipales);
-        jP_DatosPrincipales.setLayout(jP_DatosPrincipalesLayout);
-        jP_DatosPrincipalesLayout.setHorizontalGroup(
-            jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 892, Short.MAX_VALUE)
-        );
-        jP_DatosPrincipalesLayout.setVerticalGroup(
-            jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 442, Short.MAX_VALUE)
-        );
-
-        jP_AltCard.add(jP_DatosPrincipales, "card2");
 
         jP_Alta.add(jP_AltCard, java.awt.BorderLayout.PAGE_START);
 
@@ -224,7 +375,7 @@ public class VtnAdministrador extends javax.swing.JFrame
             .addGroup(layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jL_TituloGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jBttn_Consulta, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -237,14 +388,14 @@ public class VtnAdministrador extends javax.swing.JFrame
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(37, 37, 37)
-                    .addComponent(jBttn_Alta1, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBttn_Alta, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(1109, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jL_TituloGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(123, 123, 123)
@@ -263,7 +414,7 @@ public class VtnAdministrador extends javax.swing.JFrame
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(114, 114, 114)
-                    .addComponent(jBttn_Alta1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBttn_Alta, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(580, Short.MAX_VALUE)))
         );
 
@@ -277,25 +428,82 @@ public class VtnAdministrador extends javax.swing.JFrame
         this.dispose();
     }//GEN-LAST:event_jBttn_RegresarActionPerformed
 
+    private void jBttn_DatosPrincipalesActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_DatosPrincipalesActionPerformed
+    {//GEN-HEADEREND:event_jBttn_DatosPrincipalesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jBttn_DatosPrincipalesActionPerformed
+
+    private void jBttn_AltaActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_AltaActionPerformed
+    {//GEN-HEADEREND:event_jBttn_AltaActionPerformed
+        java.awt.CardLayout cl = (java.awt.CardLayout) jp_Contenedor.getLayout();
+        cl.show(jp_Contenedor, "card2");
+        Estilos.seleccionar(jBttn_Alta);
+    }//GEN-LAST:event_jBttn_AltaActionPerformed
+
+    private void jBttn_ContinuarActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_ContinuarActionPerformed
+    {//GEN-HEADEREND:event_jBttn_ContinuarActionPerformed
+        // TODO add your handling code here:
+        String nombre= jTxt_nombre.getText().trim();
+        String apellidoPat=jTxt_ApellidoPat.getText().trim();
+        String apellidoMat= jTxt_ApellidoMat.getText().trim();
+        Date fechaNacimiento= jDC_Nacimiento.getDate();
+        if(!validaciones.ValidadorAlumno.nombreValido(nombre))
+        {
+            JOptionPane.showMessageDialog(this, "El formato del nombre no es valido. Ingerese un nombre válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(!validaciones.ValidadorAlumno.nombreValido(apellidoPat))
+        {
+            JOptionPane.showMessageDialog(this, "El formato del apellido paterno no es valido. Ingerese un apellido válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(!validaciones.ValidadorAlumno.nombreValido(apellidoMat))
+        {
+            JOptionPane.showMessageDialog(this, "El formato del apellido materno no es valido. Ingerese un apellido válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(validaciones.ValidadorAlumno.fechaPasada(fechaNacimiento))
+        {
+            JOptionPane.showMessageDialog(this, "No puede ingresar una fecha tan antigua. Ingerese una fecha válida", "Error de campo", JOptionPane.ERROR_MESSAGE);
+            return;
+            
+        }
+        String nombreCompleto= nombre + apellidoPat + apellidoMat ;
+        
+        
+    }//GEN-LAST:event_jBttn_ContinuarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jBttn_Alta1;
+    private javax.swing.JButton jBttn_Alta;
     private javax.swing.JButton jBttn_Baja;
+    private javax.swing.JButton jBttn_Cancelar;
     private javax.swing.JButton jBttn_Consulta;
+    private javax.swing.JButton jBttn_Continuar;
     private javax.swing.JButton jBttn_CuentasExtr;
     private javax.swing.JButton jBttn_DatosPrincipales;
     private javax.swing.JButton jBttn_Edicion;
     private javax.swing.JButton jBttn_MateriasProm;
     private javax.swing.JButton jBttn_Regresar;
-    private javax.swing.JLabel jLabel1;
+    private com.toedter.calendar.JDateChooser jDC_Nacimiento;
+    private javax.swing.JLabel jL_ApellidoMat;
+    private javax.swing.JLabel jL_ApellidoPat;
+    private javax.swing.JLabel jL_Fecha;
+    private javax.swing.JLabel jL_Nombres1;
+    private javax.swing.JLabel jL_TituloGeneral;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jP_AltCard;
     private javax.swing.JPanel jP_Alta;
     private javax.swing.JPanel jP_Baja;
+    private javax.swing.JPanel jP_Bienvenida;
     private javax.swing.JPanel jP_Consulta;
     private javax.swing.JPanel jP_CuentasExtr;
     private javax.swing.JPanel jP_DatosPrincipales;
     private javax.swing.JPanel jP_Edicion;
     private javax.swing.JPanel jP_Encabezado;
     private javax.swing.JPanel jP_MateriasProm;
+    private javax.swing.JTextField jTxt_ApellidoMat;
+    private javax.swing.JTextField jTxt_ApellidoPat;
+    private javax.swing.JTextField jTxt_nombre;
     private javax.swing.JPanel jp_Contenedor;
     // End of variables declaration//GEN-END:variables
 }
