@@ -13,6 +13,9 @@ public class ValidadorAlumno
     private static final Pattern CORREO
             = Pattern.compile("^[\\w.+-]+@[\\w-]+(\\.[\\w-]+)+$");
 
+    private static final Pattern TELEFONO
+             = Pattern.compile("^\\d{10}$");
+    
     public static boolean esVacio(String texto)
     {
         return texto == null || texto.trim().isEmpty();
@@ -35,7 +38,11 @@ public class ValidadorAlumno
         return promedio == null || promedio.trim().isEmpty();
 
     }
-
+    
+    public static boolean telefonoValido(String telefono) {
+        return telefono != null
+                && TELEFONO.matcher(telefono.trim()).matches();
+    }
     //Este primero ve que entre un dato, cuando entra realiza la conversion, 
     //si el dato introducido es valido, 
     //si no es valido manda la excepcion avisando que el formato en el que entro el dato no es valido
