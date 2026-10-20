@@ -4,16 +4,18 @@ import controller.*;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
-public class VtnAdministrador extends javax.swing.JFrame
-{
+public class VtnAdministrador extends javax.swing.JFrame {
 
     private AlumnoController controllerAdministracion;
 
-    public VtnAdministrador(AlumnoController controller)
-    {
+    public VtnAdministrador(AlumnoController controller) {
         initComponents();
         jP_Encabezado.setPreferredSize(new java.awt.Dimension(0, 48));
         controllerAdministracion = controller;
+
+        jP_Edicion.setLayout(new java.awt.BorderLayout());
+        jP_Edicion.add(new PanelEdicion(controller), java.awt.BorderLayout.CENTER);
+
         setTitle("Administracion");
 
         // ---- FORMATO GENERAL ----
@@ -53,7 +55,9 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         Estilos.estilizarPanelConSombra(jP_Bienvenida);
         Estilos.estilizarPanelConSombra(jP_Consulta);
-        Estilos.estilizarPanelConSombra(jP_Edicion);
+        
+        Estilos.estilizarFondo(jP_Edicion);
+        
         Estilos.estilizarPanelConSombra(jP_Baja);
 
         // ---- ALTA: PESTAÑAS ARRIBA, CAJA DEBAJO ----
@@ -66,12 +70,11 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         Estilos.estilizarPanelConSombra(jP_AltCard);
 
-        javax.swing.JPanel[] pantallasAlta =
-        {
-            jP_DatosPrincipales, jP_MateriasProm, jP_CuentasExtr
-        };
-        for (javax.swing.JPanel p : pantallasAlta)
-        {
+        javax.swing.JPanel[] pantallasAlta
+                = {
+                    jP_DatosPrincipales, jP_MateriasProm, jP_CuentasExtr
+                };
+        for (javax.swing.JPanel p : pantallasAlta) {
             p.setOpaque(true);
             p.setBackground(Estilos.CREMA_CLARO);
         }
@@ -140,6 +143,11 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jBttn_Edicion.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Edicion.setText("EDICIÓN");
+        jBttn_Edicion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBttn_EdicionActionPerformed(evt);
+            }
+        });
 
         jBttn_Alta.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Alta.setText("ALTA");
@@ -204,9 +212,6 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jL_Nombres1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jL_Nombres1.setText("Nombre(s)");
-        jL_Nombres1.setMaximumSize(null);
-        jL_Nombres1.setMinimumSize(null);
-        jL_Nombres1.setPreferredSize(null);
 
         jL_ApellidoPat.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jL_ApellidoPat.setText("Apellido paterno");
@@ -479,39 +484,43 @@ public class VtnAdministrador extends javax.swing.JFrame
     private void jBttn_ContinuarActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_ContinuarActionPerformed
     {//GEN-HEADEREND:event_jBttn_ContinuarActionPerformed
         // TODO add your handling code here:
-        String nombre= jTxt_nombre.getText().trim();
-        String apellidoPat=jTxt_ApellidoPat.getText().trim();
-        String apellidoMat= jTxt_ApellidoMat.getText().trim();
-        Date fechaNacimiento= jDC_Nacimiento.getDate();
-        if(!validaciones.ValidadorAlumno.nombreValido(nombre))
-        {
+        String nombre = jTxt_nombre.getText().trim();
+        String apellidoPat = jTxt_ApellidoPat.getText().trim();
+        String apellidoMat = jTxt_ApellidoMat.getText().trim();
+        Date fechaNacimiento = jDC_Nacimiento.getDate();
+        if (!validaciones.ValidadorAlumno.nombreValido(nombre)) {
             JOptionPane.showMessageDialog(this, "El formato del nombre no es valido. Ingerese un nombre válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if(!validaciones.ValidadorAlumno.nombreValido(apellidoPat))
-        {
+        if (!validaciones.ValidadorAlumno.nombreValido(apellidoPat)) {
             JOptionPane.showMessageDialog(this, "El formato del apellido paterno no es valido. Ingerese un apellido válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if(!validaciones.ValidadorAlumno.nombreValido(apellidoMat))
-        {
+        if (!validaciones.ValidadorAlumno.nombreValido(apellidoMat)) {
             JOptionPane.showMessageDialog(this, "El formato del apellido materno no es valido. Ingerese un apellido válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
         }
-/*        if(validaciones.ValidadorAlumno.fechaPasada(fechaNacimiento))
+        /*        if(validaciones.ValidadorAlumno.fechaPasada(fechaNacimiento))
         {
             JOptionPane.showMessageDialog(this, "No puede ingresar una fecha tan antigua. Ingerese una fecha válida", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
             
         }*/
-        String nombreCompleto= nombre + apellidoPat + apellidoMat ;
-        
-        
+        String nombreCompleto = nombre + apellidoPat + apellidoMat;
+
+
     }//GEN-LAST:event_jBttn_ContinuarActionPerformed
 
     private void jCb_Estatus1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCb_Estatus1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jCb_Estatus1ActionPerformed
+
+    private void jBttn_EdicionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttn_EdicionActionPerformed
+        // TODO add your handling code here:
+        java.awt.CardLayout cl = (java.awt.CardLayout) jp_Contenedor.getLayout();
+        cl.show(jp_Contenedor, "card4");
+        Estilos.seleccionar(jBttn_Edicion);
+    }//GEN-LAST:event_jBttn_EdicionActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBttn_Alta;
