@@ -86,5 +86,14 @@ public class ValidadorAlumno
         }
         return false;
     }
+    
+    public static boolean fechaPasada(Date fechaNacimiento)
+    {
+        if (fechaNacimiento != null)
+        {
+            return fechaNacimiento.before(new Date(01/01/1950));
+        }
+        return false;
+    }
 
 }
