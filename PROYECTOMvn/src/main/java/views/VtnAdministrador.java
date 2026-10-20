@@ -3,6 +3,7 @@ package views;
 import controller.*;
 import java.util.Date;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class VtnAdministrador extends javax.swing.JFrame {
 
@@ -17,7 +18,9 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jP_Edicion.add(new PanelEdicion(controller), java.awt.BorderLayout.CENTER);
 
         setTitle("Administracion");
-
+        cargarTabla();
+        
+        
         // ---- FORMATO GENERAL ----
         Estilos.estilizarVentana(this);
 
@@ -35,6 +38,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
         Estilos.estilizarFondo(jP_Bienvenida);
         //Panel de alta
         Estilos.estilizarFondo(jP_Alta);
+        
         //--Fuentes
         Estilos.estilizarEtiqueta(jL_Nombres1);
         jL_Nombres1.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
@@ -44,7 +48,17 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jL_ApellidoMat.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
         Estilos.estilizarEtiqueta(jL_Fecha);
         jL_Fecha.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
+        jL_Nombres1.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
+        Estilos.estilizarEtiqueta(jL_Materias);
+        Estilos.estilizarEtiqueta(jL_Semestre);
+        jL_ApellidoPat.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
+        Estilos.estilizarEtiqueta(jL_Promedio);
+        jL_ApellidoMat.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
+        
+        
         //---Txt fields
+         Estilos.estilizarCampo(jTxt_Semestre);
+        Estilos.estilizarCampo(jTxt_Promedio);
         Estilos.estilizarCampo(jTxt_ApellidoMat);
         Estilos.estilizarCampo(jTxt_ApellidoPat);
         Estilos.estilizarCampo(jTxt_nombre);
@@ -52,7 +66,13 @@ public class VtnAdministrador extends javax.swing.JFrame {
         //----Botones
         Estilos.estilizarBoton(jBttn_Continuar);
         Estilos.estilizarBoton(jBttn_Cancelar);
-
+        Estilos.estilizarBoton(jBttn_Continuar_2);
+        Estilos.estilizarBoton(jBttn_Cancelar_2);
+        
+        
+        //-----TABLAS-----
+        Estilos.estilizarTabla(jMaterias);
+         
         Estilos.estilizarPanelConSombra(jP_Bienvenida);
         Estilos.estilizarPanelConSombra(jP_Consulta);
         
@@ -125,6 +145,15 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jBttn_Cancelar = new javax.swing.JButton();
         jBttn_Continuar = new javax.swing.JButton();
         jP_MateriasProm = new javax.swing.JPanel();
+        jBttn_Continuar_2 = new javax.swing.JButton();
+        jBttn_Cancelar_2 = new javax.swing.JButton();
+        jL_Semestre = new javax.swing.JLabel();
+        jL_Materias = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jMaterias = new javax.swing.JTable();
+        jL_Promedio = new javax.swing.JLabel();
+        jTxt_Semestre = new javax.swing.JTextField();
+        jTxt_Promedio = new javax.swing.JTextField();
         jP_CuentasExtr = new javax.swing.JPanel();
         jLbl_CuentaExtras = new javax.swing.JLabel();
         jLbl_Contra = new javax.swing.JLabel();
@@ -212,7 +241,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
             .addGroup(jP_BienvenidaLayout.createSequentialGroup()
                 .addGap(153, 153, 153)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(224, Short.MAX_VALUE))
+                .addContainerGap(237, Short.MAX_VALUE))
         );
 
         jp_Contenedor.add(jP_Bienvenida, "card6");
@@ -322,15 +351,92 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
         jP_AltCard.add(jP_DatosPrincipales, "card2");
 
+        jBttn_Continuar_2.setText("Continuar");
+        jBttn_Continuar_2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBttn_Continuar_2ActionPerformed(evt);
+            }
+        });
+
+        jBttn_Cancelar_2.setText("Cancelar");
+
+        jL_Semestre.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jL_Semestre.setText("Semestre");
+
+        jL_Materias.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jL_Materias.setText("Materias");
+
+        jMaterias.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jMaterias);
+
+        jL_Promedio.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jL_Promedio.setText("Promedio General");
+
+        jTxt_Semestre.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+
+        jTxt_Promedio.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+
         javax.swing.GroupLayout jP_MateriasPromLayout = new javax.swing.GroupLayout(jP_MateriasProm);
         jP_MateriasProm.setLayout(jP_MateriasPromLayout);
         jP_MateriasPromLayout.setHorizontalGroup(
             jP_MateriasPromLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 892, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_MateriasPromLayout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(jP_MateriasPromLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jP_MateriasPromLayout.createSequentialGroup()
+                        .addComponent(jL_Materias)
+                        .addContainerGap())
+                    .addGroup(jP_MateriasPromLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                        .addGroup(jP_MateriasPromLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_MateriasPromLayout.createSequentialGroup()
+                                .addGroup(jP_MateriasPromLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jL_Promedio)
+                                    .addGroup(jP_MateriasPromLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jTxt_Promedio, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTxt_Semestre, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jL_Semestre))
+                                .addGap(50, 50, 50))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_MateriasPromLayout.createSequentialGroup()
+                                .addGroup(jP_MateriasPromLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jBttn_Cancelar_2, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jBttn_Continuar_2, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(105, 105, 105))))))
         );
         jP_MateriasPromLayout.setVerticalGroup(
             jP_MateriasPromLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 467, Short.MAX_VALUE)
+            .addGroup(jP_MateriasPromLayout.createSequentialGroup()
+                .addContainerGap(28, Short.MAX_VALUE)
+                .addGroup(jP_MateriasPromLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jL_Materias)
+                    .addComponent(jL_Semestre))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jP_MateriasPromLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jP_MateriasPromLayout.createSequentialGroup()
+                        .addComponent(jTxt_Semestre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jL_Promedio)
+                        .addGap(9, 9, 9)
+                        .addComponent(jTxt_Promedio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
+                        .addComponent(jBttn_Continuar_2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(51, 51, 51)
+                        .addComponent(jBttn_Cancelar_2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(62, 62, 62))
+                    .addGroup(jP_MateriasPromLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         jP_AltCard.add(jP_MateriasProm, "card3");
@@ -512,7 +618,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
                     .addComponent(jButton3)
                     .addComponent(jButton4)
                     .addComponent(jButton5))
-                .addContainerGap(271, Short.MAX_VALUE))
+                .addContainerGap(284, Short.MAX_VALUE))
         );
 
         jP_ConsultaC.add(jP_CONSULTA_COMP, "card2");
@@ -529,7 +635,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
         );
         jP_EdicionLayout.setVerticalGroup(
             jP_EdicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 454, Short.MAX_VALUE)
+            .addGap(0, 467, Short.MAX_VALUE)
         );
 
         jp_Contenedor.add(jP_Edicion, "card4");
@@ -542,7 +648,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
         );
         jP_BajaLayout.setVerticalGroup(
             jP_BajaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 454, Short.MAX_VALUE)
+            .addGap(0, 467, Short.MAX_VALUE)
         );
 
         jp_Contenedor.add(jP_Baja, "card5");
@@ -646,12 +752,18 @@ public class VtnAdministrador extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "El formato del apellido materno no es valido. Ingerese un apellido válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        /*        if(validaciones.ValidadorAlumno.fechaPasada(fechaNacimiento))
+        if(validaciones.ValidadorAlumno.fechaFutura(fechaNacimiento))
         {
-            JOptionPane.showMessageDialog(this, "No puede ingresar una fecha tan antigua. Ingerese una fecha válida", "Error de campo", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No puede ingresar una fecha futura. Ingerese una fecha válida", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
             
-        }*/
+        }
+                if(validaciones.ValidadorAlumno.fechaPasada(fechaNacimiento))
+        {
+            JOptionPane.showMessageDialog(this, "No puede ingresar una fecha anterios a 1950. Ingerese una fecha válida", "Error de campo", JOptionPane.ERROR_MESSAGE);
+            return;
+            
+        }
         String nombreCompleto = nombre + apellidoPat + apellidoMat;
 
 
@@ -679,12 +791,93 @@ public class VtnAdministrador extends javax.swing.JFrame {
         Estilos.seleccionar(jBttn_Consulta);
     }//GEN-LAST:event_jBttn_ConsultaActionPerformed
 
+    private void jBttn_Continuar_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttn_Continuar_2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jBttn_Continuar_2ActionPerformed
+
+     public void cargarTabla()
+    {
+        String[] columnas =
+        {
+            "Materia",
+             "Horario",
+             "Agregar Mat."
+        };
+        DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
+        //declaro un n de tipo alumno de la carpeta model
+        //me la vole UwU
+        
+          
+        String[] mat1 =
+        {
+            "Top. Avan. Prog.",
+             "Mar/Jue 7 am - 9 am",
+             "Agregar"
+        };
+        String[] mat2 =
+        {
+            "Simulacion",
+             "Mar/Jue 9 am - 11 am",
+             "Agregar"
+        };
+        String[] mat3 =
+        {
+            "Metodos Numericos",
+             "Mie/Vie 1 pm - 3 pm",
+             "Agregar"
+        };
+        String[] mat4 =
+        {
+            "Prolog",
+             "Mie/Vie 11 am - 1 pm",
+             "Agregar"
+        };
+        String[] mat5 =
+        {
+            "Arq.Computadoras.",
+             "Lun/Mie/Vie 7 am - 9 am",
+             "Agregar"
+        };
+        
+        modelo.addRow(mat1);
+        modelo.addRow(mat2);
+        modelo.addRow(mat3);
+        modelo.addRow(mat4);
+        modelo.addRow(mat5);
+                
+
+        
+
+            //Se hace que el JPanel ocupe todo el espacio de la tabla
+            
+
+        
+               /* modelo.addRow(mensaje);
+        
+
+               
+                modelo.addRow(fila);
+            */
+
+                //no mover las columnas de lugar
+             jMaterias.getTableHeader().setReorderingAllowed(false);
+                 //no cambiarles la longitud
+                 jMaterias.getTableHeader().setResizingAllowed(false);
+               jMaterias.setModel(modelo); //muestrala
+               
+
+               
+        }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBttn_Alta;
     private javax.swing.JButton jBttn_Baja;
     private javax.swing.JButton jBttn_Cancelar;
+    private javax.swing.JButton jBttn_Cancelar_2;
     private javax.swing.JButton jBttn_Consulta;
     private javax.swing.JButton jBttn_Continuar;
+    private javax.swing.JButton jBttn_Continuar_2;
     private javax.swing.JButton jBttn_CuentasExtr;
     private javax.swing.JButton jBttn_DatosPrincipales;
     private javax.swing.JButton jBttn_Edicion;
@@ -703,7 +896,10 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private javax.swing.JLabel jL_ApellidoMat;
     private javax.swing.JLabel jL_ApellidoPat;
     private javax.swing.JLabel jL_Fecha;
+    private javax.swing.JLabel jL_Materias;
     private javax.swing.JLabel jL_Nombres1;
+    private javax.swing.JLabel jL_Promedio;
+    private javax.swing.JLabel jL_Semestre;
     private javax.swing.JLabel jL_TituloGeneral;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
@@ -716,6 +912,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private javax.swing.JLabel jLbl_Contra;
     private javax.swing.JLabel jLbl_CuentaExtras;
     private javax.swing.JLabel jLbl_Estatus1;
+    private javax.swing.JTable jMaterias;
     private javax.swing.JPanel jP_AltCard;
     private javax.swing.JPanel jP_Alta;
     private javax.swing.JPanel jP_Baja;
@@ -728,12 +925,15 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private javax.swing.JPanel jP_Edicion;
     private javax.swing.JPanel jP_Encabezado;
     private javax.swing.JPanel jP_MateriasProm;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JSpinner jSpinner2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTxt_ApellidoMat;
     private javax.swing.JTextField jTxt_ApellidoPat;
     private javax.swing.JTextField jTxt_Consulta_Buscar;
+    private javax.swing.JTextField jTxt_Promedio;
+    private javax.swing.JTextField jTxt_Semestre;
     private javax.swing.JTextField jTxt_nombre;
     private javax.swing.JPanel jp_Contenedor;
     // End of variables declaration//GEN-END:variables
