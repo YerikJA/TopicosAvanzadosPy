@@ -21,9 +21,6 @@ public class CatalogoController {
     public List<String> obtenerMaterias(){
         return Arrays.asList("Ingles", "Fisica", "Simulacion", "Telecom");
     }
-    
-    public List<String> obtenerEstatus(){
-        return Arrays.asList("Activo");
-    }
+
     
 }

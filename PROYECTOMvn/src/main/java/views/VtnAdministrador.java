@@ -77,8 +77,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.estilizarEtiqueta(jLbl_Contra);
         jLbl_Contra.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
 
-        Estilos.estilizarEtiqueta(jLbl_Estatus);
-        jLbl_Estatus.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
 
         // Consulta
         Estilos.estilizarEtiqueta(jLb_CONSULTA_CARR);
@@ -128,7 +126,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.estilizarBoton(jButton3);            // CANCELAR
 
         // ---- COMBOS ----
-        Estilos.estilizarCombo(jCb_Estatus);
         Estilos.estilizarCombo(jCb_CONSULTA_CARR);
         Estilos.estilizarCombo(jCb_Consulta_Ordenar);
         Estilos.estilizarCombo(jCb_Consulta_Materias);
@@ -210,7 +207,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.icono(jLbl_CuentaExtras, FontAwesomeSolid.COG, 24);
         Estilos.icono(jLbl_Contra, FontAwesomeSolid.KEY, 16);
 
-        Estilos.icono(jLbl_Estatus, FontAwesomeSolid.USER_CHECK, 16);
 
         Estilos.icono(jL_Semestre, FontAwesomeSolid.CALENDAR_ALT, 16);
         Estilos.icono(jL_Materias, FontAwesomeSolid.BOOK, 16);
@@ -227,10 +223,7 @@ public class VtnAdministrador extends javax.swing.JFrame
 
     private void cargarCatalogos()
     {
-        CatalogoController catalogo = new CatalogoController();
-        //creado como un metodo list, necesita un Array
-        jCb_Estatus.setModel(new javax.swing.DefaultComboBoxModel<>(catalogo.obtenerEstatus().toArray(new String[0])));
-       
+   
 
         // ===== EDICIÓN =====
         grupoPestanasEd.add(jTBuscar);
@@ -314,8 +307,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_CuentasExtr = new javax.swing.JPanel();
         jLbl_CuentaExtras = new javax.swing.JLabel();
         jLbl_Contra = new javax.swing.JLabel();
-        jLbl_Estatus = new javax.swing.JLabel();
-        jCb_Estatus = new javax.swing.JComboBox<>();
         jB_Cancelar3 = new javax.swing.JButton();
         jB_Guardar = new javax.swing.JButton();
         jLbl_correo = new javax.swing.JLabel();
@@ -697,11 +688,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         jLbl_Contra.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLbl_Contra.setText("Contraseña:");
 
-        jLbl_Estatus.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLbl_Estatus.setText("Estatus:");
-
-        jCb_Estatus.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-
         jB_Cancelar3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jB_Cancelar3.setText("Volver");
         jB_Cancelar3.addActionListener(new java.awt.event.ActionListener() {
@@ -732,14 +718,13 @@ public class VtnAdministrador extends javax.swing.JFrame
             .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
                 .addGap(53, 53, 53)
                 .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLbl_correo)
                     .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
-                        .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLbl_Contra)
-                            .addComponent(jLbl_Estatus)
-                            .addComponent(jCb_Estatus, 0, 330, Short.MAX_VALUE)
-                            .addComponent(jTxt_Correo)
-                            .addComponent(jPF_contraseña))
+                        .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLbl_Contra)
+                                .addComponent(jTxt_Correo, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                                .addComponent(jPF_contraseña))
+                            .addComponent(jLbl_correo))
                         .addGap(240, 240, 240)
                         .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jB_Cancelar3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -752,24 +737,19 @@ public class VtnAdministrador extends javax.swing.JFrame
             .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(jLbl_CuentaExtras)
-                .addGap(31, 31, 31)
+                .addGap(51, 51, 51)
                 .addComponent(jLbl_correo)
                 .addGap(18, 18, 18)
-                .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jB_Cancelar3, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
-                    .addComponent(jTxt_Correo))
+                .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTxt_Correo, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jB_Cancelar3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addComponent(jLbl_Contra)
                 .addGap(18, 18, 18)
-                .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jB_Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
-                        .addComponent(jLbl_Contra)
-                        .addGap(18, 18, 18)
-                        .addComponent(jPF_contraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLbl_Estatus)))
-                .addGap(18, 18, 18)
-                .addComponent(jCb_Estatus, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(252, Short.MAX_VALUE))
+                .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jPF_contraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jB_Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(307, Short.MAX_VALUE))
         );
 
         jP_AltCard.add(jP_CuentasExtr, "card4");
@@ -1716,7 +1696,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         // TODO add your handling code here:
         String correo = jTxt_Correo.getText().trim();
         String contraseña = new String(jPF_contraseña.getPassword());
-        String estatus = jCb_Estatus.getSelectedItem().toString();
+        
         
 
         if (ValidadorAlumno.esVacio(correo))
@@ -1746,13 +1726,7 @@ public class VtnAdministrador extends javax.swing.JFrame
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (validaciones.ValidadorAlumno.esVacio(estatus))
-        {
-            JOptionPane.showMessageDialog(this,
-                    "Debes elegir un estatus",
-                    "Campo requerido",
-                    JOptionPane.ERROR_MESSAGE);   
-        }
+
 
 
     }//GEN-LAST:event_jB_GuardarActionPerformed
@@ -2339,7 +2313,6 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JComboBox<String> jCb_CONSULTA_CARR;
     private javax.swing.JComboBox<String> jCb_Consulta_Materias;
     private javax.swing.JComboBox<String> jCb_Consulta_Ordenar;
-    private javax.swing.JComboBox<String> jCb_Estatus;
     private javax.swing.JComboBox<String> jComboBox1;
     private com.toedter.calendar.JDateChooser jDC_Nacimiento;
     private javax.swing.JLabel jL_ApellidoMat;
@@ -2384,7 +2357,6 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JLabel jLbl_Contra;
     private javax.swing.JLabel jLbl_Correo;
     private javax.swing.JLabel jLbl_CuentaExtras;
-    private javax.swing.JLabel jLbl_Estatus;
     private javax.swing.JLabel jLbl_Fecha;
     private javax.swing.JLabel jLbl_Nombre;
     private javax.swing.JLabel jLbl_Promedio;
