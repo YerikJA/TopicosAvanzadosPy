@@ -5,9 +5,26 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
+import java.awt.Font;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.ListModel;
+import model.Alumno;
+import validaciones.ValidadorAlumno;
+
 public class VtnAdministrador extends javax.swing.JFrame {
 
     private AlumnoController controllerAdministracion;
+
+    private Alumno alumnoOriginal;
+    private String pasoActual = "buscar";
+    private final javax.swing.ButtonGroup grupoPestanasEd = new javax.swing.ButtonGroup();
 
     public VtnAdministrador(AlumnoController controller) {
         initComponents();
@@ -15,12 +32,11 @@ public class VtnAdministrador extends javax.swing.JFrame {
         controllerAdministracion = controller;
 
         jP_Edicion.setLayout(new java.awt.BorderLayout());
-        jP_Edicion.add(new PanelEdicion(controller), java.awt.BorderLayout.CENTER);
+        //jP_Edicion.add(new PanelEdicion(controller), java.awt.BorderLayout.CENTER);
 
         setTitle("Administracion");
         cargarTabla();
-        
-        
+
         // ---- FORMATO GENERAL ----
         Estilos.estilizarVentana(this);
 
@@ -28,7 +44,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jL_TituloGeneral.setFont(Estilos.fuente(java.awt.Font.PLAIN, 48));
         Estilos.estilizarTitulo(jLabel2);
         jL_TituloGeneral.setFont(Estilos.fuente(java.awt.Font.PLAIN, 48));
-        
+
         Estilos.estilizarTitulo(jLb_Consulta_buscar);
 
         // Menú: ningún botón marcado al inicio
@@ -40,7 +56,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
         Estilos.estilizarFondo(jP_Bienvenida);
         //Panel de alta
         Estilos.estilizarFondo(jP_Alta);
-        
+
         //--Fuentes
         Estilos.estilizarEtiqueta(jL_Nombres1);
         jL_Nombres1.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
@@ -56,7 +72,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jL_ApellidoPat.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
         Estilos.estilizarEtiqueta(jL_Promedio);
         jL_ApellidoMat.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
-                       //Cuentas y extra
+        //Cuentas y extra
         Estilos.estilizarEtiqueta(jLbl_CuentaExtras);
         jLbl_CuentaExtras.setFont(Estilos.fuente(java.awt.Font.PLAIN, 24));
         Estilos.estilizarEtiqueta(jLbl_Contra);
@@ -67,7 +83,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jLbl_Estatus.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
         Estilos.estilizarEtiqueta(jLbl_localidad);
         jLbl_localidad.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-        
+
         Estilos.estilizarEtiqueta(jLb_CONSULTA_CARR);
         jLb_CONSULTA_CARR.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
         Estilos.estilizarEtiqueta(jLb_CONSULTA_ORDENAR);
@@ -82,10 +98,9 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jLb_Consulta_buscar.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
         Estilos.estilizarEtiqueta(jLb_Consulta_materias);
         jLb_Consulta_materias.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-        
-        
+
         //---Txt fields
-         Estilos.estilizarCampo(jTxt_Semestre);
+        Estilos.estilizarCampo(jTxt_Semestre);
         Estilos.estilizarCampo(jTxt_Promedio);
         Estilos.estilizarCampo(jTxt_ApellidoMat);
         Estilos.estilizarCampo(jTxt_ApellidoPat);
@@ -93,40 +108,39 @@ public class VtnAdministrador extends javax.swing.JFrame {
         Estilos.estilizarFecha(jDC_Nacimiento);
         Estilos.estilizarCampo(jTxt_contraseña);
         Estilos.estilizarCampo(jTxt_telefono);
-        
+
         Estilos.estilizarCampo(jTxt_Consulta_Buscar);
-        
+
         //----Botones
         Estilos.estilizarBoton(jBttn_Continuar);
         Estilos.estilizarBoton(jBttn_Cancelar);
         Estilos.estilizarBoton(jBttn_Continuar_2);
         Estilos.estilizarBoton(jBttn_Cancelar_2);
-        
+
         Estilos.estilizarBoton(jB_Cancelar3);
         Estilos.estilizarBoton(jB_Guardar);
-        
+
         Estilos.estilizarBoton(jB_Consulta_Todos);
         Estilos.estilizarBoton(jB_Consulta_Sobresal);
         Estilos.estilizarBoton(jB_Cosnulta_Aprob);
         Estilos.estilizarBoton(jB_Consulta_Riesg);
         Estilos.estilizarBoton(jB_Consulta_Rep);
-        
-        
+
         //-----Combo Box
         Estilos.estilizarCombo(jCb_Estatus);
         Estilos.estilizarCombo(jCb_Localidad);
         Estilos.estilizarCombo(jCb_CONSULTA_CARR);
         Estilos.estilizarCombo(jCb_Consulta_Ordenar);
         Estilos.estilizarCombo(jCb_Consulta_Materias);
-        
+
         //-----TABLAS-----
         Estilos.estilizarTabla(jMaterias);
-         
+
         Estilos.estilizarPanelConSombra(jP_Bienvenida);
         Estilos.estilizarPanelConSombra(jP_Consulta);
-        
+
         Estilos.estilizarFondo(jP_Edicion);
-        
+
         Estilos.estilizarPanelConSombra(jP_Baja);
         Estilos.estilizarPanelConSombra(jP_CONSULTA_COMP);
 
@@ -158,17 +172,52 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
         tarjetas.show(jP_AltCard, "card2");
         Estilos.seleccionar(jBttn_DatosPrincipales);
-        
+
         cargarCatalogos();
     }
 
-    private void cargarCatalogos()
-    {
+    private void cargarCatalogos() {
         CatalogoController catalogo = new CatalogoController();
         //creado como un metodo list, necesita un Array
         jCb_Estatus.setModel(new javax.swing.DefaultComboBoxModel<>(catalogo.obtenerEstatus().toArray(new String[0])));
         jCb_Localidad.setModel(new javax.swing.DefaultComboBoxModel<>(catalogo.obtenerLocalidades().toArray(new String[0])));
+    
+        
+                // ===== EDICIÓN =====
+        grupoPestanasEd.add(jTBuscar);
+        grupoPestanasEd.add(jTDatos);
+        grupoPestanasEd.add(jTConfirmar);
+        java.awt.event.ActionListener soloIndicador = e -> irA(pasoActual);
+        jTBuscar.addActionListener(soloIndicador);
+        jTDatos.addActionListener(soloIndicador);
+        jTConfirmar.addActionListener(soloIndicador);
+
+        CatalogoController catalogoEd = new CatalogoController();
+        cmbCarrera.setModel(new javax.swing.DefaultComboBoxModel<>(
+                catalogoEd.obtenerCarreras().toArray(new String[0])));
+        lstMaterias.setListData(catalogoEd.obtenerMaterias().toArray(new String[0]));
+
+        // Ocultos por ahora (apellidos y botones de materias)
+        jLabel16.setVisible(false);
+        txtApPat.setVisible(false);
+        jLabel17.setVisible(false);
+        txtApMaterno.setVisible(false);
+        btnAgregarMat.setVisible(false);
+        btnQuitarMat.setVisible(false);
+
+        btnAtras2.addActionListener(e -> irA("buscar"));
+        btnRestablecer.addActionListener(e -> llenarFormulario(alumnoOriginal));
+        btnCancelar2.addActionListener(e -> reiniciar());
+
+        limpiarResultado();
+        conScroll(jP_EdBuscar, "buscar");
+        conScroll(jP_EdDatos, "datos");
+        conScroll(jP_EdConfirmar, "confirmar");
+        aplicarEstilos();
+        irA("buscar");
+ 
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -176,8 +225,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
 
         jL_TituloGeneral = new javax.swing.JLabel();
         jBttn_Edicion = new javax.swing.JButton();
@@ -248,6 +296,60 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jB_Consulta_Riesg = new javax.swing.JButton();
         jB_Consulta_Rep = new javax.swing.JButton();
         jP_Edicion = new javax.swing.JPanel();
+        jP_EncabezadoEd = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jTBuscar = new javax.swing.JToggleButton();
+        jTDatos = new javax.swing.JToggleButton();
+        jTConfirmar = new javax.swing.JToggleButton();
+        jP_EdCard = new javax.swing.JPanel();
+        jP_EdDatos = new javax.swing.JPanel();
+        jLabel14 = new javax.swing.JLabel();
+        txtNoControl2 = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
+        txtApPat = new javax.swing.JTextField();
+        txtApMaterno = new javax.swing.JTextField();
+        txtCorreo = new javax.swing.JTextField();
+        cmbCarrera = new javax.swing.JComboBox<>();
+        txtPromedio = new javax.swing.JTextField();
+        dcFechaNac = new com.toedter.calendar.JDateChooser();
+        jLabel22 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        lstMaterias = new javax.swing.JList<>();
+        btnAgregarMat = new javax.swing.JButton();
+        btnQuitarMat = new javax.swing.JButton();
+        btnAtras2 = new javax.swing.JButton();
+        btnRestablecer = new javax.swing.JButton();
+        btnCancelar2 = new javax.swing.JButton();
+        btnContinuar2 = new javax.swing.JButton();
+        jP_EdConfirmar = new javax.swing.JPanel();
+        jLabel23 = new javax.swing.JLabel();
+        lblResumen = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblCambios = new javax.swing.JTable();
+        chkConfirmo = new javax.swing.JCheckBox();
+        btnAtras3 = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
+        jP_EdBuscar = new javax.swing.JPanel();
+        lblNoControl = new javax.swing.JLabel();
+        txtNoControl = new javax.swing.JTextField();
+        btnBuscar = new javax.swing.JButton();
+        lblEstado = new javax.swing.JLabel();
+        jP_Resultado = new javax.swing.JPanel();
+        jLbl_Nombre = new javax.swing.JLabel();
+        jLbl_Carrera = new javax.swing.JLabel();
+        jLbl_Semestre = new javax.swing.JLabel();
+        jLbl_Correo = new javax.swing.JLabel();
+        jLbl_Fecha = new javax.swing.JLabel();
+        jLbl_Promedio = new javax.swing.JLabel();
+        jBContinuar1 = new javax.swing.JButton();
+        jBCancelar1 = new javax.swing.JButton();
         jP_Baja = new javax.swing.JPanel();
         jP_Baja1 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
@@ -292,40 +394,32 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
         jBttn_Edicion.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Edicion.setText("EDICIÓN");
-        jBttn_Edicion.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jBttn_Edicion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBttn_EdicionActionPerformed(evt);
             }
         });
 
         jBttn_Alta.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Alta.setText("ALTA");
-        jBttn_Alta.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jBttn_Alta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBttn_AltaActionPerformed(evt);
             }
         });
 
         jBttn_Consulta.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Consulta.setText("CONSULTA");
-        jBttn_Consulta.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jBttn_Consulta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBttn_ConsultaActionPerformed(evt);
             }
         });
 
         jBttn_Baja.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Baja.setText("BAJA");
-        jBttn_Baja.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jBttn_Baja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBttn_BajaActionPerformed(evt);
             }
         });
@@ -357,10 +451,8 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jP_Alta.setLayout(new java.awt.BorderLayout());
 
         jBttn_DatosPrincipales.setText("1. DATOS PRINCIPALES");
-        jBttn_DatosPrincipales.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jBttn_DatosPrincipales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBttn_DatosPrincipalesActionPerformed(evt);
             }
         });
@@ -393,10 +485,8 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jBttn_Cancelar.setText("Cancelar");
 
         jBttn_Continuar.setText("Continuar");
-        jBttn_Continuar.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jBttn_Continuar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBttn_ContinuarActionPerformed(evt);
             }
         });
@@ -464,10 +554,8 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jP_AltCard.add(jP_DatosPrincipales, "card2");
 
         jBttn_Continuar_2.setText("Continuar");
-        jBttn_Continuar_2.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jBttn_Continuar_2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBttn_Continuar_2ActionPerformed(evt);
             }
         });
@@ -481,15 +569,13 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jL_Materias.setText("Materias");
 
         jMaterias.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][]
-            {
+            new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null}
             },
-            new String []
-            {
+            new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
@@ -584,10 +670,8 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
         jB_Guardar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jB_Guardar.setText("Guardar");
-        jB_Guardar.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jB_Guardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jB_GuardarActionPerformed(evt);
             }
         });
@@ -785,16 +869,320 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
         jp_Contenedor.add(jP_Consulta, "card3");
 
-        javax.swing.GroupLayout jP_EdicionLayout = new javax.swing.GroupLayout(jP_Edicion);
-        jP_Edicion.setLayout(jP_EdicionLayout);
-        jP_EdicionLayout.setHorizontalGroup(
-            jP_EdicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 892, Short.MAX_VALUE)
+        jP_Edicion.setLayout(new java.awt.BorderLayout());
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        jLabel1.setText("EDICION");
+
+        jTBuscar.setText("1.Buscar");
+        jTBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTBuscarActionPerformed(evt);
+            }
+        });
+
+        jTDatos.setText("2.Datos del alumno");
+
+        jTConfirmar.setText("3.Confirmar");
+
+        javax.swing.GroupLayout jP_EncabezadoEdLayout = new javax.swing.GroupLayout(jP_EncabezadoEd);
+        jP_EncabezadoEd.setLayout(jP_EncabezadoEdLayout);
+        jP_EncabezadoEdLayout.setHorizontalGroup(
+            jP_EncabezadoEdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_EncabezadoEdLayout.createSequentialGroup()
+                .addGap(75, 75, 75)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(jTBuscar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTDatos)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTConfirmar)
+                .addContainerGap(244, Short.MAX_VALUE))
         );
-        jP_EdicionLayout.setVerticalGroup(
-            jP_EdicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 467, Short.MAX_VALUE)
+        jP_EncabezadoEdLayout.setVerticalGroup(
+            jP_EncabezadoEdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_EncabezadoEdLayout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addComponent(jLabel1)
+                .addContainerGap(13, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_EncabezadoEdLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jP_EncabezadoEdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTBuscar)
+                    .addComponent(jTDatos)
+                    .addComponent(jTConfirmar))
+                .addContainerGap())
         );
+
+        jP_Edicion.add(jP_EncabezadoEd, java.awt.BorderLayout.PAGE_START);
+
+        jP_EdCard.setLayout(new java.awt.CardLayout());
+
+        jP_EdDatos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel14.setText("Num.Ctrl");
+        jP_EdDatos.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 60, -1, -1));
+
+        txtNoControl2.setEditable(false);
+        jP_EdDatos.add(txtNoControl2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 60, 280, -1));
+
+        jLabel15.setText("Nombre");
+        jP_EdDatos.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 110, -1, -1));
+
+        jLabel16.setText("Apellido paterno");
+        jP_EdDatos.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 160, -1, -1));
+
+        jLabel17.setText("Apellido materno");
+        jP_EdDatos.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 210, -1, -1));
+
+        jLabel18.setText("Correo");
+        jP_EdDatos.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 250, -1, -1));
+
+        jLabel19.setText("Carrera");
+        jP_EdDatos.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 300, -1, -1));
+
+        jLabel20.setText("Promedio");
+        jP_EdDatos.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 350, -1, -1));
+
+        jLabel21.setText("Fecha nac.");
+        jP_EdDatos.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 400, -1, -1));
+
+        txtNombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNombreActionPerformed(evt);
+            }
+        });
+        jP_EdDatos.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 110, 280, -1));
+        jP_EdDatos.add(txtApPat, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 160, 280, -1));
+        jP_EdDatos.add(txtApMaterno, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 210, 280, -1));
+
+        txtCorreo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCorreoActionPerformed(evt);
+            }
+        });
+        jP_EdDatos.add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 250, 280, -1));
+
+        cmbCarrera.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jP_EdDatos.add(cmbCarrera, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 300, 280, -1));
+        jP_EdDatos.add(txtPromedio, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 350, 280, -1));
+        jP_EdDatos.add(dcFechaNac, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 400, 280, -1));
+
+        jLabel22.setText("Materias");
+        jP_EdDatos.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 450, -1, -1));
+
+        lstMaterias.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(lstMaterias);
+
+        jP_EdDatos.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 480, 470, 100));
+
+        btnAgregarMat.setText("Agregar Materia");
+        jP_EdDatos.add(btnAgregarMat, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 600, -1, -1));
+
+        btnQuitarMat.setText("Quitar Materia");
+        jP_EdDatos.add(btnQuitarMat, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 600, -1, -1));
+
+        btnAtras2.setText("Atras");
+        jP_EdDatos.add(btnAtras2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 650, -1, -1));
+
+        btnRestablecer.setText("Restablecer");
+        jP_EdDatos.add(btnRestablecer, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 650, -1, -1));
+
+        btnCancelar2.setText("Cancelar");
+        jP_EdDatos.add(btnCancelar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, -1, -1));
+
+        btnContinuar2.setText("Continuar");
+        btnContinuar2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnContinuar2ActionPerformed(evt);
+            }
+        });
+        jP_EdDatos.add(btnContinuar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 650, -1, -1));
+
+        jP_EdCard.add(jP_EdDatos, "datos");
+
+        jLabel23.setText("Confirmar cambios");
+
+        lblResumen.setText("Resumen del tramite");
+
+        tblCambios.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(tblCambios);
+
+        chkConfirmo.setText("Revise los cambios y deseo guardarlos");
+        chkConfirmo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkConfirmoActionPerformed(evt);
+            }
+        });
+
+        btnAtras3.setText("Atras");
+        btnAtras3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtras3ActionPerformed(evt);
+            }
+        });
+
+        btnGuardar.setText("Guardar cambios");
+        btnGuardar.setEnabled(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jP_EdConfirmarLayout = new javax.swing.GroupLayout(jP_EdConfirmar);
+        jP_EdConfirmar.setLayout(jP_EdConfirmarLayout);
+        jP_EdConfirmarLayout.setHorizontalGroup(
+            jP_EdConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_EdConfirmarLayout.createSequentialGroup()
+                .addGroup(jP_EdConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jP_EdConfirmarLayout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addGroup(jP_EdConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jP_EdConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(lblResumen, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                                .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 565, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chkConfirmo, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_EdConfirmarLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnAtras3)
+                        .addGap(58, 58, 58)
+                        .addComponent(btnGuardar)))
+                .addContainerGap(282, Short.MAX_VALUE))
+        );
+        jP_EdConfirmarLayout.setVerticalGroup(
+            jP_EdConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_EdConfirmarLayout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblResumen)
+                .addGap(43, 43, 43)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jP_EdConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jP_EdConfirmarLayout.createSequentialGroup()
+                        .addGap(98, 98, 98)
+                        .addComponent(chkConfirmo)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jP_EdConfirmarLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jP_EdConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnGuardar)
+                            .addComponent(btnAtras3))
+                        .addGap(90, 90, 90))))
+        );
+
+        jP_EdCard.add(jP_EdConfirmar, "confirmar");
+
+        jP_EdBuscar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lblNoControl.setText("No. de control");
+        jP_EdBuscar.add(lblNoControl, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 60, -1, -1));
+
+        txtNoControl.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNoControlActionPerformed(evt);
+            }
+        });
+        jP_EdBuscar.add(txtNoControl, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 110, 240, 20));
+
+        btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+        jP_EdBuscar.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 110, -1, -1));
+
+        lblEstado.setText("Resultado de la busqueda");
+        jP_EdBuscar.add(lblEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 140, 150, -1));
+
+        jLbl_Nombre.setText("jLabel2");
+
+        jLbl_Carrera.setText("jLabel3");
+
+        jLbl_Semestre.setText("jLabel4");
+
+        jLbl_Correo.setText("jLabel5");
+
+        jLbl_Fecha.setText("jLabel6");
+
+        jLbl_Promedio.setText("jLabel7");
+
+        javax.swing.GroupLayout jP_ResultadoLayout = new javax.swing.GroupLayout(jP_Resultado);
+        jP_Resultado.setLayout(jP_ResultadoLayout);
+        jP_ResultadoLayout.setHorizontalGroup(
+            jP_ResultadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_ResultadoLayout.createSequentialGroup()
+                .addGap(70, 70, 70)
+                .addGroup(jP_ResultadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLbl_Nombre, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                    .addComponent(jLbl_Correo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLbl_Carrera, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jP_ResultadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jP_ResultadoLayout.createSequentialGroup()
+                        .addComponent(jLbl_Semestre, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(89, 89, 89)
+                        .addComponent(jLbl_Promedio, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLbl_Fecha))
+                .addGap(17, 17, 17))
+        );
+        jP_ResultadoLayout.setVerticalGroup(
+            jP_ResultadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jP_ResultadoLayout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(jLbl_Nombre)
+                .addGap(18, 18, 18)
+                .addGroup(jP_ResultadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLbl_Carrera)
+                    .addComponent(jLbl_Semestre)
+                    .addComponent(jLbl_Promedio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jP_ResultadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLbl_Correo)
+                    .addComponent(jLbl_Fecha))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jP_EdBuscar.add(jP_Resultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 540, 130));
+
+        jBContinuar1.setText("Continuar");
+        jBContinuar1.setEnabled(false);
+        jBContinuar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBContinuar1ActionPerformed(evt);
+            }
+        });
+        jP_EdBuscar.add(jBContinuar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 320, -1, 20));
+
+        jBCancelar1.setText("Cancelar");
+        jBCancelar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCancelar1ActionPerformed(evt);
+            }
+        });
+        jP_EdBuscar.add(jBCancelar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 320, -1, -1));
+
+        jP_EdCard.add(jP_EdBuscar, "buscar");
+
+        jP_Edicion.add(jP_EdCard, java.awt.BorderLayout.CENTER);
 
         jp_Contenedor.add(jP_Edicion, "card4");
 
@@ -819,18 +1207,15 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jLabel4.setText("No. De Control");
 
         jTextField1.setBackground(new java.awt.Color(255, 252, 243));
-        jTextField1.setForeground(new java.awt.Color(0, 0, 0));
         jTextField1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
 
         jButton1.setBackground(new java.awt.Color(255, 100, 24));
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(0, 0, 0));
         jButton1.setText("BUSCAR");
         jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
 
         jTextField2.setBackground(new java.awt.Color(44, 160, 237));
         jTextField2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jTextField2.setForeground(new java.awt.Color(0, 0, 0));
         jTextField2.setText("ALUMNOENCONTRADO/NOENCONTRADO");
         jTextField2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
 
@@ -860,7 +1245,6 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
         jTextField3.setBackground(new java.awt.Color(255, 252, 243));
         jTextField3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jTextField3.setForeground(new java.awt.Color(0, 0, 0));
         jTextField3.setText("NOMBRE");
         jTextField3.setBorder(null);
 
@@ -897,21 +1281,13 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
         jSeparator5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jTextField5.setBackground(new java.awt.Color(255, 255, 255));
         jTextField5.setFont(new java.awt.Font("Segoe UI", 1, 8)); // NOI18N
-        jTextField5.setForeground(new java.awt.Color(0, 0, 0));
 
-        jTextField6.setBackground(new java.awt.Color(255, 255, 255));
         jTextField6.setFont(new java.awt.Font("Segoe UI", 1, 8)); // NOI18N
-        jTextField6.setForeground(new java.awt.Color(0, 0, 0));
 
-        jTextField7.setBackground(new java.awt.Color(255, 255, 255));
         jTextField7.setFont(new java.awt.Font("Segoe UI", 1, 8)); // NOI18N
-        jTextField7.setForeground(new java.awt.Color(0, 0, 0));
 
-        jTextField8.setBackground(new java.awt.Color(255, 255, 255));
         jTextField8.setFont(new java.awt.Font("Segoe UI", 1, 8)); // NOI18N
-        jTextField8.setForeground(new java.awt.Color(0, 0, 0));
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -999,19 +1375,16 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
         jButton2.setBackground(new java.awt.Color(255, 100, 24));
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(0, 0, 0));
         jButton2.setText("DAR BAJA");
         jButton2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
 
         jButton3.setBackground(new java.awt.Color(239, 232, 217));
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(0, 0, 0));
         jButton3.setText("CANCELAR");
         jButton3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
 
         jButton4.setBackground(new java.awt.Color(255, 100, 24));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(0, 0, 0));
         jButton4.setText("LIMPIAR");
         jButton4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
 
@@ -1024,7 +1397,6 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jLabel12.setText("Motivo de la Baja");
 
         jComboBox1.setBackground(new java.awt.Color(255, 252, 243));
-        jComboBox1.setForeground(new java.awt.Color(0, 0, 0));
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jTextField9.setBackground(new java.awt.Color(255, 252, 243));
@@ -1163,10 +1535,8 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
         jBttn_Regresar.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Regresar.setText("REGRESAR");
-        jBttn_Regresar.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        jBttn_Regresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBttn_RegresarActionPerformed(evt);
             }
         });
@@ -1262,13 +1632,12 @@ public class VtnAdministrador extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "El formato del apellido materno no es valido. Ingerese un apellido válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if(validaciones.ValidadorAlumno.fechaFutura(fechaNacimiento))
-        {
+        if (validaciones.ValidadorAlumno.fechaFutura(fechaNacimiento)) {
             JOptionPane.showMessageDialog(this, "No puede ingresar una fecha futura. Ingerese una fecha válida", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
-            
+
         }
-/*                if(validaciones.ValidadorAlumno.fechaPasada(fechaNacimiento))
+        /*                if(validaciones.ValidadorAlumno.fechaPasada(fechaNacimiento))
         {
             JOptionPane.showMessageDialog(this, "No puede ingresar una fecha anterios a 1950. Ingerese una fecha válida", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
@@ -1276,7 +1645,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
         }
         String nombreCompleto = nombre + apellidoPat + apellidoMat;
 
-*/
+         */
     }//GEN-LAST:event_jBttn_ContinuarActionPerformed
 
     private void jBttn_EdicionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttn_EdicionActionPerformed
@@ -1292,7 +1661,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
     private void jBttn_ConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttn_ConsultaActionPerformed
         // TODO add your handling code here:
-           java.awt.CardLayout cl = (java.awt.CardLayout) jp_Contenedor.getLayout();
+        java.awt.CardLayout cl = (java.awt.CardLayout) jp_Contenedor.getLayout();
         cl.show(jp_Contenedor, "card3");
         Estilos.seleccionar(jBttn_Consulta);
     }//GEN-LAST:event_jBttn_ConsultaActionPerformed
@@ -1309,112 +1678,502 @@ public class VtnAdministrador extends javax.swing.JFrame {
         String localidad = jCb_Localidad.getSelectedItem().toString();
 
         if (validaciones.ValidadorAlumno.esVacio(contraseña)) {
-            JOptionPane.showMessageDialog(this
-                    , "La contraseña no puede estar vacio"
-                    , "Campo requerido"
-                    , JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                     "La contraseña no puede estar vacio",
+                     "Campo requerido",
+                     JOptionPane.ERROR_MESSAGE);
             return;
-        }          
+        }
         if (validaciones.ValidadorAlumno.esVacio(telefono)) {
-            JOptionPane.showMessageDialog(this
-                    , "El telefono no puede estar vacio"
-                    , "Campo requerido"
-                    , JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                     "El telefono no puede estar vacio",
+                     "Campo requerido",
+                     JOptionPane.ERROR_MESSAGE);
             return;
-        } 
+        }
         if (validaciones.ValidadorAlumno.esVacio(estatus)) {
-            JOptionPane.showMessageDialog(this
-                    , "Debes elegir un estatus"
-                    , "Campo requerido"
-                    , JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                     "Debes elegir un estatus",
+                     "Campo requerido",
+                     JOptionPane.ERROR_MESSAGE);
             return;
-        } 
+        }
         if (validaciones.ValidadorAlumno.esVacio(localidad)) {
-            JOptionPane.showMessageDialog(this
-                    , "Debes elegir una localidad"
-                    , "Campo requerido"
-                    , JOptionPane.ERROR_MESSAGE);
-        }         
-        
-        
+            JOptionPane.showMessageDialog(this,
+                     "Debes elegir una localidad",
+                     "Campo requerido",
+                     JOptionPane.ERROR_MESSAGE);
+        }
+
+
     }//GEN-LAST:event_jB_GuardarActionPerformed
 
-     public void cargarTabla()
-    {
-        String[] columnas =
-        {
-            "Materia",
-             "Horario",
-             "Agregar Mat."
+    private void jTBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTBuscarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTBuscarActionPerformed
+
+    private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNombreActionPerformed
+
+    private void txtCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCorreoActionPerformed
+
+    private void btnContinuar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuar2ActionPerformed
+        // TODO add your handling code here:
+        if (!validarFormulario()) {
+            return;
+        }
+        cargarTablaCambios();
+        irA("confirmar");
+    }//GEN-LAST:event_btnContinuar2ActionPerformed
+
+    private void chkConfirmoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkConfirmoActionPerformed
+        // TODO add your handling code here:
+        btnGuardar.setEnabled(chkConfirmo.isSelected() && tblCambios.getRowCount() > 0);
+    }//GEN-LAST:event_chkConfirmoActionPerformed
+
+    private void btnAtras3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtras3ActionPerformed
+        // TODO add your handling code here:
+        irA("datos");
+    }//GEN-LAST:event_btnAtras3ActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // TODO add your handling code here:
+        Alumno nuevo = new Alumno(
+                alumnoOriginal.getNo_control(),
+                txtNombre.getText().trim(),
+                txtCorreo.getText().trim(),
+                (String) cmbCarrera.getSelectedItem(),
+                Double.parseDouble(txtPromedio.getText().trim()),
+                dcFechaNac.getDate(),
+                lstMaterias.getSelectedValuesList());
+
+        if (controllerAdministracion.actualizarAlumno(nuevo)) {
+            JOptionPane.showMessageDialog(this, "Alumno actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            reiniciar();
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo actualizar el alumno.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void txtNoControlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNoControlActionPerformed
+        // TODO add your handling code here:
+        btnBuscar.doClick();
+    }//GEN-LAST:event_txtNoControlActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        // TODO add your handling code here:
+        String nc = txtNoControl.getText().trim();
+
+        // 1. Que no esté vacío
+        if (nc.isEmpty()) {
+            lblEstado.setText("Escribe un número de control");
+            return;
+        }
+
+        // 2. Que solo tenga números (sin espacios, letras ni símbolos)
+        if (!nc.matches("\\d+")) {
+            limpiarResultado();
+            alumnoOriginal = null;
+            jBContinuar1.setEnabled(false);
+            lblEstado.setText("El No. de control solo debe tener números, sin espacios ni símbolos");
+            return;
+        }
+
+        // 3. Buscar al alumno
+    Alumno a = controllerAdministracion.buscarAlumnoPorNoControl(nc);
+        if (a == null) {
+            limpiarResultado();
+            alumnoOriginal = null;
+            jBContinuar1.setEnabled(false);
+            lblEstado.setText("Alumno no encontrado");
+            return;
+        }
+
+        // 4. Mostrar el resultado
+        alumnoOriginal = a;
+        lblEstado.setText("✓ Alumno encontrado");
+        jLbl_Nombre.setText(a.getNombre());
+        jLbl_Carrera.setText(a.getCarerra());
+        jLbl_Correo.setText(a.getCorreo());
+        jLbl_Promedio.setText(String.valueOf(a.getPromedio()));
+        jLbl_Fecha.setText(new SimpleDateFormat("dd/MM/yyyy").format(a.getFechaNaciomiento()));
+        jP_Resultado.setVisible(true);
+        jBContinuar1.setEnabled(true);
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void jBContinuar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBContinuar1ActionPerformed
+        llenarFormulario(alumnoOriginal);
+        irA("datos");
+    }//GEN-LAST:event_jBContinuar1ActionPerformed
+
+    private void jBCancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelar1ActionPerformed
+        // TODO add your handling code here:
+        reiniciar();
+    }//GEN-LAST:event_jBCancelar1ActionPerformed
+
+        // Edicion metodos propios
+    private void conScroll(JPanel card, String nombre) {
+        jP_EdCard.remove(card);
+        card.setVisible(true);   // el CardLayout lo había ocultado
+        javax.swing.JScrollPane sp = new javax.swing.JScrollPane(card);
+        sp.setBorder(null);
+        sp.getViewport().setBackground(Estilos.CREMA_CLARO);
+        sp.getVerticalScrollBar().setUnitIncrement(16);
+        jP_EdCard.add(sp, nombre);
+    }
+
+    private void irA(String paso) {
+        pasoActual = paso;
+        ((java.awt.CardLayout) jP_EdCard.getLayout()).show(jP_EdCard, paso);
+        switch (paso) {
+            case "buscar":    jTBuscar.setSelected(true);    break;
+            case "datos":     jTDatos.setSelected(true);     break;
+            case "confirmar": jTConfirmar.setSelected(true); break;
+        }
+        pintarPestanas();
+    }
+
+    private void pintarPestanas() {
+        for (AbstractButton t : new AbstractButton[]{jTBuscar, jTDatos, jTConfirmar}) {
+            boolean activa = t.isSelected();
+            t.setBackground(activa ? Estilos.NEGRO : Estilos.AZUL_OSCURO);
+            t.setForeground(activa ? Estilos.NARANJA : java.awt.Color.WHITE);
+        }
+    }
+
+    private void poner(JPanel panel, java.awt.Component c, int x, int y, int w, int h) {
+        panel.add(c, new org.netbeans.lib.awtextra.AbsoluteConstraints(x, y, w, h));
+    }
+
+    private void aplicarEstilos() {
+        Estilos.estilizarFondo(jP_EncabezadoEd);
+        Estilos.estilizarPanelConSombra(jP_EdCard);
+        for (JPanel p : new JPanel[]{jP_EdBuscar, jP_EdDatos, jP_EdConfirmar, jP_Resultado}) {
+            p.setOpaque(true);
+            p.setBackground(Estilos.CREMA_CLARO);
+        }
+        jP_Resultado.setBorder(Estilos.borde(2));
+
+        // Encabezado: solo las pestañas, a la izquierda
+        jLabel1.setVisible(false);
+        jP_EncabezadoEd.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 6, 8));
+        jP_EncabezadoEd.setPreferredSize(new java.awt.Dimension(0, 56));
+        jTBuscar.setText("1. BUSCAR ALUMNO");
+        jTDatos.setText("2. DATOS DEL ALUMNO");
+        jTConfirmar.setText("3. CONFIRMAR");
+        for (AbstractButton t : new AbstractButton[]{jTBuscar, jTDatos, jTConfirmar}) {
+            t.setFont(Estilos.fuente(Font.PLAIN, 20));
+            t.setFocusPainted(false);
+            t.setContentAreaFilled(false);
+            t.setOpaque(true);
+            t.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
+            t.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(Estilos.NEGRO, 3),
+                    BorderFactory.createEmptyBorder(3, 14, 3, 14)));
+        }
+
+        // Etiquetas
+        for (JLabel l : new JLabel[]{lblNoControl, jLabel14, jLabel15, jLabel16, jLabel17,
+            jLabel18, jLabel19, jLabel20, jLabel21, jLabel22, lblResumen}) {
+            Estilos.estilizarEtiqueta(l);
+        }
+        Estilos.estilizarSubtitulo(jLabel23);
+        jLabel23.setText("CONFIRMAR CAMBIOS");
+        lblEstado.setFont(Estilos.fuente(Font.BOLD, 16));
+        lblEstado.setForeground(Estilos.AZUL_OSCURO);
+
+        // Tarjeta del alumno encontrado
+        jLbl_Nombre.setFont(Estilos.fuente(Font.PLAIN, 28));
+        for (JLabel l : new JLabel[]{jLbl_Carrera, jLbl_Semestre, jLbl_Correo, jLbl_Fecha}) {
+            l.setFont(Estilos.fuente(Font.BOLD, 16));
+        }
+        jLbl_Promedio.setFont(Estilos.fuente(Font.PLAIN, 36));
+        jLbl_Promedio.setForeground(Estilos.AZUL_OSCURO);
+
+        // Campos
+        Estilos.estilizarCampo(txtNoControl);
+        Estilos.estilizarCampo(txtNoControl2);
+        txtNoControl2.setBackground(Estilos.CREMA);
+        Estilos.estilizarCampo(txtNombre);
+        Estilos.estilizarCampo(txtApPat);
+        Estilos.estilizarCampo(txtApMaterno);
+        Estilos.estilizarCampo(txtCorreo);
+        Estilos.estilizarCampo(txtPromedio);
+        Estilos.estilizarCombo(cmbCarrera);
+        Estilos.estilizarFecha(dcFechaNac);
+
+        lstMaterias.setFont(Estilos.fuente(Font.PLAIN, 18));
+        lstMaterias.setBackground(Estilos.CREMA_CLARO);
+        lstMaterias.setSelectionBackground(Estilos.NARANJA);
+        lstMaterias.setSelectionForeground(Estilos.NEGRO);
+        jScrollPane2.setBorder(Estilos.borde(2));   // lista de materias
+
+        // Paso 3
+        Estilos.estilizarTabla(tblCambios);
+        jScrollPane3.setBorder(Estilos.borde(2));   // tabla de cambios
+        chkConfirmo.setOpaque(false);
+        chkConfirmo.setFont(Estilos.fuente(Font.BOLD, 16));
+        chkConfirmo.setForeground(Estilos.NEGRO);
+        chkConfirmo.setText("ENTIENDO QUE ESTA ACCIÓN MODIFICA LOS DATOS DEL ALUMNO");
+
+        // Botones
+        btnBuscar.setText("BUSCAR");
+        jBCancelar1.setText("CANCELAR");
+        jBContinuar1.setText("CONTINUAR");
+        btnAtras2.setText("ATRÁS");
+        btnRestablecer.setText("RESTABLECER");
+        btnCancelar2.setText("CANCELAR");
+        btnContinuar2.setText("CONTINUAR");
+        btnAtras3.setText("ATRÁS");
+        btnGuardar.setText("GUARDAR CAMBIOS");
+
+        JButton[] normales = {btnBuscar, jBCancelar1, btnAtras2, btnRestablecer, btnCancelar2, btnAtras3};
+        JButton[] principales = {jBContinuar1, btnContinuar2, btnGuardar};
+        for (JButton b : normales) {
+            Estilos.estilizarBoton(b);
+            b.setFont(Estilos.fuente(Font.PLAIN, 18));
+        }
+        for (JButton b : principales) {
+            Estilos.estilizarBotonPrincipal(b);
+            b.setFont(Estilos.fuente(Font.PLAIN, 18));
+        }
+
+        // Posiciones
+                // Paso 1
+        poner(jP_EdBuscar, lblNoControl, 60, 20, -1, -1);
+        poner(jP_EdBuscar, txtNoControl, 60, 45, 300, 40);
+        poner(jP_EdBuscar, btnBuscar, 380, 45, -1, 40);
+        poner(jP_EdBuscar, lblEstado, 60, 95, 600, -1);
+        poner(jP_EdBuscar, jP_Resultado, 60, 130, 540, 130);
+        poner(jP_EdBuscar, jBCancelar1, 60, 280, -1, -1);
+        poner(jP_EdBuscar, jBContinuar1, 220, 280, -1, -1);
+        
+        poner(jP_EdDatos, btnAtras2, 60, 600, -1, -1);
+        poner(jP_EdDatos, btnRestablecer, 200, 600, -1, -1);
+        poner(jP_EdDatos, btnCancelar2, 360, 600, -1, -1);
+        poner(jP_EdDatos, btnContinuar2, 500, 600, -1, -1);
+
+        pintarPestanas();
+    }
+
+    private void limpiarResultado() {
+        jLbl_Nombre.setText("");
+        jLbl_Carrera.setText("");
+        jLbl_Semestre.setText("");
+        jLbl_Correo.setText("");
+        jLbl_Fecha.setText("");
+        jLbl_Promedio.setText("");
+        lblEstado.setText("");
+        jP_Resultado.setVisible(false);
+    }
+
+    private void reiniciar() {
+        txtNoControl.setText("");
+        alumnoOriginal = null;
+        limpiarResultado();
+        jBContinuar1.setEnabled(false);
+        irA("buscar");
+    }
+
+    private void llenarFormulario(Alumno a) {
+        txtNoControl2.setText(a.getNo_control());
+        txtNoControl2.setEditable(false);
+        txtNombre.setText(a.getNombre());
+        txtCorreo.setText(a.getCorreo());
+        cmbCarrera.setSelectedItem(a.getCarerra());
+        txtPromedio.setText(String.valueOf(a.getPromedio()));
+        dcFechaNac.setDate(a.getFechaNaciomiento());
+        seleccionarMaterias(a.getMaterias());
+    }
+
+    private void seleccionarMaterias(List<String> materias) {
+        List<Integer> idx = new ArrayList<>();
+        ListModel<String> m = lstMaterias.getModel();
+        for (int i = 0; i < m.getSize(); i++) {
+            if (materias.contains(m.getElementAt(i))) {
+                idx.add(i);
+            }
+        }
+        lstMaterias.setSelectedIndices(idx.stream().mapToInt(Integer::intValue).toArray());
+    }
+
+    private void error(String titulo, String msg) {
+        JOptionPane.showMessageDialog(this, msg, titulo, JOptionPane.ERROR_MESSAGE);
+    }
+
+    private boolean fechaAnterior1950(Date f) {
+        java.util.Calendar c = java.util.Calendar.getInstance();
+        c.setTime(f);
+        return c.get(java.util.Calendar.YEAR) < 1950;
+    }
+
+    private boolean validarFormulario() {
+        String nombre = txtNombre.getText().trim();
+        String correo = txtCorreo.getText().trim();
+        String promedio = txtPromedio.getText().trim();
+        Date fecha = dcFechaNac.getDate();
+
+        if (ValidadorAlumno.esVacio(nombre)) {
+            error("Campo requerido", "El nombre es OBLIGATORIO");
+            return false;
+        }
+        if (!ValidadorAlumno.nombreValido(nombre)) {
+            error("Error de validación", "El nombre solo puede contener letras y espacios.");
+            return false;
+        }
+        if (ValidadorAlumno.esVacio(correo)) {
+            error("Campo requerido", "El correo es OBLIGATORIO");
+            return false;
+        }
+        if (!ValidadorAlumno.correoValido(correo)) {
+            error("Error de validación", "El formato del correo no es válido. Ejemplo: usuario@dominio.com");
+            txtCorreo.requestFocus();
+            return false;
+        }
+        if (ValidadorAlumno.seleccionCb(cmbCarrera.getSelectedIndex())) {
+            error("Campo requerido", "La carrera es OBLIGATORIA");
+            return false;
+        }
+        if (ValidadorAlumno.promedioVacio(promedio)) {
+            error("Campo requerido", "No puede quedar vacío el Promedio");
+            return false;
+        }
+        if (!ValidadorAlumno.promedioValido(promedio)) {
+            error("Error de validación", "El promedio debe ser numérico");
+            return false;
+        }
+        if (!ValidadorAlumno.promedioValid(Double.parseDouble(promedio))) {
+            error("Error en el rango", "El promedio debe estar en un rango de 0 a 100");
+            return false;
+        }
+        if (ValidadorAlumno.fechaVacia(fecha)) {
+            error("Campo requerido", "Debe ingresar la fecha de nacimiento");
+            return false;
+        }
+        if (ValidadorAlumno.fechaFutura(fecha) || fechaAnterior1950(fecha)) {
+            error("Error en fecha", "La fecha no puede ser futura ni anterior a 1950");
+            return false;
+        }
+        if (ValidadorAlumno.materiasVacias(lstMaterias.getSelectedValuesList())) {
+            error("Campo requerido", "Debe seleccionar al menos una materia");
+            return false;
+        }
+        return true;
+    }
+
+    private void agregarSiCambio(DefaultTableModel m, String campo, String antes, String despues) {
+        if (!java.util.Objects.equals(antes, despues)) {
+            m.addRow(new Object[]{campo, antes, despues});
+        }
+    }
+
+    private void cargarTablaCambios() {
+        DefaultTableModel m = new DefaultTableModel(new String[]{"Campo", "Antes", "Después"}, 0) {
+            @Override
+            public boolean isCellEditable(int r, int c) {
+                return false;
+            }
         };
+        Alumno a = alumnoOriginal;
+        SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
+
+        agregarSiCambio(m, "Nombre", a.getNombre(), txtNombre.getText().trim());
+        agregarSiCambio(m, "Correo", a.getCorreo(), txtCorreo.getText().trim());
+        agregarSiCambio(m, "Carrera", a.getCarerra(), (String) cmbCarrera.getSelectedItem());
+        agregarSiCambio(m, "Promedio", String.valueOf(a.getPromedio()),
+                String.valueOf(Double.parseDouble(txtPromedio.getText().trim())));
+        agregarSiCambio(m, "Fecha nac.", f.format(a.getFechaNaciomiento()), f.format(dcFechaNac.getDate()));
+        agregarSiCambio(m, "Materias", String.join(", ", a.getMaterias()),
+                String.join(", ", lstMaterias.getSelectedValuesList()));
+
+        tblCambios.setModel(m);
+        lblResumen.setText(m.getRowCount() == 0 ? "Sin cambios" : m.getRowCount() + " campo(s) modificado(s)");
+        chkConfirmo.setSelected(false);
+        btnGuardar.setEnabled(false);
+    }
+    
+    public void cargarTabla() {
+        String[] columnas
+                = {
+                    "Materia",
+                    "Horario",
+                    "Agregar Mat."
+                };
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
         //declaro un n de tipo alumno de la carpeta model
         //me la vole UwU
-        
-          
-        String[] mat1 =
-        {
-            "Top. Avan. Prog.",
-             "Mar/Jue 7 am - 9 am",
-             "Agregar"
-        };
-        String[] mat2 =
-        {
-            "Simulacion",
-             "Mar/Jue 9 am - 11 am",
-             "Agregar"
-        };
-        String[] mat3 =
-        {
-            "Metodos Numericos",
-             "Mie/Vie 1 pm - 3 pm",
-             "Agregar"
-        };
-        String[] mat4 =
-        {
-            "Prolog",
-             "Mie/Vie 11 am - 1 pm",
-             "Agregar"
-        };
-        String[] mat5 =
-        {
-            "Arq.Computadoras.",
-             "Lun/Mie/Vie 7 am - 9 am",
-             "Agregar"
-        };
-        
+
+        String[] mat1
+                = {
+                    "Top. Avan. Prog.",
+                    "Mar/Jue 7 am - 9 am",
+                    "Agregar"
+                };
+        String[] mat2
+                = {
+                    "Simulacion",
+                    "Mar/Jue 9 am - 11 am",
+                    "Agregar"
+                };
+        String[] mat3
+                = {
+                    "Metodos Numericos",
+                    "Mie/Vie 1 pm - 3 pm",
+                    "Agregar"
+                };
+        String[] mat4
+                = {
+                    "Prolog",
+                    "Mie/Vie 11 am - 1 pm",
+                    "Agregar"
+                };
+        String[] mat5
+                = {
+                    "Arq.Computadoras.",
+                    "Lun/Mie/Vie 7 am - 9 am",
+                    "Agregar"
+                };
+
         modelo.addRow(mat1);
         modelo.addRow(mat2);
         modelo.addRow(mat3);
         modelo.addRow(mat4);
         modelo.addRow(mat5);
-                
 
-        
-
-            //Se hace que el JPanel ocupe todo el espacio de la tabla
-            
-
-        
-               /* modelo.addRow(mensaje);
+        //Se hace que el JPanel ocupe todo el espacio de la tabla
+        /* modelo.addRow(mensaje);
         
 
                
                 modelo.addRow(fila);
-            */
+         */
+        //no mover las columnas de lugar
+        jMaterias.getTableHeader().setReorderingAllowed(false);
+        //no cambiarles la longitud
+        jMaterias.getTableHeader().setResizingAllowed(false);
+        jMaterias.setModel(modelo); //muestrala
 
-                //no mover las columnas de lugar
-             jMaterias.getTableHeader().setReorderingAllowed(false);
-                 //no cambiarles la longitud
-                 jMaterias.getTableHeader().setResizingAllowed(false);
-               jMaterias.setModel(modelo); //muestrala
-               
+    }
 
-               
-        }
-    
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregarMat;
+    private javax.swing.JButton btnAtras2;
+    private javax.swing.JButton btnAtras3;
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnCancelar2;
+    private javax.swing.JButton btnContinuar2;
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnQuitarMat;
+    private javax.swing.JButton btnRestablecer;
+    private javax.swing.JCheckBox chkConfirmo;
+    private javax.swing.JComboBox<String> cmbCarrera;
+    private com.toedter.calendar.JDateChooser dcFechaNac;
+    private javax.swing.JButton jBCancelar1;
+    private javax.swing.JButton jBContinuar1;
     private javax.swing.JButton jB_Cancelar3;
     private javax.swing.JButton jB_Consulta_Rep;
     private javax.swing.JButton jB_Consulta_Riesg;
@@ -1453,11 +2212,22 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private javax.swing.JLabel jL_Promedio;
     private javax.swing.JLabel jL_Semestre;
     private javax.swing.JLabel jL_TituloGeneral;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1472,9 +2242,15 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private javax.swing.JLabel jLb_Consulta_Sit_Ac;
     private javax.swing.JLabel jLb_Consulta_buscar;
     private javax.swing.JLabel jLb_Consulta_materias;
+    private javax.swing.JLabel jLbl_Carrera;
     private javax.swing.JLabel jLbl_Contra;
+    private javax.swing.JLabel jLbl_Correo;
     private javax.swing.JLabel jLbl_CuentaExtras;
     private javax.swing.JLabel jLbl_Estatus;
+    private javax.swing.JLabel jLbl_Fecha;
+    private javax.swing.JLabel jLbl_Nombre;
+    private javax.swing.JLabel jLbl_Promedio;
+    private javax.swing.JLabel jLbl_Semestre;
     private javax.swing.JLabel jLbl_Telefono;
     private javax.swing.JLabel jLbl_localidad;
     private javax.swing.JTable jMaterias;
@@ -1488,20 +2264,31 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private javax.swing.JPanel jP_ConsultaC;
     private javax.swing.JPanel jP_CuentasExtr;
     private javax.swing.JPanel jP_DatosPrincipales;
+    private javax.swing.JPanel jP_EdBuscar;
+    private javax.swing.JPanel jP_EdCard;
+    private javax.swing.JPanel jP_EdConfirmar;
+    private javax.swing.JPanel jP_EdDatos;
     private javax.swing.JPanel jP_Edicion;
     private javax.swing.JPanel jP_Encabezado;
+    private javax.swing.JPanel jP_EncabezadoEd;
     private javax.swing.JPanel jP_MateriasProm;
+    private javax.swing.JPanel jP_Resultado;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JSpinner jSpinner2;
+    private javax.swing.JToggleButton jTBuscar;
+    private javax.swing.JToggleButton jTConfirmar;
+    private javax.swing.JToggleButton jTDatos;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
@@ -1520,5 +2307,17 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private javax.swing.JTextField jTxt_nombre;
     private javax.swing.JTextField jTxt_telefono;
     private javax.swing.JPanel jp_Contenedor;
+    private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblNoControl;
+    private javax.swing.JLabel lblResumen;
+    private javax.swing.JList<String> lstMaterias;
+    private javax.swing.JTable tblCambios;
+    private javax.swing.JTextField txtApMaterno;
+    private javax.swing.JTextField txtApPat;
+    private javax.swing.JTextField txtCorreo;
+    private javax.swing.JTextField txtNoControl;
+    private javax.swing.JTextField txtNoControl2;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtPromedio;
     // End of variables declaration//GEN-END:variables
 }
