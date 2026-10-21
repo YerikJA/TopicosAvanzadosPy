@@ -1,24 +1,26 @@
 package views;
 
 import controller.*;
-import java.util.Date;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-
+import estilos.Estilos;
 import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ListModel;
+import javax.swing.table.DefaultTableModel;
 import model.Alumno;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import validaciones.ValidadorAlumno;
 
-public class VtnAdministrador extends javax.swing.JFrame {
+public class VtnAdministrador extends javax.swing.JFrame
+{
 
     private AlumnoController controllerAdministracion;
 
@@ -26,12 +28,12 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private String pasoActual = "buscar";
     private final javax.swing.ButtonGroup grupoPestanasEd = new javax.swing.ButtonGroup();
 
-    public VtnAdministrador(AlumnoController controller) {
+    public VtnAdministrador(AlumnoController controller)
+    {
         initComponents();
         jP_Encabezado.setPreferredSize(new java.awt.Dimension(0, 48));
         controllerAdministracion = controller;
-
-        jP_Edicion.setLayout(new java.awt.BorderLayout());
+        //jP_Edicion.setLayout(new java.awt.BorderLayout());
         //jP_Edicion.add(new PanelEdicion(controller), java.awt.BorderLayout.CENTER);
 
         setTitle("Administracion");
@@ -43,36 +45,32 @@ public class VtnAdministrador extends javax.swing.JFrame {
         Estilos.estilizarTitulo(jL_TituloGeneral);
         jL_TituloGeneral.setFont(Estilos.fuente(java.awt.Font.PLAIN, 48));
         Estilos.estilizarTitulo(jLabel2);
-        jL_TituloGeneral.setFont(Estilos.fuente(java.awt.Font.PLAIN, 48));
+        jLabel2.setFont(Estilos.fuente(java.awt.Font.PLAIN, 48));   // corregido
 
         Estilos.estilizarTitulo(jLb_Consulta_buscar);
 
-        // Menú: ningún botón marcado al inicio
+        // ---- MENÚ Y PESTAÑAS ----
         Estilos.estilizarMenu(jBttn_Alta, jBttn_Consulta, jBttn_Edicion, jBttn_Baja);
         Estilos.estilizarBoton(jBttn_Regresar);
+        Estilos.estilizarPestanas(jBttn_DatosPrincipales, jBttn_MateriasProm, jBttn_CuentasExtr);
 
         // ---- PANELES ----
         Estilos.estilizarFondo(jp_Contenedor); // sin borde: cada pantalla lleva el suyo
         Estilos.estilizarFondo(jP_Bienvenida);
-        //Panel de alta
+        // Panel de alta
         Estilos.estilizarFondo(jP_Alta);
 
-        //--Fuentes
+        // ---- ETIQUETAS ----
+        // Alta: datos principales
         Estilos.estilizarEtiqueta(jL_Nombres1);
-        jL_Nombres1.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
         Estilos.estilizarEtiqueta(jL_ApellidoPat);
-        jL_ApellidoPat.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
         Estilos.estilizarEtiqueta(jL_ApellidoMat);
-        jL_ApellidoMat.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
         Estilos.estilizarEtiqueta(jL_Fecha);
-        jL_Fecha.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
-        jL_Nombres1.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
+        // Alta: materias y promedio
         Estilos.estilizarEtiqueta(jL_Materias);
         Estilos.estilizarEtiqueta(jL_Semestre);
-        jL_ApellidoPat.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
         Estilos.estilizarEtiqueta(jL_Promedio);
-        jL_ApellidoMat.setFont(Estilos.fuente(java.awt.Font.BOLD, 16));
-        //Cuentas y extra
+        // Alta: cuenta y extras
         Estilos.estilizarEtiqueta(jLbl_CuentaExtras);
         jLbl_CuentaExtras.setFont(Estilos.fuente(java.awt.Font.PLAIN, 24));
         Estilos.estilizarEtiqueta(jLbl_Contra);
@@ -83,7 +81,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jLbl_Estatus.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
         Estilos.estilizarEtiqueta(jLbl_localidad);
         jLbl_localidad.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-
+        // Consulta
         Estilos.estilizarEtiqueta(jLb_CONSULTA_CARR);
         jLb_CONSULTA_CARR.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
         Estilos.estilizarEtiqueta(jLb_CONSULTA_ORDENAR);
@@ -99,50 +97,64 @@ public class VtnAdministrador extends javax.swing.JFrame {
         Estilos.estilizarEtiqueta(jLb_Consulta_materias);
         jLb_Consulta_materias.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
 
-        //---Txt fields
+        // ---- CAMPOS DE TEXTO ----
         Estilos.estilizarCampo(jTxt_Semestre);
         Estilos.estilizarCampo(jTxt_Promedio);
         Estilos.estilizarCampo(jTxt_ApellidoMat);
         Estilos.estilizarCampo(jTxt_ApellidoPat);
         Estilos.estilizarCampo(jTxt_nombre);
         Estilos.estilizarFecha(jDC_Nacimiento);
-        Estilos.estilizarCampo(jTxt_contraseña);
-        Estilos.estilizarCampo(jTxt_telefono);
 
-        Estilos.estilizarCampo(jTxt_Consulta_Buscar);
-
-        //----Botones
-        Estilos.estilizarBoton(jBttn_Continuar);
-        Estilos.estilizarBoton(jBttn_Cancelar);
-        Estilos.estilizarBoton(jBttn_Continuar_2);
-        Estilos.estilizarBoton(jBttn_Cancelar_2);
-
-        Estilos.estilizarBoton(jB_Cancelar3);
-        Estilos.estilizarBoton(jB_Guardar);
-
+        // ---- BOTONES ----
+        // Consulta: situación académica
         Estilos.estilizarBoton(jB_Consulta_Todos);
         Estilos.estilizarBoton(jB_Consulta_Sobresal);
         Estilos.estilizarBoton(jB_Cosnulta_Aprob);
         Estilos.estilizarBoton(jB_Consulta_Riesg);
         Estilos.estilizarBoton(jB_Consulta_Rep);
+        // Alta: datos principales
+        Estilos.estilizarBotonPrincipal(jBttn_Continuar);
+        Estilos.estilizarBoton(jBttn_Cancelar);
+        // Alta: materias y promedio
+        Estilos.estilizarBotonPrincipal(jBttn_Continuar_2);
+        Estilos.estilizarBoton(jBttn_Cancelar_2);
+        // Alta: cuenta y extras
+        Estilos.estilizarBotonPrincipal(jB_Guardar);
+        Estilos.estilizarBoton(jB_Cancelar3);
+        // Consulta y Baja
+        Estilos.estilizarBotonPrincipal(jButton1);   // BUSCAR
+        Estilos.estilizarBoton(jButton4);            // LIMPIAR
+        Estilos.estilizarBotonPrincipal(jButton2);   // DAR BAJA
+        Estilos.estilizarBoton(jButton3);            // CANCELAR
 
-        //-----Combo Box
+        // ---- COMBOS ----
         Estilos.estilizarCombo(jCb_Estatus);
         Estilos.estilizarCombo(jCb_Localidad);
         Estilos.estilizarCombo(jCb_CONSULTA_CARR);
         Estilos.estilizarCombo(jCb_Consulta_Ordenar);
         Estilos.estilizarCombo(jCb_Consulta_Materias);
 
-        //-----TABLAS-----
+        Estilos.estilizarCampo(jTxt_telefono);
+        Estilos.estilizarCampo(jTxt_contraseña);
+        Estilos.estilizarCampo(jTxt_Consulta_Buscar);
+        Estilos.estilizarSpinner(jSpinner1);
+        Estilos.estilizarSpinner(jSpinner2);
+        Estilos.estilizarScroll(jScrollPane1);
+
+        jP_ConsultaC.setOpaque(true);
+        jP_ConsultaC.setBackground(Estilos.CREMA_CLARO);
+        jP_CONSULTA_COMP.setOpaque(true);
+        jP_CONSULTA_COMP.setBackground(Estilos.CREMA_CLARO);
+        jP_CONSULTA_COMP.setBorder(null);
+
+        // ---- TABLAS ----
         Estilos.estilizarTabla(jMaterias);
 
+        // ---- PANELES CON SOMBRA ----
         Estilos.estilizarPanelConSombra(jP_Bienvenida);
         Estilos.estilizarPanelConSombra(jP_Consulta);
-
         Estilos.estilizarFondo(jP_Edicion);
-
         Estilos.estilizarPanelConSombra(jP_Baja);
-        Estilos.estilizarPanelConSombra(jP_CONSULTA_COMP);
 
         // ---- ALTA: PESTAÑAS ARRIBA, CAJA DEBAJO ----
         jP_Alta.add(jP_Encabezado, java.awt.BorderLayout.NORTH);
@@ -154,16 +166,15 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
         Estilos.estilizarPanelConSombra(jP_AltCard);
 
-        javax.swing.JPanel[] pantallasAlta
-                = {
-                    jP_DatosPrincipales, jP_MateriasProm, jP_CuentasExtr
-                };
-        for (javax.swing.JPanel p : pantallasAlta) {
+        javax.swing.JPanel[] pantallasAlta =
+        {
+            jP_DatosPrincipales, jP_MateriasProm, jP_CuentasExtr
+        };
+        for (javax.swing.JPanel p : pantallasAlta)
+        {
             p.setOpaque(true);
             p.setBackground(Estilos.CREMA_CLARO);
         }
-
-        Estilos.estilizarPestanas(jBttn_DatosPrincipales, jBttn_MateriasProm, jBttn_CuentasExtr);
 
         java.awt.CardLayout tarjetas = (java.awt.CardLayout) jP_AltCard.getLayout();
         jBttn_DatosPrincipales.addActionListener(e -> tarjetas.show(jP_AltCard, "card2"));
@@ -173,17 +184,58 @@ public class VtnAdministrador extends javax.swing.JFrame {
         tarjetas.show(jP_AltCard, "card2");
         Estilos.seleccionar(jBttn_DatosPrincipales);
 
+        // ---- ICONOS VECTORIALES ----
+        Estilos.icono(jBttn_Alta, FontAwesomeSolid.USER_PLUS, 22);
+        Estilos.icono(jBttn_Consulta, FontAwesomeSolid.SEARCH, 22);
+        Estilos.icono(jBttn_Edicion, FontAwesomeSolid.PENCIL_ALT, 22);
+        Estilos.icono(jBttn_Baja, FontAwesomeSolid.TRASH, 22);
+        Estilos.icono(jBttn_Regresar, FontAwesomeSolid.ARROW_LEFT, 22);
+
+        Estilos.icono(jBttn_DatosPrincipales, FontAwesomeSolid.USER, 18);
+        Estilos.icono(jBttn_MateriasProm, FontAwesomeSolid.LIST_ALT, 18);
+        Estilos.icono(jBttn_CuentasExtr, FontAwesomeSolid.LOCK, 18);
+
+        Estilos.icono(jBttn_Continuar, FontAwesomeSolid.ARROW_RIGHT, 18);
+        Estilos.icono(jBttn_Continuar_2, FontAwesomeSolid.ARROW_RIGHT, 18);
+        Estilos.icono(jBttn_Cancelar, FontAwesomeSolid.TIMES, 18);
+        Estilos.icono(jBttn_Cancelar_2, FontAwesomeSolid.TIMES, 18);
+        Estilos.icono(jB_Cancelar3, FontAwesomeSolid.TIMES, 18);
+        Estilos.icono(jB_Guardar, FontAwesomeSolid.SAVE, 18);
+
+        Estilos.icono(jB_Consulta_Todos, FontAwesomeSolid.USERS, 18);
+        Estilos.icono(jB_Consulta_Sobresal, FontAwesomeSolid.STAR, 18);
+        Estilos.icono(jB_Cosnulta_Aprob, FontAwesomeSolid.CHECK_CIRCLE, 18);
+        Estilos.icono(jB_Consulta_Riesg, FontAwesomeSolid.EXCLAMATION_TRIANGLE, 18);
+        Estilos.icono(jB_Consulta_Rep, FontAwesomeSolid.TIMES_CIRCLE, 18);
+
+        // etiquetas
+        Estilos.icono(jLbl_CuentaExtras, FontAwesomeSolid.COG, 24);
+        Estilos.icono(jLbl_Contra, FontAwesomeSolid.KEY, 16);
+        Estilos.icono(jLbl_Telefono, FontAwesomeSolid.PHONE, 16);
+        Estilos.icono(jLbl_localidad, FontAwesomeSolid.MAP_MARKER_ALT, 16);
+        Estilos.icono(jLbl_Estatus, FontAwesomeSolid.USER_CHECK, 16);
+
+        Estilos.icono(jL_Semestre, FontAwesomeSolid.CALENDAR_ALT, 16);
+        Estilos.icono(jL_Materias, FontAwesomeSolid.BOOK, 16);
+        Estilos.icono(jL_Promedio, FontAwesomeSolid.CHART_LINE, 16);
+
+        Estilos.icono(jLb_Consulta_buscar, FontAwesomeSolid.SEARCH, 32);
+        Estilos.icono(jLb_CONSULTA_CARR, FontAwesomeSolid.GRADUATION_CAP, 16);
+        Estilos.icono(jLb_CONSULTA_ORDENAR, FontAwesomeSolid.SORT_AMOUNT_DOWN, 16);
+        Estilos.icono(jLb_Consulta_materias, FontAwesomeSolid.BOOK, 16);
+        Estilos.icono(jLb_CONSULTA_PROM, FontAwesomeSolid.CHART_LINE, 16);
+
         cargarCatalogos();
     }
 
-    private void cargarCatalogos() {
+    private void cargarCatalogos()
+    {
         CatalogoController catalogo = new CatalogoController();
         //creado como un metodo list, necesita un Array
         jCb_Estatus.setModel(new javax.swing.DefaultComboBoxModel<>(catalogo.obtenerEstatus().toArray(new String[0])));
         jCb_Localidad.setModel(new javax.swing.DefaultComboBoxModel<>(catalogo.obtenerLocalidades().toArray(new String[0])));
-    
-        
-                // ===== EDICIÓN =====
+
+        // ===== EDICIÓN =====
         grupoPestanasEd.add(jTBuscar);
         grupoPestanasEd.add(jTDatos);
         grupoPestanasEd.add(jTConfirmar);
@@ -215,7 +267,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
         conScroll(jP_EdConfirmar, "confirmar");
         aplicarEstilos();
         irA("buscar");
- 
+
     }
 
     /**
@@ -1620,19 +1672,23 @@ public class VtnAdministrador extends javax.swing.JFrame {
         String apellidoPat = jTxt_ApellidoPat.getText().trim();
         String apellidoMat = jTxt_ApellidoMat.getText().trim();
         Date fechaNacimiento = jDC_Nacimiento.getDate();
-        if (!validaciones.ValidadorAlumno.nombreValido(nombre)) {
+        if (!validaciones.ValidadorAlumno.nombreValido(nombre))
+        {
             JOptionPane.showMessageDialog(this, "El formato del nombre no es valido. Ingerese un nombre válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (!validaciones.ValidadorAlumno.nombreValido(apellidoPat)) {
+        if (!validaciones.ValidadorAlumno.nombreValido(apellidoPat))
+        {
             JOptionPane.showMessageDialog(this, "El formato del apellido paterno no es valido. Ingerese un apellido válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (!validaciones.ValidadorAlumno.nombreValido(apellidoMat)) {
+        if (!validaciones.ValidadorAlumno.nombreValido(apellidoMat))
+        {
             JOptionPane.showMessageDialog(this, "El formato del apellido materno no es valido. Ingerese un apellido válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (validaciones.ValidadorAlumno.fechaFutura(fechaNacimiento)) {
+        if (validaciones.ValidadorAlumno.fechaFutura(fechaNacimiento))
+        {
             JOptionPane.showMessageDialog(this, "No puede ingresar una fecha futura. Ingerese una fecha válida", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
 
@@ -1677,34 +1733,37 @@ public class VtnAdministrador extends javax.swing.JFrame {
         String estatus = jCb_Estatus.getSelectedItem().toString();
         String localidad = jCb_Localidad.getSelectedItem().toString();
 
-        if (validaciones.ValidadorAlumno.esVacio(contraseña)) {
+        if (validaciones.ValidadorAlumno.esVacio(contraseña))
+        {
             JOptionPane.showMessageDialog(this,
-                     "La contraseña no puede estar vacio",
-                     "Campo requerido",
-                     JOptionPane.ERROR_MESSAGE);
+                    "La contraseña no puede estar vacio",
+                    "Campo requerido",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (validaciones.ValidadorAlumno.esVacio(telefono)) {
+        if (validaciones.ValidadorAlumno.esVacio(telefono))
+        {
             JOptionPane.showMessageDialog(this,
-                     "El telefono no puede estar vacio",
-                     "Campo requerido",
-                     JOptionPane.ERROR_MESSAGE);
+                    "El telefono no puede estar vacio",
+                    "Campo requerido",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (validaciones.ValidadorAlumno.esVacio(estatus)) {
+        if (validaciones.ValidadorAlumno.esVacio(estatus))
+        {
             JOptionPane.showMessageDialog(this,
-                     "Debes elegir un estatus",
-                     "Campo requerido",
-                     JOptionPane.ERROR_MESSAGE);
+                    "Debes elegir un estatus",
+                    "Campo requerido",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (validaciones.ValidadorAlumno.esVacio(localidad)) {
+        if (validaciones.ValidadorAlumno.esVacio(localidad))
+        {
             JOptionPane.showMessageDialog(this,
-                     "Debes elegir una localidad",
-                     "Campo requerido",
-                     JOptionPane.ERROR_MESSAGE);
+                    "Debes elegir una localidad",
+                    "Campo requerido",
+                    JOptionPane.ERROR_MESSAGE);
         }
-
 
     }//GEN-LAST:event_jB_GuardarActionPerformed
 
@@ -1722,7 +1781,8 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
     private void btnContinuar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuar2ActionPerformed
         // TODO add your handling code here:
-        if (!validarFormulario()) {
+        if (!validarFormulario())
+        {
             return;
         }
         cargarTablaCambios();
@@ -1750,10 +1810,12 @@ public class VtnAdministrador extends javax.swing.JFrame {
                 dcFechaNac.getDate(),
                 lstMaterias.getSelectedValuesList());
 
-        if (controllerAdministracion.actualizarAlumno(nuevo)) {
+        if (controllerAdministracion.actualizarAlumno(nuevo))
+        {
             JOptionPane.showMessageDialog(this, "Alumno actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             reiniciar();
-        } else {
+        } else
+        {
             JOptionPane.showMessageDialog(this, "No se pudo actualizar el alumno.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
@@ -1768,13 +1830,15 @@ public class VtnAdministrador extends javax.swing.JFrame {
         String nc = txtNoControl.getText().trim();
 
         // 1. Que no esté vacío
-        if (nc.isEmpty()) {
+        if (nc.isEmpty())
+        {
             lblEstado.setText("Escribe un número de control");
             return;
         }
 
         // 2. Que solo tenga números (sin espacios, letras ni símbolos)
-        if (!nc.matches("\\d+")) {
+        if (!nc.matches("\\d+"))
+        {
             limpiarResultado();
             alumnoOriginal = null;
             jBContinuar1.setEnabled(false);
@@ -1783,8 +1847,9 @@ public class VtnAdministrador extends javax.swing.JFrame {
         }
 
         // 3. Buscar al alumno
-    Alumno a = controllerAdministracion.buscarAlumnoPorNoControl(nc);
-        if (a == null) {
+        Alumno a = controllerAdministracion.buscarAlumnoPorNoControl(nc);
+        if (a == null)
+        {
             limpiarResultado();
             alumnoOriginal = null;
             jBContinuar1.setEnabled(false);
@@ -1814,8 +1879,9 @@ public class VtnAdministrador extends javax.swing.JFrame {
         reiniciar();
     }//GEN-LAST:event_jBCancelar1ActionPerformed
 
-        // Edicion metodos propios
-    private void conScroll(JPanel card, String nombre) {
+    // Edicion metodos propios
+    private void conScroll(JPanel card, String nombre)
+    {
         jP_EdCard.remove(card);
         card.setVisible(true);   // el CardLayout lo había ocultado
         javax.swing.JScrollPane sp = new javax.swing.JScrollPane(card);
@@ -1825,33 +1891,52 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jP_EdCard.add(sp, nombre);
     }
 
-    private void irA(String paso) {
+    private void irA(String paso)
+    {
         pasoActual = paso;
         ((java.awt.CardLayout) jP_EdCard.getLayout()).show(jP_EdCard, paso);
-        switch (paso) {
-            case "buscar":    jTBuscar.setSelected(true);    break;
-            case "datos":     jTDatos.setSelected(true);     break;
-            case "confirmar": jTConfirmar.setSelected(true); break;
+        switch (paso)
+        {
+            case "buscar":
+                jTBuscar.setSelected(true);
+                break;
+            case "datos":
+                jTDatos.setSelected(true);
+                break;
+            case "confirmar":
+                jTConfirmar.setSelected(true);
+                break;
         }
         pintarPestanas();
     }
 
-    private void pintarPestanas() {
-        for (AbstractButton t : new AbstractButton[]{jTBuscar, jTDatos, jTConfirmar}) {
+    private void pintarPestanas()
+    {
+        for (AbstractButton t : new AbstractButton[]
+        {
+            jTBuscar, jTDatos, jTConfirmar
+        })
+        {
             boolean activa = t.isSelected();
             t.setBackground(activa ? Estilos.NEGRO : Estilos.AZUL_OSCURO);
             t.setForeground(activa ? Estilos.NARANJA : java.awt.Color.WHITE);
         }
     }
 
-    private void poner(JPanel panel, java.awt.Component c, int x, int y, int w, int h) {
+    private void poner(JPanel panel, java.awt.Component c, int x, int y, int w, int h)
+    {
         panel.add(c, new org.netbeans.lib.awtextra.AbsoluteConstraints(x, y, w, h));
     }
 
-    private void aplicarEstilos() {
+    private void aplicarEstilos()
+    {
         Estilos.estilizarFondo(jP_EncabezadoEd);
         Estilos.estilizarPanelConSombra(jP_EdCard);
-        for (JPanel p : new JPanel[]{jP_EdBuscar, jP_EdDatos, jP_EdConfirmar, jP_Resultado}) {
+        for (JPanel p : new JPanel[]
+        {
+            jP_EdBuscar, jP_EdDatos, jP_EdConfirmar, jP_Resultado
+        })
+        {
             p.setOpaque(true);
             p.setBackground(Estilos.CREMA_CLARO);
         }
@@ -1864,7 +1949,11 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jTBuscar.setText("1. BUSCAR ALUMNO");
         jTDatos.setText("2. DATOS DEL ALUMNO");
         jTConfirmar.setText("3. CONFIRMAR");
-        for (AbstractButton t : new AbstractButton[]{jTBuscar, jTDatos, jTConfirmar}) {
+        for (AbstractButton t : new AbstractButton[]
+        {
+            jTBuscar, jTDatos, jTConfirmar
+        })
+        {
             t.setFont(Estilos.fuente(Font.PLAIN, 20));
             t.setFocusPainted(false);
             t.setContentAreaFilled(false);
@@ -1876,8 +1965,12 @@ public class VtnAdministrador extends javax.swing.JFrame {
         }
 
         // Etiquetas
-        for (JLabel l : new JLabel[]{lblNoControl, jLabel14, jLabel15, jLabel16, jLabel17,
-            jLabel18, jLabel19, jLabel20, jLabel21, jLabel22, lblResumen}) {
+        for (JLabel l : new JLabel[]
+        {
+            lblNoControl, jLabel14, jLabel15, jLabel16, jLabel17,
+            jLabel18, jLabel19, jLabel20, jLabel21, jLabel22, lblResumen
+        })
+        {
             Estilos.estilizarEtiqueta(l);
         }
         Estilos.estilizarSubtitulo(jLabel23);
@@ -1887,7 +1980,11 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
         // Tarjeta del alumno encontrado
         jLbl_Nombre.setFont(Estilos.fuente(Font.PLAIN, 28));
-        for (JLabel l : new JLabel[]{jLbl_Carrera, jLbl_Semestre, jLbl_Correo, jLbl_Fecha}) {
+        for (JLabel l : new JLabel[]
+        {
+            jLbl_Carrera, jLbl_Semestre, jLbl_Correo, jLbl_Fecha
+        })
+        {
             l.setFont(Estilos.fuente(Font.BOLD, 16));
         }
         jLbl_Promedio.setFont(Estilos.fuente(Font.PLAIN, 36));
@@ -1930,19 +2027,27 @@ public class VtnAdministrador extends javax.swing.JFrame {
         btnAtras3.setText("ATRÁS");
         btnGuardar.setText("GUARDAR CAMBIOS");
 
-        JButton[] normales = {btnBuscar, jBCancelar1, btnAtras2, btnRestablecer, btnCancelar2, btnAtras3};
-        JButton[] principales = {jBContinuar1, btnContinuar2, btnGuardar};
-        for (JButton b : normales) {
+        JButton[] normales =
+        {
+            btnBuscar, jBCancelar1, btnAtras2, btnRestablecer, btnCancelar2, btnAtras3
+        };
+        JButton[] principales =
+        {
+            jBContinuar1, btnContinuar2, btnGuardar
+        };
+        for (JButton b : normales)
+        {
             Estilos.estilizarBoton(b);
             b.setFont(Estilos.fuente(Font.PLAIN, 18));
         }
-        for (JButton b : principales) {
+        for (JButton b : principales)
+        {
             Estilos.estilizarBotonPrincipal(b);
             b.setFont(Estilos.fuente(Font.PLAIN, 18));
         }
 
         // Posiciones
-                // Paso 1
+        // Paso 1
         poner(jP_EdBuscar, lblNoControl, 60, 20, -1, -1);
         poner(jP_EdBuscar, txtNoControl, 60, 45, 300, 40);
         poner(jP_EdBuscar, btnBuscar, 380, 45, -1, 40);
@@ -1950,7 +2055,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
         poner(jP_EdBuscar, jP_Resultado, 60, 130, 540, 130);
         poner(jP_EdBuscar, jBCancelar1, 60, 280, -1, -1);
         poner(jP_EdBuscar, jBContinuar1, 220, 280, -1, -1);
-        
+
         poner(jP_EdDatos, btnAtras2, 60, 600, -1, -1);
         poner(jP_EdDatos, btnRestablecer, 200, 600, -1, -1);
         poner(jP_EdDatos, btnCancelar2, 360, 600, -1, -1);
@@ -1959,7 +2064,8 @@ public class VtnAdministrador extends javax.swing.JFrame {
         pintarPestanas();
     }
 
-    private void limpiarResultado() {
+    private void limpiarResultado()
+    {
         jLbl_Nombre.setText("");
         jLbl_Carrera.setText("");
         jLbl_Semestre.setText("");
@@ -1970,7 +2076,8 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jP_Resultado.setVisible(false);
     }
 
-    private void reiniciar() {
+    private void reiniciar()
+    {
         txtNoControl.setText("");
         alumnoOriginal = null;
         limpiarResultado();
@@ -1978,7 +2085,8 @@ public class VtnAdministrador extends javax.swing.JFrame {
         irA("buscar");
     }
 
-    private void llenarFormulario(Alumno a) {
+    private void llenarFormulario(Alumno a)
+    {
         txtNoControl2.setText(a.getNo_control());
         txtNoControl2.setEditable(false);
         txtNombre.setText(a.getNombre());
@@ -1989,91 +2097,119 @@ public class VtnAdministrador extends javax.swing.JFrame {
         seleccionarMaterias(a.getMaterias());
     }
 
-    private void seleccionarMaterias(List<String> materias) {
+    private void seleccionarMaterias(List<String> materias)
+    {
         List<Integer> idx = new ArrayList<>();
         ListModel<String> m = lstMaterias.getModel();
-        for (int i = 0; i < m.getSize(); i++) {
-            if (materias.contains(m.getElementAt(i))) {
+        for (int i = 0; i < m.getSize(); i++)
+        {
+            if (materias.contains(m.getElementAt(i)))
+            {
                 idx.add(i);
             }
         }
         lstMaterias.setSelectedIndices(idx.stream().mapToInt(Integer::intValue).toArray());
     }
 
-    private void error(String titulo, String msg) {
+    private void error(String titulo, String msg)
+    {
         JOptionPane.showMessageDialog(this, msg, titulo, JOptionPane.ERROR_MESSAGE);
     }
 
-    private boolean fechaAnterior1950(Date f) {
+    private boolean fechaAnterior1950(Date f)
+    {
         java.util.Calendar c = java.util.Calendar.getInstance();
         c.setTime(f);
         return c.get(java.util.Calendar.YEAR) < 1950;
     }
 
-    private boolean validarFormulario() {
+    private boolean validarFormulario()
+    {
         String nombre = txtNombre.getText().trim();
         String correo = txtCorreo.getText().trim();
         String promedio = txtPromedio.getText().trim();
         Date fecha = dcFechaNac.getDate();
 
-        if (ValidadorAlumno.esVacio(nombre)) {
+        if (ValidadorAlumno.esVacio(nombre))
+        {
             error("Campo requerido", "El nombre es OBLIGATORIO");
             return false;
         }
-        if (!ValidadorAlumno.nombreValido(nombre)) {
+        if (!ValidadorAlumno.nombreValido(nombre))
+        {
             error("Error de validación", "El nombre solo puede contener letras y espacios.");
             return false;
         }
-        if (ValidadorAlumno.esVacio(correo)) {
+        if (ValidadorAlumno.esVacio(correo))
+        {
             error("Campo requerido", "El correo es OBLIGATORIO");
             return false;
         }
-        if (!ValidadorAlumno.correoValido(correo)) {
+        if (!ValidadorAlumno.correoValido(correo))
+        {
             error("Error de validación", "El formato del correo no es válido. Ejemplo: usuario@dominio.com");
             txtCorreo.requestFocus();
             return false;
         }
-        if (ValidadorAlumno.seleccionCb(cmbCarrera.getSelectedIndex())) {
+        if (ValidadorAlumno.seleccionCb(cmbCarrera.getSelectedIndex()))
+        {
             error("Campo requerido", "La carrera es OBLIGATORIA");
             return false;
         }
-        if (ValidadorAlumno.promedioVacio(promedio)) {
+        if (ValidadorAlumno.promedioVacio(promedio))
+        {
             error("Campo requerido", "No puede quedar vacío el Promedio");
             return false;
         }
-        if (!ValidadorAlumno.promedioValido(promedio)) {
+        if (!ValidadorAlumno.promedioValido(promedio))
+        {
             error("Error de validación", "El promedio debe ser numérico");
             return false;
         }
-        if (!ValidadorAlumno.promedioValid(Double.parseDouble(promedio))) {
+        if (!ValidadorAlumno.promedioValid(Double.parseDouble(promedio)))
+        {
             error("Error en el rango", "El promedio debe estar en un rango de 0 a 100");
             return false;
         }
-        if (ValidadorAlumno.fechaVacia(fecha)) {
+        if (ValidadorAlumno.fechaVacia(fecha))
+        {
             error("Campo requerido", "Debe ingresar la fecha de nacimiento");
             return false;
         }
-        if (ValidadorAlumno.fechaFutura(fecha) || fechaAnterior1950(fecha)) {
+        if (ValidadorAlumno.fechaFutura(fecha) || fechaAnterior1950(fecha))
+        {
             error("Error en fecha", "La fecha no puede ser futura ni anterior a 1950");
             return false;
         }
-        if (ValidadorAlumno.materiasVacias(lstMaterias.getSelectedValuesList())) {
+        if (ValidadorAlumno.materiasVacias(lstMaterias.getSelectedValuesList()))
+        {
             error("Campo requerido", "Debe seleccionar al menos una materia");
             return false;
         }
         return true;
     }
 
-    private void agregarSiCambio(DefaultTableModel m, String campo, String antes, String despues) {
-        if (!java.util.Objects.equals(antes, despues)) {
-            m.addRow(new Object[]{campo, antes, despues});
+    private void agregarSiCambio(DefaultTableModel m, String campo, String antes, String despues)
+    {
+        if (!java.util.Objects.equals(antes, despues))
+        {
+            m.addRow(new Object[]
+            {
+                campo, antes, despues
+            });
         }
     }
 
-    private void cargarTablaCambios() {
-        DefaultTableModel m = new DefaultTableModel(new String[]{"Campo", "Antes", "Después"}, 0) {
+    private void cargarTablaCambios()
+    {
+        DefaultTableModel m = new DefaultTableModel(new String[]
+        {
+            "Campo", "Antes", "Después"
+        }, 0)
+        {
             @Override
-            public boolean isCellEditable(int r, int c) {
+            public boolean isCellEditable(int r, int c)
+            {
                 return false;
             }
         };
@@ -2094,10 +2230,12 @@ public class VtnAdministrador extends javax.swing.JFrame {
         chkConfirmo.setSelected(false);
         btnGuardar.setEnabled(false);
     }
-    
-    public void cargarTabla() {
+
+    public void cargarTabla()
+    {
         String[] columnas
-                = {
+                =
+                {
                     "Materia",
                     "Horario",
                     "Agregar Mat."
@@ -2107,31 +2245,36 @@ public class VtnAdministrador extends javax.swing.JFrame {
         //me la vole UwU
 
         String[] mat1
-                = {
+                =
+                {
                     "Top. Avan. Prog.",
                     "Mar/Jue 7 am - 9 am",
                     "Agregar"
                 };
         String[] mat2
-                = {
+                =
+                {
                     "Simulacion",
                     "Mar/Jue 9 am - 11 am",
                     "Agregar"
                 };
         String[] mat3
-                = {
+                =
+                {
                     "Metodos Numericos",
                     "Mie/Vie 1 pm - 3 pm",
                     "Agregar"
                 };
         String[] mat4
-                = {
+                =
+                {
                     "Prolog",
                     "Mie/Vie 11 am - 1 pm",
                     "Agregar"
                 };
         String[] mat5
-                = {
+                =
+                {
                     "Arq.Computadoras.",
                     "Lun/Mie/Vie 7 am - 9 am",
                     "Agregar"
@@ -2157,7 +2300,6 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jMaterias.setModel(modelo); //muestrala
 
     }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarMat;
