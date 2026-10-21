@@ -14,5 +14,6 @@
     <modules>
         <module>validacion-alumno</module>
         <module>PROYECTOMvn</module>
+        <module>estilos</module>
     </modules>
 </project>
