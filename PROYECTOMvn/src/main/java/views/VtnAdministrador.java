@@ -72,15 +72,14 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.estilizarEtiqueta(jL_Promedio);
         // Alta: cuenta y extras
         Estilos.estilizarEtiqueta(jLbl_CuentaExtras);
+        Estilos.estilizarEtiqueta(jLbl_correo);
         jLbl_CuentaExtras.setFont(Estilos.fuente(java.awt.Font.PLAIN, 24));
         Estilos.estilizarEtiqueta(jLbl_Contra);
         jLbl_Contra.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-        Estilos.estilizarEtiqueta(jLbl_Telefono);
-        jLbl_Telefono.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
+
         Estilos.estilizarEtiqueta(jLbl_Estatus);
         jLbl_Estatus.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-        Estilos.estilizarEtiqueta(jLbl_localidad);
-        jLbl_localidad.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
+
         // Consulta
         Estilos.estilizarEtiqueta(jLb_CONSULTA_CARR);
         jLb_CONSULTA_CARR.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
@@ -104,6 +103,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.estilizarCampo(jTxt_ApellidoPat);
         Estilos.estilizarCampo(jTxt_nombre);
         Estilos.estilizarFecha(jDC_Nacimiento);
+        Estilos.estilizarCampo(jTxt_Correo);
 
         // ---- BOTONES ----
         // Consulta: situación académica
@@ -129,13 +129,11 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         // ---- COMBOS ----
         Estilos.estilizarCombo(jCb_Estatus);
-        Estilos.estilizarCombo(jCb_Localidad);
         Estilos.estilizarCombo(jCb_CONSULTA_CARR);
         Estilos.estilizarCombo(jCb_Consulta_Ordenar);
         Estilos.estilizarCombo(jCb_Consulta_Materias);
 
-        Estilos.estilizarCampo(jTxt_telefono);
-        Estilos.estilizarCampo(jTxt_contraseña);
+        Estilos.estilizarCampo(jPF_contraseña);
         Estilos.estilizarCampo(jTxt_Consulta_Buscar);
         Estilos.estilizarSpinner(jSpinner1);
         Estilos.estilizarSpinner(jSpinner2);
@@ -211,8 +209,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         // etiquetas
         Estilos.icono(jLbl_CuentaExtras, FontAwesomeSolid.COG, 24);
         Estilos.icono(jLbl_Contra, FontAwesomeSolid.KEY, 16);
-        Estilos.icono(jLbl_Telefono, FontAwesomeSolid.PHONE, 16);
-        Estilos.icono(jLbl_localidad, FontAwesomeSolid.MAP_MARKER_ALT, 16);
+
         Estilos.icono(jLbl_Estatus, FontAwesomeSolid.USER_CHECK, 16);
 
         Estilos.icono(jL_Semestre, FontAwesomeSolid.CALENDAR_ALT, 16);
@@ -233,7 +230,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         CatalogoController catalogo = new CatalogoController();
         //creado como un metodo list, necesita un Array
         jCb_Estatus.setModel(new javax.swing.DefaultComboBoxModel<>(catalogo.obtenerEstatus().toArray(new String[0])));
-        jCb_Localidad.setModel(new javax.swing.DefaultComboBoxModel<>(catalogo.obtenerLocalidades().toArray(new String[0])));
+       
 
         // ===== EDICIÓN =====
         grupoPestanasEd.add(jTBuscar);
@@ -319,13 +316,11 @@ public class VtnAdministrador extends javax.swing.JFrame
         jLbl_Contra = new javax.swing.JLabel();
         jLbl_Estatus = new javax.swing.JLabel();
         jCb_Estatus = new javax.swing.JComboBox<>();
-        jTxt_contraseña = new javax.swing.JTextField();
-        jLbl_Telefono = new javax.swing.JLabel();
-        jLbl_localidad = new javax.swing.JLabel();
-        jTxt_telefono = new javax.swing.JTextField();
-        jCb_Localidad = new javax.swing.JComboBox<>();
         jB_Cancelar3 = new javax.swing.JButton();
         jB_Guardar = new javax.swing.JButton();
+        jLbl_correo = new javax.swing.JLabel();
+        jTxt_Correo = new javax.swing.JTextField();
+        jPF_contraseña = new javax.swing.JPasswordField();
         jP_Consulta = new javax.swing.JPanel();
         jP_ConsultaC = new javax.swing.JPanel();
         jP_CONSULTA_COMP = new javax.swing.JPanel();
@@ -595,12 +590,12 @@ public class VtnAdministrador extends javax.swing.JFrame
                 .addComponent(jL_Fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jDC_Nacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(229, Short.MAX_VALUE))
+                .addContainerGap(261, Short.MAX_VALUE))
             .addGroup(jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jP_DatosPrincipalesLayout.createSequentialGroup()
                     .addGap(91, 91, 91)
                     .addComponent(jBttn_Continuar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(450, Short.MAX_VALUE)))
+                    .addContainerGap(482, Short.MAX_VALUE)))
         );
 
         jP_AltCard.add(jP_DatosPrincipales, "card2");
@@ -671,7 +666,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_MateriasPromLayout.setVerticalGroup(
             jP_MateriasPromLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jP_MateriasPromLayout.createSequentialGroup()
-                .addContainerGap(83, Short.MAX_VALUE)
+                .addContainerGap(100, Short.MAX_VALUE)
                 .addGroup(jP_MateriasPromLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jL_Materias)
                     .addComponent(jL_Semestre))
@@ -683,7 +678,7 @@ public class VtnAdministrador extends javax.swing.JFrame
                         .addComponent(jL_Promedio)
                         .addGap(9, 9, 9)
                         .addComponent(jTxt_Promedio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 155, Short.MAX_VALUE)
                         .addComponent(jBttn_Continuar_2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(51, 51, 51)
                         .addComponent(jBttn_Cancelar_2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -696,7 +691,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_AltCard.add(jP_MateriasProm, "card3");
 
         jLbl_CuentaExtras.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLbl_CuentaExtras.setText("Cuenta y Extras");
+        jLbl_CuentaExtras.setText("Datos de la cuenta:");
         jLbl_CuentaExtras.setToolTipText("");
 
         jLbl_Contra.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -707,18 +702,13 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jCb_Estatus.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
-        jLbl_Telefono.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLbl_Telefono.setText("Telefono:");
-
-        jLbl_localidad.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLbl_localidad.setText("Localidad:");
-
-        jTxt_telefono.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-
-        jCb_Localidad.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-
         jB_Cancelar3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jB_Cancelar3.setText("Cancelar");
+        jB_Cancelar3.setText("Volver");
+        jB_Cancelar3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jB_Cancelar3ActionPerformed(evt);
+            }
+        });
 
         jB_Guardar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jB_Guardar.setText("Guardar");
@@ -728,6 +718,13 @@ public class VtnAdministrador extends javax.swing.JFrame
             }
         });
 
+        jLbl_correo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLbl_correo.setText("Correo:");
+
+        jTxt_Correo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+
+        jPF_contraseña.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+
         javax.swing.GroupLayout jP_CuentasExtrLayout = new javax.swing.GroupLayout(jP_CuentasExtr);
         jP_CuentasExtr.setLayout(jP_CuentasExtrLayout);
         jP_CuentasExtrLayout.setHorizontalGroup(
@@ -735,55 +732,44 @@ public class VtnAdministrador extends javax.swing.JFrame
             .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
                 .addGap(53, 53, 53)
                 .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLbl_CuentaExtras)
+                    .addComponent(jLbl_correo)
                     .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
-                        .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jCb_Localidad, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
-                                .addComponent(jLbl_Contra)
-                                .addGap(237, 237, 237))
-                            .addComponent(jLbl_localidad, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTxt_telefono, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLbl_Telefono, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(52, 52, 52)
-                        .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
-                                .addComponent(jLbl_Estatus)
-                                .addGap(128, 128, 128)
-                                .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jB_Guardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jB_Cancelar3, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)))
-                            .addComponent(jCb_Estatus, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jTxt_contraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(127, Short.MAX_VALUE))
+                        .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLbl_Contra)
+                            .addComponent(jLbl_Estatus)
+                            .addComponent(jCb_Estatus, 0, 330, Short.MAX_VALUE)
+                            .addComponent(jTxt_Correo)
+                            .addComponent(jPF_contraseña))
+                        .addGap(240, 240, 240)
+                        .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jB_Cancelar3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jB_Guardar, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)))
+                    .addComponent(jLbl_CuentaExtras))
+                .addContainerGap(126, Short.MAX_VALUE))
         );
         jP_CuentasExtrLayout.setVerticalGroup(
             jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(jLbl_CuentaExtras)
+                .addGap(31, 31, 31)
+                .addComponent(jLbl_correo)
                 .addGap(18, 18, 18)
-                .addComponent(jLbl_Contra)
-                .addGap(18, 18, 18)
-                .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTxt_contraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jB_Cancelar3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jB_Cancelar3, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                    .addComponent(jTxt_Correo))
                 .addGap(18, 18, 18)
                 .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jB_Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jB_Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
-                        .addComponent(jLbl_Telefono)
+                        .addComponent(jLbl_Contra)
                         .addGap(18, 18, 18)
-                        .addComponent(jTxt_telefono, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPF_contraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLbl_Estatus)))
                 .addGap(18, 18, 18)
-                .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLbl_localidad)
-                    .addComponent(jLbl_Estatus))
-                .addGap(18, 18, 18)
-                .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCb_Localidad, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCb_Estatus, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(231, Short.MAX_VALUE))
+                .addComponent(jCb_Estatus, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(252, Short.MAX_VALUE))
         );
 
         jP_AltCard.add(jP_CuentasExtr, "card4");
@@ -1728,23 +1714,34 @@ public class VtnAdministrador extends javax.swing.JFrame
 
     private void jB_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_GuardarActionPerformed
         // TODO add your handling code here:
-        String contraseña = jTxt_contraseña.getText().trim();
-        String telefono = jTxt_telefono.getText().trim();
+        String correo = jTxt_Correo.getText().trim();
+        String contraseña = new String(jPF_contraseña.getPassword());
         String estatus = jCb_Estatus.getSelectedItem().toString();
-        String localidad = jCb_Localidad.getSelectedItem().toString();
+        
 
-        if (validaciones.ValidadorAlumno.esVacio(contraseña))
+        if (ValidadorAlumno.esVacio(correo))
         {
             JOptionPane.showMessageDialog(this,
-                    "La contraseña no puede estar vacio",
+                    "El correo es OBLIGATORIO",
                     "Campo requerido",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (validaciones.ValidadorAlumno.esVacio(telefono))
+        
+                if (!ValidadorAlumno.correoValido(correo))
+        {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "El formato del correo electrónico no es válido. Ejemplo: usuario@dominio.com",
+                    "Error de validación",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            jTxt_Correo.requestFocus();
+            return;
+        }
+                
+        if (validaciones.ValidadorAlumno.esVacio(contraseña))
         {
             JOptionPane.showMessageDialog(this,
-                    "El telefono no puede estar vacio",
+                    "La contraseña no puede estar vacio",
                     "Campo requerido",
                     JOptionPane.ERROR_MESSAGE);
             return;
@@ -1754,16 +1751,9 @@ public class VtnAdministrador extends javax.swing.JFrame
             JOptionPane.showMessageDialog(this,
                     "Debes elegir un estatus",
                     "Campo requerido",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
+                    JOptionPane.ERROR_MESSAGE);   
         }
-        if (validaciones.ValidadorAlumno.esVacio(localidad))
-        {
-            JOptionPane.showMessageDialog(this,
-                    "Debes elegir una localidad",
-                    "Campo requerido",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+
 
     }//GEN-LAST:event_jB_GuardarActionPerformed
 
@@ -1878,6 +1868,13 @@ public class VtnAdministrador extends javax.swing.JFrame
         // TODO add your handling code here:
         reiniciar();
     }//GEN-LAST:event_jBCancelar1ActionPerformed
+
+    private void jB_Cancelar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_Cancelar3ActionPerformed
+        // TODO add your handling code here:
+        
+        java.awt.CardLayout cExtra = (java.awt.CardLayout) jP_AltCard.getLayout();
+        cExtra.previous(jP_AltCard);
+    }//GEN-LAST:event_jB_Cancelar3ActionPerformed
 
     // Edicion metodos propios
     private void conScroll(JPanel card, String nombre)
@@ -2343,7 +2340,6 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JComboBox<String> jCb_Consulta_Materias;
     private javax.swing.JComboBox<String> jCb_Consulta_Ordenar;
     private javax.swing.JComboBox<String> jCb_Estatus;
-    private javax.swing.JComboBox<String> jCb_Localidad;
     private javax.swing.JComboBox<String> jComboBox1;
     private com.toedter.calendar.JDateChooser jDC_Nacimiento;
     private javax.swing.JLabel jL_ApellidoMat;
@@ -2393,9 +2389,9 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JLabel jLbl_Nombre;
     private javax.swing.JLabel jLbl_Promedio;
     private javax.swing.JLabel jLbl_Semestre;
-    private javax.swing.JLabel jLbl_Telefono;
-    private javax.swing.JLabel jLbl_localidad;
+    private javax.swing.JLabel jLbl_correo;
     private javax.swing.JTable jMaterias;
+    private javax.swing.JPasswordField jPF_contraseña;
     private javax.swing.JPanel jP_AltCard;
     private javax.swing.JPanel jP_Alta;
     private javax.swing.JPanel jP_Baja;
@@ -2443,11 +2439,10 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JTextField jTxt_ApellidoMat;
     private javax.swing.JTextField jTxt_ApellidoPat;
     private javax.swing.JTextField jTxt_Consulta_Buscar;
+    private javax.swing.JTextField jTxt_Correo;
     private javax.swing.JTextField jTxt_Promedio;
     private javax.swing.JTextField jTxt_Semestre;
-    private javax.swing.JTextField jTxt_contraseña;
     private javax.swing.JTextField jTxt_nombre;
-    private javax.swing.JTextField jTxt_telefono;
     private javax.swing.JPanel jp_Contenedor;
     private javax.swing.JLabel lblEstado;
     private javax.swing.JLabel lblNoControl;

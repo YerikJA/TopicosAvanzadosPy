@@ -23,10 +23,7 @@ public class CatalogoController {
     }
     
     public List<String> obtenerEstatus(){
-        return Arrays.asList("Estudiante", "Profesor");
+        return Arrays.asList("Activo");
     }
     
-    public List<String> obtenerLocalidades(){
-        return Arrays.asList("Toluca", "Metepec", "Lerma", "Tenango", "San Mateo Atenco");
-    }
 }
