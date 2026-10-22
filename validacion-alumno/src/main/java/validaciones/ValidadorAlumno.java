@@ -13,10 +13,18 @@ public class ValidadorAlumno
     private static final Pattern CORREO
             = Pattern.compile("^[\\w.+-]+@[\\w-]+(\\.[\\w-]+)+$");
 
-    
+    private static final Pattern NUMERICOS
+            = Pattern.compile("^\\d+$");
+
     public static boolean esVacio(String texto)
     {
         return texto == null || texto.trim().isEmpty();
+    }
+    
+    public static boolean validarNumericos(String numericos)
+    {
+        return numericos !=null && NUMERICOS.matcher(numericos.trim()).matches();
+        
     }
 
     public static boolean nombreValido(String nombre)
@@ -29,38 +37,31 @@ public class ValidadorAlumno
         return correo != null && CORREO.matcher(correo.trim()).matches();
     }
 
-    //Este checa que la caja venga con datos
-    public static boolean promedioVacio(String promedio)
-    {
-
-        return promedio == null || promedio.trim().isEmpty();
-
-    }
-    
-
-    //Este primero ve que entre un dato, cuando entra realiza la conversion, 
     //si el dato introducido es valido, 
     //si no es valido manda la excepcion avisando que el formato en el que entro el dato no es valido
-    public static boolean promedioValido(String promedio)
+    public static Double promedioValido(String promedio)
     {
-        if (!promedioVacio(promedio))
+        if (!esVacio(promedio))
         {
             try
             {
                 double dpromedio = Double.parseDouble(promedio);
-                return true;
+                //return true;
+
+                if (dpromedio >= 0 && dpromedio <= 100)
+                {
+                    return dpromedio; //Sin problemas
+
+                }
+                return null; //debe estar dentro del rango
+
             } catch (NumberFormatException e)
             {
-                return false;
+                return null; //no es numerico
             }
         }
-        return false;
-    }
 
-    //Este revisa que el dato que metio el usuario este en el rango valido de 0 a 100
-    public static boolean promedioValid(double dpromedio)
-    {
-        return dpromedio >= 0 && dpromedio <= 100;
+        return null; //esta vacio
     }
 
     public static boolean seleccionCb(int ind)
@@ -88,12 +89,12 @@ public class ValidadorAlumno
         }
         return false;
     }
-    
+
     public static boolean fechaPasada(Date fechaNacimiento)
     {
         if (fechaNacimiento != null)
         {
-            return fechaNacimiento.before(new Date(01/01/1950));
+            return fechaNacimiento.before(new Date(01 / 01 / 1950));
         }
         return false;
     }
