@@ -787,6 +787,13 @@ public class VtnAdministrador extends javax.swing.JFrame
         });
 
         jTxt_Promedio.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jTxt_Promedio.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jTxt_PromedioActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jP_MateriasPromLayout = new javax.swing.GroupLayout(jP_MateriasProm);
         jP_MateriasProm.setLayout(jP_MateriasPromLayout);
@@ -1142,7 +1149,7 @@ public class VtnAdministrador extends javax.swing.JFrame
                     .addComponent(lblTitPromedio)
                     .addComponent(lblFProm))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPaneMaterias, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                .addComponent(jScrollPaneMaterias, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1645,7 +1652,7 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 8)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(23, 100, 165));
-        jLabel10.setText("FECHA DE INGRESO");
+        jLabel10.setText("FECHA DE NACIMIENTO");
 
         jSeparator1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -2051,6 +2058,15 @@ public class VtnAdministrador extends javax.swing.JFrame
         {
             JOptionPane.showMessageDialog(this,
                     "Ingrese solo numeros",
+                    "Error de campo",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (validaciones.ValidadorAlumno.esVacio(promedio))
+        {
+            JOptionPane.showMessageDialog(this,
+                    "El promedio no puede ser vacio",
                     "Error de campo",
                     JOptionPane.ERROR_MESSAGE);
             return;
@@ -2823,7 +2839,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         jTextField2.setText("");
     }
 
-    
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton2ActionPerformed
     {//GEN-HEADEREND:event_jButton2ActionPerformed
         int respuesta = JOptionPane.showConfirmDialog(
@@ -2859,6 +2875,11 @@ public class VtnAdministrador extends javax.swing.JFrame
                 + "• Pulsa «Limpiar filtros» para reiniciar la búsqueda.",
                 "¿Cómo busco?", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnAyudaActionPerformed
+
+    private void jTxt_PromedioActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jTxt_PromedioActionPerformed
+    {//GEN-HEADEREND:event_jTxt_PromedioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTxt_PromedioActionPerformed
 
     // Edicion metodos propios
     private void conScroll(JPanel card, String nombre)
