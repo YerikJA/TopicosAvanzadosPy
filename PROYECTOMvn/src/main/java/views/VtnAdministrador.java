@@ -77,7 +77,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.estilizarEtiqueta(jLbl_Contra);
         jLbl_Contra.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
 
-
         // Consulta
         Estilos.estilizarEtiqueta(jLb_CONSULTA_CARR);
         jLb_CONSULTA_CARR.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
@@ -111,10 +110,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.estilizarBoton(jB_Consulta_Riesg);
         Estilos.estilizarBoton(jB_Consulta_Rep);
         // Alta: datos principales
-        Estilos.estilizarBotonPrincipal(jBttn_Continuar);
+        Estilos.estilizarBotonPrincipal(jBttn_ContinuarDP);
         Estilos.estilizarBoton(jBttn_Cancelar);
         // Alta: materias y promedio
-        Estilos.estilizarBotonPrincipal(jBttn_Continuar_2);
+        Estilos.estilizarBotonPrincipal(jBttn_ContinuarMP);
         Estilos.estilizarBoton(jBttn_Cancelar_2);
         // Alta: cuenta y extras
         Estilos.estilizarBotonPrincipal(jB_Guardar);
@@ -143,7 +142,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_CONSULTA_COMP.setBorder(null);
 
         // ---- TABLAS ----
-        Estilos.estilizarTabla(jMaterias);
+        Estilos.estilizarTabla(jTb_Materias);
 
         // ---- PANELES CON SOMBRA ----
         Estilos.estilizarPanelConSombra(jP_Bienvenida);
@@ -190,8 +189,8 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.icono(jBttn_MateriasProm, FontAwesomeSolid.LIST_ALT, 18);
         Estilos.icono(jBttn_CuentasExtr, FontAwesomeSolid.LOCK, 18);
 
-        Estilos.icono(jBttn_Continuar, FontAwesomeSolid.ARROW_RIGHT, 18);
-        Estilos.icono(jBttn_Continuar_2, FontAwesomeSolid.ARROW_RIGHT, 18);
+        Estilos.icono(jBttn_ContinuarDP, FontAwesomeSolid.ARROW_RIGHT, 18);
+        Estilos.icono(jBttn_ContinuarMP, FontAwesomeSolid.ARROW_RIGHT, 18);
         Estilos.icono(jBttn_Cancelar, FontAwesomeSolid.TIMES, 18);
         Estilos.icono(jBttn_Cancelar_2, FontAwesomeSolid.TIMES, 18);
         Estilos.icono(jB_Cancelar3, FontAwesomeSolid.TIMES, 18);
@@ -206,7 +205,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         // etiquetas
         Estilos.icono(jLbl_CuentaExtras, FontAwesomeSolid.COG, 24);
         Estilos.icono(jLbl_Contra, FontAwesomeSolid.KEY, 16);
-
 
         Estilos.icono(jL_Semestre, FontAwesomeSolid.CALENDAR_ALT, 16);
         Estilos.icono(jL_Materias, FontAwesomeSolid.BOOK, 16);
@@ -223,8 +221,6 @@ public class VtnAdministrador extends javax.swing.JFrame
 
     private void cargarCatalogos()
     {
-   
-
         // ===== EDICIÓN =====
         grupoPestanasEd.add(jTBuscar);
         grupoPestanasEd.add(jTDatos);
@@ -267,7 +263,8 @@ public class VtnAdministrador extends javax.swing.JFrame
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
 
         jL_TituloGeneral = new javax.swing.JLabel();
         jBttn_Edicion = new javax.swing.JButton();
@@ -293,14 +290,14 @@ public class VtnAdministrador extends javax.swing.JFrame
         jL_Fecha = new javax.swing.JLabel();
         jDC_Nacimiento = new com.toedter.calendar.JDateChooser();
         jBttn_Cancelar = new javax.swing.JButton();
-        jBttn_Continuar = new javax.swing.JButton();
+        jBttn_ContinuarDP = new javax.swing.JButton();
         jP_MateriasProm = new javax.swing.JPanel();
-        jBttn_Continuar_2 = new javax.swing.JButton();
+        jBttn_ContinuarMP = new javax.swing.JButton();
         jBttn_Cancelar_2 = new javax.swing.JButton();
         jL_Semestre = new javax.swing.JLabel();
         jL_Materias = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jMaterias = new javax.swing.JTable();
+        jTb_Materias = new javax.swing.JTable();
         jL_Promedio = new javax.swing.JLabel();
         jTxt_Semestre = new javax.swing.JTextField();
         jTxt_Promedio = new javax.swing.JTextField();
@@ -432,32 +429,40 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jBttn_Edicion.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Edicion.setText("EDICIÓN");
-        jBttn_Edicion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBttn_Edicion.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBttn_EdicionActionPerformed(evt);
             }
         });
 
         jBttn_Alta.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Alta.setText("ALTA");
-        jBttn_Alta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBttn_Alta.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBttn_AltaActionPerformed(evt);
             }
         });
 
         jBttn_Consulta.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Consulta.setText("CONSULTA");
-        jBttn_Consulta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBttn_Consulta.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBttn_ConsultaActionPerformed(evt);
             }
         });
 
         jBttn_Baja.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Baja.setText("BAJA");
-        jBttn_Baja.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBttn_Baja.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBttn_BajaActionPerformed(evt);
             }
         });
@@ -489,8 +494,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_Alta.setLayout(new java.awt.BorderLayout());
 
         jBttn_DatosPrincipales.setText("1. DATOS PRINCIPALES");
-        jBttn_DatosPrincipales.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBttn_DatosPrincipales.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBttn_DatosPrincipalesActionPerformed(evt);
             }
         });
@@ -522,10 +529,12 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jBttn_Cancelar.setText("Cancelar");
 
-        jBttn_Continuar.setText("Continuar");
-        jBttn_Continuar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBttn_ContinuarActionPerformed(evt);
+        jBttn_ContinuarDP.setText("Continuar");
+        jBttn_ContinuarDP.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jBttn_ContinuarDPActionPerformed(evt);
             }
         });
 
@@ -558,7 +567,7 @@ public class VtnAdministrador extends javax.swing.JFrame
             .addGroup(jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_DatosPrincipalesLayout.createSequentialGroup()
                     .addContainerGap(659, Short.MAX_VALUE)
-                    .addComponent(jBttn_Continuar, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBttn_ContinuarDP, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(72, 72, 72)))
         );
         jP_DatosPrincipalesLayout.setVerticalGroup(
@@ -585,16 +594,18 @@ public class VtnAdministrador extends javax.swing.JFrame
             .addGroup(jP_DatosPrincipalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jP_DatosPrincipalesLayout.createSequentialGroup()
                     .addGap(91, 91, 91)
-                    .addComponent(jBttn_Continuar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBttn_ContinuarDP, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(482, Short.MAX_VALUE)))
         );
 
         jP_AltCard.add(jP_DatosPrincipales, "card2");
 
-        jBttn_Continuar_2.setText("Continuar");
-        jBttn_Continuar_2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBttn_Continuar_2ActionPerformed(evt);
+        jBttn_ContinuarMP.setText("Continuar");
+        jBttn_ContinuarMP.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jBttn_ContinuarMPActionPerformed(evt);
             }
         });
 
@@ -606,18 +617,20 @@ public class VtnAdministrador extends javax.swing.JFrame
         jL_Materias.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jL_Materias.setText("Materias");
 
-        jMaterias.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        jTb_Materias.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][]
+            {
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null}
             },
-            new String [] {
+            new String []
+            {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jMaterias);
+        jScrollPane1.setViewportView(jTb_Materias);
 
         jL_Promedio.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jL_Promedio.setText("Promedio General");
@@ -651,7 +664,7 @@ public class VtnAdministrador extends javax.swing.JFrame
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_MateriasPromLayout.createSequentialGroup()
                                 .addGroup(jP_MateriasPromLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jBttn_Cancelar_2, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jBttn_Continuar_2, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jBttn_ContinuarMP, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(105, 105, 105))))))
         );
         jP_MateriasPromLayout.setVerticalGroup(
@@ -670,7 +683,7 @@ public class VtnAdministrador extends javax.swing.JFrame
                         .addGap(9, 9, 9)
                         .addComponent(jTxt_Promedio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 155, Short.MAX_VALUE)
-                        .addComponent(jBttn_Continuar_2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jBttn_ContinuarMP, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(51, 51, 51)
                         .addComponent(jBttn_Cancelar_2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(62, 62, 62))
@@ -690,16 +703,20 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jB_Cancelar3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jB_Cancelar3.setText("Volver");
-        jB_Cancelar3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jB_Cancelar3.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jB_Cancelar3ActionPerformed(evt);
             }
         });
 
         jB_Guardar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jB_Guardar.setText("Guardar");
-        jB_Guardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jB_Guardar.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jB_GuardarActionPerformed(evt);
             }
         });
@@ -893,8 +910,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         jLabel1.setText("EDICION");
 
         jTBuscar.setText("1.Buscar");
-        jTBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jTBuscar.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jTBuscarActionPerformed(evt);
             }
         });
@@ -966,8 +985,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         jLabel21.setText("Fecha nac.");
         jP_EdDatos.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 400, -1, -1));
 
-        txtNombre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        txtNombre.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 txtNombreActionPerformed(evt);
             }
         });
@@ -975,8 +996,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_EdDatos.add(txtApPat, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 160, 280, -1));
         jP_EdDatos.add(txtApMaterno, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 210, 280, -1));
 
-        txtCorreo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        txtCorreo.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 txtCorreoActionPerformed(evt);
             }
         });
@@ -990,7 +1013,8 @@ public class VtnAdministrador extends javax.swing.JFrame
         jLabel22.setText("Materias");
         jP_EdDatos.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 450, -1, -1));
 
-        lstMaterias.setModel(new javax.swing.AbstractListModel<String>() {
+        lstMaterias.setModel(new javax.swing.AbstractListModel<String>()
+        {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
@@ -1015,8 +1039,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_EdDatos.add(btnCancelar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, -1, -1));
 
         btnContinuar2.setText("Continuar");
-        btnContinuar2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnContinuar2.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 btnContinuar2ActionPerformed(evt);
             }
         });
@@ -1029,36 +1055,44 @@ public class VtnAdministrador extends javax.swing.JFrame
         lblResumen.setText("Resumen del tramite");
 
         tblCambios.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object [][]
+            {
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null}
             },
-            new String [] {
+            new String []
+            {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
         jScrollPane3.setViewportView(tblCambios);
 
         chkConfirmo.setText("Revise los cambios y deseo guardarlos");
-        chkConfirmo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        chkConfirmo.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 chkConfirmoActionPerformed(evt);
             }
         });
 
         btnAtras3.setText("Atras");
-        btnAtras3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnAtras3.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 btnAtras3ActionPerformed(evt);
             }
         });
 
         btnGuardar.setText("Guardar cambios");
         btnGuardar.setEnabled(false);
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnGuardar.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 btnGuardarActionPerformed(evt);
             }
         });
@@ -1113,16 +1147,20 @@ public class VtnAdministrador extends javax.swing.JFrame
         lblNoControl.setText("No. de control");
         jP_EdBuscar.add(lblNoControl, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 60, -1, -1));
 
-        txtNoControl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        txtNoControl.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 txtNoControlActionPerformed(evt);
             }
         });
         jP_EdBuscar.add(txtNoControl, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 110, 240, 20));
 
         btnBuscar.setText("Buscar");
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnBuscar.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 btnBuscarActionPerformed(evt);
             }
         });
@@ -1183,16 +1221,20 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jBContinuar1.setText("Continuar");
         jBContinuar1.setEnabled(false);
-        jBContinuar1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBContinuar1.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBContinuar1ActionPerformed(evt);
             }
         });
         jP_EdBuscar.add(jBContinuar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 320, -1, 20));
 
         jBCancelar1.setText("Cancelar");
-        jBCancelar1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBCancelar1.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBCancelar1ActionPerformed(evt);
             }
         });
@@ -1553,8 +1595,10 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jBttn_Regresar.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Regresar.setText("REGRESAR");
-        jBttn_Regresar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBttn_Regresar.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBttn_RegresarActionPerformed(evt);
             }
         });
@@ -1631,16 +1675,37 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.seleccionar(jBttn_Alta);
     }//GEN-LAST:event_jBttn_AltaActionPerformed
 
-    private void jBttn_ContinuarActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_ContinuarActionPerformed
-    {//GEN-HEADEREND:event_jBttn_ContinuarActionPerformed
+    private void jBttn_ContinuarDPActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_ContinuarDPActionPerformed
+    {//GEN-HEADEREND:event_jBttn_ContinuarDPActionPerformed
         // TODO add your handling code here:
         String nombre = jTxt_nombre.getText().trim();
         String apellidoPat = jTxt_ApellidoPat.getText().trim();
         String apellidoMat = jTxt_ApellidoMat.getText().trim();
         Date fechaNacimiento = jDC_Nacimiento.getDate();
+        
+        if (validaciones.ValidadorAlumno.esVacio(nombre))
+        {
+            JOptionPane.showMessageDialog(this,
+                    "El nombre no puede ser vacio, campo obligatorio",
+                    "Error de campo",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         if (!validaciones.ValidadorAlumno.nombreValido(nombre))
         {
-            JOptionPane.showMessageDialog(this, "El formato del nombre no es valido. Ingerese un nombre válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "El formato del nombre no es valido. Ingerese un nombre válido",
+                    "Error de campo",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (validaciones.ValidadorAlumno.esVacio(apellidoPat))
+        {
+            JOptionPane.showMessageDialog(this,
+                    "El apellido no puede ser vacio, campo obligatorio",
+                    "Error de campo",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (!validaciones.ValidadorAlumno.nombreValido(apellidoPat))
@@ -1648,9 +1713,25 @@ public class VtnAdministrador extends javax.swing.JFrame
             JOptionPane.showMessageDialog(this, "El formato del apellido paterno no es valido. Ingerese un apellido válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        if (validaciones.ValidadorAlumno.esVacio(apellidoMat))
+        {
+            JOptionPane.showMessageDialog(this,
+                    "El apellido no puede ser vacio, campo obligatorio",
+                    "Error de campo",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         if (!validaciones.ValidadorAlumno.nombreValido(apellidoMat))
         {
             JOptionPane.showMessageDialog(this, "El formato del apellido materno no es valido. Ingerese un apellido válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (validaciones.ValidadorAlumno.fechaVacia(fechaNacimiento))
+        {
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar una fecha",
+                    "Error de campo",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (validaciones.ValidadorAlumno.fechaFutura(fechaNacimiento))
@@ -1659,16 +1740,18 @@ public class VtnAdministrador extends javax.swing.JFrame
             return;
 
         }
-        /*                if(validaciones.ValidadorAlumno.fechaPasada(fechaNacimiento))
+        if (validaciones.ValidadorAlumno.fechaPasada(fechaNacimiento))
         {
             JOptionPane.showMessageDialog(this, "No puede ingresar una fecha anterios a 1950. Ingerese una fecha válida", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
-            
+
         }
         String nombreCompleto = nombre + apellidoPat + apellidoMat;
 
-         */
-    }//GEN-LAST:event_jBttn_ContinuarActionPerformed
+        java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
+        cl.show(jP_AltCard, "card3");
+        Estilos.seleccionar(jBttn_MateriasProm);
+    }//GEN-LAST:event_jBttn_ContinuarDPActionPerformed
 
     private void jBttn_EdicionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttn_EdicionActionPerformed
         // TODO add your handling code here:
@@ -1688,16 +1771,75 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.seleccionar(jBttn_Consulta);
     }//GEN-LAST:event_jBttn_ConsultaActionPerformed
 
-    private void jBttn_Continuar_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttn_Continuar_2ActionPerformed
+    private void jBttn_ContinuarMPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttn_ContinuarMPActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jBttn_Continuar_2ActionPerformed
+        List<String> materias= new ArrayList<>();
+        int [] indice=jTb_Materias.getSelectedRows();
+        String semestre= jTxt_Semestre.getText().trim();
+        String promedio= jTxt_Promedio.getText().trim();
+        
+        if(!validaciones.ValidadorAlumno.materiasVacias(materias))
+        {
+            JOptionPane.showMessageDialog(this, 
+                    "Agregue al menos una materia", 
+                    "Error de campo", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        for (int i = 0; i < indice.length; i++)
+        {
+            materias.add((String) jTb_Materias.getValueAt(indice[i], 0));
+            
+        }
+        
+        if (validaciones.ValidadorAlumno.esVacio(semestre))
+        {
+            JOptionPane.showMessageDialog(this, 
+                    "El semestre no puede estar vacio.", 
+                    "Error de campo", 
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(!validaciones.ValidadorAlumno.validarNumericos(semestre))
+        {
+            JOptionPane.showMessageDialog(this, 
+                    "Ingrese solo numeros", 
+                    "Error de campo", 
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(!validaciones.ValidadorAlumno.validarNumericos(promedio))
+        {
+            JOptionPane.showMessageDialog(this, 
+                    "Ingrese solo valores numericos", 
+                    "Error de campo", 
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        Double promedioValido= validaciones.ValidadorAlumno.promedioValido(promedio);
+        if (promedioValido==null)
+        {
+            JOptionPane.showMessageDialog(this, 
+                    "Promeido fuera del rango, ingrese un promedio entre 0 y 100", 
+                    "Error de campo", 
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+            
+        }
+        
+        
+        java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
+        cl.show(jP_AltCard, "card4");
+        Estilos.seleccionar(jBttn_CuentasExtr);
+        
+        
+    }//GEN-LAST:event_jBttn_ContinuarMPActionPerformed
 
     private void jB_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_GuardarActionPerformed
         // TODO add your handling code here:
         String correo = jTxt_Correo.getText().trim();
         String contraseña = new String(jPF_contraseña.getPassword());
-        
-        
 
         if (ValidadorAlumno.esVacio(correo))
         {
@@ -1707,8 +1849,8 @@ public class VtnAdministrador extends javax.swing.JFrame
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-                if (!ValidadorAlumno.correoValido(correo))
+
+        if (!ValidadorAlumno.correoValido(correo))
         {
             javax.swing.JOptionPane.showMessageDialog(this,
                     "El formato del correo electrónico no es válido. Ejemplo: usuario@dominio.com",
@@ -1717,7 +1859,7 @@ public class VtnAdministrador extends javax.swing.JFrame
             jTxt_Correo.requestFocus();
             return;
         }
-                
+
         if (validaciones.ValidadorAlumno.esVacio(contraseña))
         {
             JOptionPane.showMessageDialog(this,
@@ -1726,7 +1868,6 @@ public class VtnAdministrador extends javax.swing.JFrame
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-
 
 
     }//GEN-LAST:event_jB_GuardarActionPerformed
@@ -1744,13 +1885,7 @@ public class VtnAdministrador extends javax.swing.JFrame
     }//GEN-LAST:event_txtCorreoActionPerformed
 
     private void btnContinuar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuar2ActionPerformed
-        // TODO add your handling code here:
-        if (!validarFormulario())
-        {
-            return;
-        }
-        cargarTablaCambios();
-        irA("confirmar");
+       
     }//GEN-LAST:event_btnContinuar2ActionPerformed
 
     private void chkConfirmoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkConfirmoActionPerformed
@@ -1845,7 +1980,7 @@ public class VtnAdministrador extends javax.swing.JFrame
 
     private void jB_Cancelar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_Cancelar3ActionPerformed
         // TODO add your handling code here:
-        
+
         java.awt.CardLayout cExtra = (java.awt.CardLayout) jP_AltCard.getLayout();
         cExtra.previous(jP_AltCard);
     }//GEN-LAST:event_jB_Cancelar3ActionPerformed
@@ -2094,72 +2229,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         return c.get(java.util.Calendar.YEAR) < 1950;
     }
 
-    private boolean validarFormulario()
-    {
-        String nombre = txtNombre.getText().trim();
-        String correo = txtCorreo.getText().trim();
-        String promedio = txtPromedio.getText().trim();
-        Date fecha = dcFechaNac.getDate();
-
-        if (ValidadorAlumno.esVacio(nombre))
-        {
-            error("Campo requerido", "El nombre es OBLIGATORIO");
-            return false;
-        }
-        if (!ValidadorAlumno.nombreValido(nombre))
-        {
-            error("Error de validación", "El nombre solo puede contener letras y espacios.");
-            return false;
-        }
-        if (ValidadorAlumno.esVacio(correo))
-        {
-            error("Campo requerido", "El correo es OBLIGATORIO");
-            return false;
-        }
-        if (!ValidadorAlumno.correoValido(correo))
-        {
-            error("Error de validación", "El formato del correo no es válido. Ejemplo: usuario@dominio.com");
-            txtCorreo.requestFocus();
-            return false;
-        }
-        if (ValidadorAlumno.seleccionCb(cmbCarrera.getSelectedIndex()))
-        {
-            error("Campo requerido", "La carrera es OBLIGATORIA");
-            return false;
-        }
-        if (ValidadorAlumno.promedioVacio(promedio))
-        {
-            error("Campo requerido", "No puede quedar vacío el Promedio");
-            return false;
-        }
-        if (!ValidadorAlumno.promedioValido(promedio))
-        {
-            error("Error de validación", "El promedio debe ser numérico");
-            return false;
-        }
-        if (!ValidadorAlumno.promedioValid(Double.parseDouble(promedio)))
-        {
-            error("Error en el rango", "El promedio debe estar en un rango de 0 a 100");
-            return false;
-        }
-        if (ValidadorAlumno.fechaVacia(fecha))
-        {
-            error("Campo requerido", "Debe ingresar la fecha de nacimiento");
-            return false;
-        }
-        if (ValidadorAlumno.fechaFutura(fecha) || fechaAnterior1950(fecha))
-        {
-            error("Error en fecha", "La fecha no puede ser futura ni anterior a 1950");
-            return false;
-        }
-        if (ValidadorAlumno.materiasVacias(lstMaterias.getSelectedValuesList()))
-        {
-            error("Campo requerido", "Debe seleccionar al menos una materia");
-            return false;
-        }
-        return true;
-    }
-
+    
     private void agregarSiCambio(DefaultTableModel m, String campo, String antes, String despues)
     {
         if (!java.util.Objects.equals(antes, despues))
@@ -2265,10 +2335,10 @@ public class VtnAdministrador extends javax.swing.JFrame
                 modelo.addRow(fila);
          */
         //no mover las columnas de lugar
-        jMaterias.getTableHeader().setReorderingAllowed(false);
+        jTb_Materias.getTableHeader().setReorderingAllowed(false);
         //no cambiarles la longitud
-        jMaterias.getTableHeader().setResizingAllowed(false);
-        jMaterias.setModel(modelo); //muestrala
+        jTb_Materias.getTableHeader().setResizingAllowed(false);
+        jTb_Materias.setModel(modelo); //muestrala
 
     }
 
@@ -2299,8 +2369,8 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JButton jBttn_Cancelar;
     private javax.swing.JButton jBttn_Cancelar_2;
     private javax.swing.JButton jBttn_Consulta;
-    private javax.swing.JButton jBttn_Continuar;
-    private javax.swing.JButton jBttn_Continuar_2;
+    private javax.swing.JButton jBttn_ContinuarDP;
+    private javax.swing.JButton jBttn_ContinuarMP;
     private javax.swing.JButton jBttn_CuentasExtr;
     private javax.swing.JButton jBttn_DatosPrincipales;
     private javax.swing.JButton jBttn_Edicion;
@@ -2362,7 +2432,6 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JLabel jLbl_Promedio;
     private javax.swing.JLabel jLbl_Semestre;
     private javax.swing.JLabel jLbl_correo;
-    private javax.swing.JTable jMaterias;
     private javax.swing.JPasswordField jPF_contraseña;
     private javax.swing.JPanel jP_AltCard;
     private javax.swing.JPanel jP_Alta;
@@ -2399,6 +2468,7 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JToggleButton jTBuscar;
     private javax.swing.JToggleButton jTConfirmar;
     private javax.swing.JToggleButton jTDatos;
+    private javax.swing.JTable jTb_Materias;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
