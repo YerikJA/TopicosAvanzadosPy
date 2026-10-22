@@ -201,7 +201,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.estilizarBoton(jB_Cancelar3);
         // Consulta y Baja
         Estilos.estilizarBotonPrincipal(jButton1);   // BUSCAR
-        Estilos.estilizarBoton(jButton4);            // LIMPIAR
         Estilos.estilizarBotonPrincipal(jButton2);   // DAR BAJA
         Estilos.estilizarBoton(jButton3);            // CANCELAR
 
@@ -551,7 +550,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         jTextField9 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         jBttn_Regresar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1776,16 +1774,11 @@ public class VtnAdministrador extends javax.swing.JFrame
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton3.setText("CANCELAR");
         jButton3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-
-        jButton4.setBackground(new java.awt.Color(255, 100, 24));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton4.setText("LIMPIAR");
-        jButton4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        jButton4.addActionListener(new java.awt.event.ActionListener()
+        jButton3.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                jButton4ActionPerformed(evt);
+                jButton3ActionPerformed(evt);
             }
         });
 
@@ -1812,8 +1805,6 @@ public class VtnAdministrador extends javax.swing.JFrame
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(67, 67, 67)
                                 .addComponent(jButton1)
-                                .addGap(39, 39, 39)
-                                .addComponent(jButton4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 99, Short.MAX_VALUE))))
@@ -1827,7 +1818,6 @@ public class VtnAdministrador extends javax.swing.JFrame
                     .addComponent(jLabel4)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1)
-                    .addComponent(jButton4)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2809,18 +2799,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         jTextField5.setText(semestreAlu);
         jTextField8.setText(new SimpleDateFormat("dd/MM/yyyy").format(a.getFechaNaciomiento()));
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton4ActionPerformed
-    {//GEN-HEADEREND:event_jButton4ActionPerformed
-        jTextField6.setText("");
-        jTextField5.setText("");
-        jTextField7.setText("");
-        jTextField8.setText("");
-        jTextField9.setText("");
-        jTextField3.setText("");
-        jTextField1.setText("");
-        jTextField2.setText("");
-    }//GEN-LAST:event_jButton4ActionPerformed
     private void limpiarBaja()
     {
         jTextField6.setEditable(false);
@@ -2880,6 +2858,19 @@ public class VtnAdministrador extends javax.swing.JFrame
     {//GEN-HEADEREND:event_jTxt_PromedioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTxt_PromedioActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton3ActionPerformed
+    {//GEN-HEADEREND:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        jTextField1.setText("");
+        jTextField6.setText("");
+        jTextField5.setText("");
+        jTextField7.setText("");
+        jTextField8.setText("");
+        jTextField9.setText("");
+        jTextField3.setText("");
+        jTextField2.setText("");
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     // Edicion metodos propios
     private void conScroll(JPanel card, String nombre)
@@ -3452,7 +3443,6 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JComboBox<String> jCB_Carrera;
     private javax.swing.JComboBox<String> jComboBox1_C;
     private com.toedter.calendar.JDateChooser jDC_Nacimiento;
