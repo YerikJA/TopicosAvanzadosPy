@@ -19,6 +19,40 @@ import model.Alumno;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import validaciones.ValidadorAlumno;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.RenderingHints;
+import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import model.Alumno;
+
 public class VtnAdministrador extends javax.swing.JFrame {
 
     private AlumnoController controllerAdministracion;
@@ -35,6 +69,37 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private List<String> materiasAlu;
     private String pasoActual = "buscar";
     private final javax.swing.ButtonGroup grupoPestanasEd = new javax.swing.ButtonGroup();
+    
+    // ------------------------------------------------------------------
+    // Constantes
+    // ------------------------------------------------------------------
+    private static final String TODAS_CARRERAS = "Todas las carreras";
+    private static final String TODAS_MATERIAS = "Todas las materias";
+
+    private static final Color FONDO = new Color(226, 250, 255);
+    private static final Color TARJETA = Color.WHITE;
+    private static final Color BORDE = new Color(200, 215, 225);
+    private static final Color TEXTO_SUAVE = new Color(100, 110, 120);
+    private static final Color SELECCION = new Color(214, 234, 255);
+
+    private static final Font F_NORMAL = new Font("Segoe UI", Font.PLAIN, 15);
+    private static final Font F_NEGRITA = new Font("Segoe UI", Font.BOLD, 15);
+    private static final Font F_ETIQUETA = new Font("Segoe UI", Font.PLAIN, 13);
+
+    
+
+    // ------------------------------------------------------------------
+    // Estado y Controladores
+    // ------------------------------------------------------------------
+    private final CatalogoController catalogo = new CatalogoController();
+
+    private List<Alumno> todos = new ArrayList<>();
+    private final Map<Alumno, List<String>> materiasDe = new HashMap<>();
+    private boolean cargando = false;
+    
+    
+    private final DefaultListModel<Alumno> modeloLista = new DefaultListModel<>();
+    private final JList<Alumno> listaAlumnos = new JList<>(modeloLista);
 
     public VtnAdministrador(AlumnoController controller) {
         initComponents();
@@ -42,7 +107,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
         controllerAdministracion = controller;
         //jP_Edicion.setLayout(new java.awt.BorderLayout());
         //jP_Edicion.add(new PanelEdicion(controller), java.awt.BorderLayout.CENTER);
-
+        
         setTitle("Administracion");
         cargarTabla();
         this.noControl = noControl;
@@ -63,7 +128,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
         Estilos.estilizarTitulo(jLabel2);
         jLabel2.setFont(Estilos.fuente(java.awt.Font.PLAIN, 48));   // corregido
 
-        Estilos.estilizarTitulo(jLb_Consulta_buscar);
+//        Estilos.estilizarTitulo(jLb_Consulta_buscar);
 
         // ---- MENÚ Y PESTAÑAS ----
         Estilos.estilizarMenu(jBttn_Alta, jBttn_Consulta, jBttn_Edicion, jBttn_Baja);
@@ -97,20 +162,20 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jLbl_Contra.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
 
         // Consulta
-        Estilos.estilizarEtiqueta(jLb_CONSULTA_CARR);
-        jLb_CONSULTA_CARR.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-        Estilos.estilizarEtiqueta(jLb_CONSULTA_ORDENAR);
-        jLb_CONSULTA_ORDENAR.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-        Estilos.estilizarEtiqueta(jLb_CONSULTA_PROM);
-        jLb_CONSULTA_PROM.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-        Estilos.estilizarEtiqueta(jLb_Consulta_A);
-        jLb_Consulta_A.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-        Estilos.estilizarEtiqueta(jLb_Consulta_Sit_Ac);
-        jLb_Consulta_Sit_Ac.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-        Estilos.estilizarEtiqueta(jLb_Consulta_buscar);
-        jLb_Consulta_buscar.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-        Estilos.estilizarEtiqueta(jLb_Consulta_materias);
-        jLb_Consulta_materias.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
+//        Estilos.estilizarEtiqueta(jLb_CONSULTA_CARR);
+//        jLb_CONSULTA_CARR.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
+//        Estilos.estilizarEtiqueta(jLb_CONSULTA_ORDENAR);
+//        jLb_CONSULTA_ORDENAR.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
+//        Estilos.estilizarEtiqueta(jLb_CONSULTA_PROM);
+//        jLb_CONSULTA_PROM.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
+//        Estilos.estilizarEtiqueta(jLb_Consulta_A);
+//        jLb_Consulta_A.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
+//        Estilos.estilizarEtiqueta(jLb_Consulta_Sit_Ac);
+//        jLb_Consulta_Sit_Ac.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
+//        Estilos.estilizarEtiqueta(jLb_Consulta_buscar);
+//        jLb_Consulta_buscar.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
+//        Estilos.estilizarEtiqueta(jLb_Consulta_materias);
+//        jLb_Consulta_materias.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
 
         // ---- CAMPOS DE TEXTO ----
         Estilos.estilizarCampo(jTxt_Semestre);
@@ -124,11 +189,11 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
         // ---- BOTONES ----
         // Consulta: situación académica
-        Estilos.estilizarBoton(jB_Consulta_Todos);
-        Estilos.estilizarBoton(jB_Consulta_Sobresal);
-        Estilos.estilizarBoton(jB_Cosnulta_Aprob);
-        Estilos.estilizarBoton(jB_Consulta_Riesg);
-        Estilos.estilizarBoton(jB_Consulta_Rep);
+//        Estilos.estilizarBoton(btnAyuda);
+//        Estilos.estilizarBoton(jbtnLimpiar);
+//        Estilos.estilizarBoton(jB_Cosnulta_Aprob);
+//        Estilos.estilizarBoton(jB_Consulta_Riesg);
+//        Estilos.estilizarBoton(jB_Consulta_Rep);
         // Alta: datos principales
         Estilos.estilizarBotonPrincipal(jBttn_ContinuarDP);
         Estilos.estilizarBoton(jBttn_Cancelar);
@@ -145,15 +210,15 @@ public class VtnAdministrador extends javax.swing.JFrame {
         Estilos.estilizarBoton(jButton3);            // CANCELAR
 
         // ---- COMBOS ----
-        Estilos.estilizarCombo(jCb_CONSULTA_CARR);
-        Estilos.estilizarCombo(jCb_Consulta_Ordenar);
-        Estilos.estilizarCombo(jCb_Consulta_Materias);
+        Estilos.estilizarCombo(jcbCarrera);
+        Estilos.estilizarCombo(jComboBox1_C);
+        Estilos.estilizarCombo(jcbMateria);
         Estilos.estilizarCombo(jCB_Carrera);
 
         Estilos.estilizarCampo(jPF_contraseña);
-        Estilos.estilizarCampo(jTxt_Consulta_Buscar);
-        Estilos.estilizarSpinner(jSpinner1);
-        Estilos.estilizarSpinner(jSpinner2);
+//        Estilos.estilizarCampo(jTxt_Consulta_Buscar);
+//        Estilos.estilizarSpinner(jSpinner1);
+//        Estilos.estilizarSpinner(jSpinner2);
         Estilos.estilizarScroll(jScrollPane1);
 
         jP_ConsultaC.setOpaque(true);
@@ -170,6 +235,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
         Estilos.estilizarPanelConSombra(jP_Consulta);
         Estilos.estilizarFondo(jP_Edicion);
         Estilos.estilizarPanelConSombra(jP_Baja);
+        Estilos.estilizarPanelConSombra(jPanelFiltros);
 
         // ---- ALTA: PESTAÑAS ARRIBA, CAJA DEBAJO ----
         jP_Alta.add(jP_Encabezado, java.awt.BorderLayout.NORTH);
@@ -216,11 +282,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
         Estilos.icono(jB_Cancelar3, FontAwesomeSolid.TIMES, 18);
         Estilos.icono(jB_Guardar, FontAwesomeSolid.SAVE, 18);
 
-        Estilos.icono(jB_Consulta_Todos, FontAwesomeSolid.USERS, 18);
-        Estilos.icono(jB_Consulta_Sobresal, FontAwesomeSolid.STAR, 18);
-        Estilos.icono(jB_Cosnulta_Aprob, FontAwesomeSolid.CHECK_CIRCLE, 18);
-        Estilos.icono(jB_Consulta_Riesg, FontAwesomeSolid.EXCLAMATION_TRIANGLE, 18);
-        Estilos.icono(jB_Consulta_Rep, FontAwesomeSolid.TIMES_CIRCLE, 18);
+
 
         // etiquetas
         Estilos.icono(jLbl_CuentaExtras, FontAwesomeSolid.COG, 24);
@@ -230,13 +292,58 @@ public class VtnAdministrador extends javax.swing.JFrame {
         Estilos.icono(jL_Materias, FontAwesomeSolid.BOOK, 16);
         Estilos.icono(jL_Promedio, FontAwesomeSolid.CHART_LINE, 16);
 
-        Estilos.icono(jLb_Consulta_buscar, FontAwesomeSolid.SEARCH, 32);
-        Estilos.icono(jLb_CONSULTA_CARR, FontAwesomeSolid.GRADUATION_CAP, 16);
+        Estilos.icono(lblTitBuscar, FontAwesomeSolid.SEARCH, 32);
+        Estilos.icono(lblTitMateria, FontAwesomeSolid.GRADUATION_CAP, 16);
         Estilos.icono(jLb_CONSULTA_ORDENAR, FontAwesomeSolid.SORT_AMOUNT_DOWN, 16);
-        Estilos.icono(jLb_Consulta_materias, FontAwesomeSolid.BOOK, 16);
-        Estilos.icono(jLb_CONSULTA_PROM, FontAwesomeSolid.CHART_LINE, 16);
+        Estilos.icono(lblTitCarrera, FontAwesomeSolid.BOOK, 16);
+        Estilos.icono(lblTitRango, FontAwesomeSolid.CHART_LINE, 16);
+        Estilos.icono(jLb_CONSULTA_ORDENAR, FontAwesomeSolid.SORT_AMOUNT_DOWN, 16);
+        Estilos.icono(lblTitCarrera, FontAwesomeSolid.BOOK, 16);
+        Estilos.icono(lblFControl, FontAwesomeSolid.CHART_LINE, 16);
+        
+        Estilos.icono(jlblContador, FontAwesomeSolid.SORT_AMOUNT_DOWN, 16);
+        Estilos.icono(lblFNombre, FontAwesomeSolid.BOOK, 16);
+        
+        Estilos.icono(lblTitCorreo, FontAwesomeSolid.CHART_LINE, 16);
+        Estilos.icono(lblFCorreo, FontAwesomeSolid.SORT_AMOUNT_DOWN, 16);
+        
+        Estilos.icono(lblTitPromedio, FontAwesomeSolid.BOOK, 16);
+        Estilos.icono(lblFProm, FontAwesomeSolid.CHART_LINE, 16);
 
+        Estilos.icono(jLabel24, FontAwesomeSolid.COG, 24);
         cargarCatalogos();
+        iniciarConsulta();
+    }
+    
+        private void iniciarConsulta() {
+        jScrollPane4.setViewportView(listaAlumnos);
+        listaAlumnos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listaAlumnos.setCellRenderer(new TarjetaRenderer());
+
+        jtxtBuscar.setText("");
+        jComboBox1_C.setModel(new DefaultComboBoxModel<>(new String[]{
+            "Nombre (A-Z)", "Nombre (Z-A)", "Promedio (mayor)",
+            "Promedio (menor)", "No. de control"}));
+        jspMin.setModel(new javax.swing.SpinnerNumberModel(0.0, 0.0, 100.0, 1.0));
+        jspMax.setModel(new javax.swing.SpinnerNumberModel(100.0, 0.0, 100.0, 1.0));
+        jbtnLimpiar.addActionListener(e -> limpiarFiltros());
+
+        cargarCatalogoCarreras();
+        recargarDatos();
+        configurarEventos();
+        aplicarFiltros();
+    }
+
+    private void limpiarFiltros() {
+        cargando = true;
+        jtxtBuscar.setText("");
+        jcbCarrera.setSelectedIndex(0);
+        jcbMateria.setSelectedIndex(0);
+        jComboBox1_C.setSelectedIndex(0);
+        jspMin.setValue(0.0);
+        jspMax.setValue(100.0);
+        cargando = false;
+        aplicarFiltros();
     }
 
     private void cargarCatalogos() {
@@ -329,25 +436,38 @@ public class VtnAdministrador extends javax.swing.JFrame {
         jL_Carrera = new javax.swing.JLabel();
         jP_Consulta = new javax.swing.JPanel();
         jP_ConsultaC = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
         jP_CONSULTA_COMP = new javax.swing.JPanel();
-        jLb_Consulta_buscar = new javax.swing.JLabel();
-        jTxt_Consulta_Buscar = new javax.swing.JTextField();
-        jLb_CONSULTA_CARR = new javax.swing.JLabel();
-        jCb_CONSULTA_CARR = new javax.swing.JComboBox<>();
+        jLabel24 = new javax.swing.JLabel();
+        jPanelFiltros = new javax.swing.JPanel();
+        lblTitBuscar = new javax.swing.JLabel();
+        jtxtBuscar = new javax.swing.JTextField();
+        lblTitCarrera = new javax.swing.JLabel();
+        jcbCarrera = new javax.swing.JComboBox<>();
         jLb_CONSULTA_ORDENAR = new javax.swing.JLabel();
-        jCb_Consulta_Ordenar = new javax.swing.JComboBox<>();
-        jLb_Consulta_materias = new javax.swing.JLabel();
-        jCb_Consulta_Materias = new javax.swing.JComboBox<>();
-        jLb_CONSULTA_PROM = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
+        jComboBox1_C = new javax.swing.JComboBox<>();
+        lblTitMateria = new javax.swing.JLabel();
+        jcbMateria = new javax.swing.JComboBox<>();
+        lblTitRango = new javax.swing.JLabel();
+        jspMin = new javax.swing.JSpinner();
         jLb_Consulta_A = new javax.swing.JLabel();
-        jSpinner2 = new javax.swing.JSpinner();
-        jLb_Consulta_Sit_Ac = new javax.swing.JLabel();
-        jB_Consulta_Todos = new javax.swing.JButton();
-        jB_Consulta_Sobresal = new javax.swing.JButton();
-        jB_Cosnulta_Aprob = new javax.swing.JButton();
-        jB_Consulta_Riesg = new javax.swing.JButton();
-        jB_Consulta_Rep = new javax.swing.JButton();
+        jspMax = new javax.swing.JSpinner();
+        jlblContador = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jlistaAlumnos = new javax.swing.JList<>();
+        jPanel3 = new javax.swing.JPanel();
+        lblFNombre = new javax.swing.JLabel();
+        lblFControl = new javax.swing.JLabel();
+        lblTitCorreo = new javax.swing.JLabel();
+        lblFCorreo = new javax.swing.JLabel();
+        lblTitCarrera1 = new javax.swing.JLabel();
+        lblFCarrera = new javax.swing.JLabel();
+        lblTitPromedio = new javax.swing.JLabel();
+        lblFProm = new javax.swing.JLabel();
+        jScrollPaneMaterias = new javax.swing.JScrollPane();
+        txtFMaterias = new javax.swing.JTextArea();
+        btnAyuda = new javax.swing.JButton();
+        jbtnLimpiar = new javax.swing.JButton();
         jP_Edicion = new javax.swing.JPanel();
         jP_EncabezadoEd = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -808,126 +928,270 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
         jP_ConsultaC.setLayout(new java.awt.CardLayout());
 
-        jLb_Consulta_buscar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLb_Consulta_buscar.setText("BUSCAR");
+        jP_CONSULTA_COMP.setPreferredSize(new java.awt.Dimension(892, 604));
 
-        jTxt_Consulta_Buscar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jTxt_Consulta_Buscar.setText("Ej. Luis Estrada");
+        jLabel24.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel24.setText("Consulta");
 
-        jLb_CONSULTA_CARR.setText("CARRERA DEL ALUMNO");
+        lblTitBuscar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblTitBuscar.setText("Buscar");
 
-        jCb_CONSULTA_CARR.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jtxtBuscar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jtxtBuscar.setText("Ej. Luis Estrada");
 
-        jLb_CONSULTA_ORDENAR.setText("ORDENAR POR:");
+        lblTitCarrera.setText("Carrera del alumno");
 
-        jCb_Consulta_Ordenar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "TODOS", "SOBRESALIENTE", "APROBADO", "EN RIESGO", "REPORBADO" }));
+        jcbCarrera.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLb_Consulta_materias.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLb_Consulta_materias.setText("MATERIAS");
+        jLb_CONSULTA_ORDENAR.setText("Ordenar por:");
 
-        jCb_Consulta_Materias.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jCb_Consulta_Materias.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1_C.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jComboBox1_C.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLb_CONSULTA_PROM.setText("PROMEDIO(0 A 100)");
+        lblTitMateria.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblTitMateria.setText("Materia");
+
+        jcbMateria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "TODOS", "SOBRESALIENTE", "APROBADO", "EN RIESGO", "REPORBADO" }));
+
+        lblTitRango.setText("Promedio (0 a 100)");
 
         jLb_Consulta_A.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLb_Consulta_A.setText("A");
 
-        jLb_Consulta_Sit_Ac.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLb_Consulta_Sit_Ac.setText("SITUACIÓN ACADÉMICA");
+        javax.swing.GroupLayout jPanelFiltrosLayout = new javax.swing.GroupLayout(jPanelFiltros);
+        jPanelFiltros.setLayout(jPanelFiltrosLayout);
+        jPanelFiltrosLayout.setHorizontalGroup(
+            jPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelFiltrosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanelFiltrosLayout.createSequentialGroup()
+                        .addGroup(jPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jtxtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblTitBuscar)
+                            .addComponent(lblTitMateria))
+                        .addGap(23, 23, 23)
+                        .addGroup(jPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanelFiltrosLayout.createSequentialGroup()
+                                .addGroup(jPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblTitRango)
+                                    .addComponent(lblTitCarrera))
+                                .addGap(192, 192, 192))
+                            .addGroup(jPanelFiltrosLayout.createSequentialGroup()
+                                .addComponent(jcbCarrera, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(29, 29, 29)))
+                        .addGroup(jPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLb_CONSULTA_ORDENAR, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox1_C, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanelFiltrosLayout.createSequentialGroup()
+                        .addComponent(jcbMateria, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24)
+                        .addComponent(jspMin, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLb_Consulta_A)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jspMax, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(280, 280, 280)))
+                .addContainerGap(46, Short.MAX_VALUE))
+        );
+        jPanelFiltrosLayout.setVerticalGroup(
+            jPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelFiltrosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanelFiltrosLayout.createSequentialGroup()
+                        .addGroup(jPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblTitBuscar)
+                            .addComponent(lblTitCarrera)
+                            .addComponent(jLb_CONSULTA_ORDENAR))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jtxtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox1_C, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblTitMateria))
+                    .addGroup(jPanelFiltrosLayout.createSequentialGroup()
+                        .addComponent(jcbCarrera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTitRango)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jcbMateria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jspMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLb_Consulta_A)
+                    .addComponent(jspMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(9, Short.MAX_VALUE))
+        );
 
-        jB_Consulta_Todos.setText("TODOS");
+        jlblContador.setText("Mostrando 0 de 0 alumnos");
 
-        jB_Consulta_Sobresal.setText("SOBRESALIENTE");
+        jlistaAlumnos.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { " " };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane4.setViewportView(jlistaAlumnos);
 
-        jB_Cosnulta_Aprob.setText("APROBADO");
+        lblFNombre.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
+        lblFNombre.setText("Nombre del Alumno");
 
-        jB_Consulta_Riesg.setText("EN RIESGO");
+        lblFControl.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblFControl.setForeground(new java.awt.Color(100, 110, 120));
+        lblFControl.setText("No. de control: 00000000");
 
-        jB_Consulta_Rep.setText("REPROBADO");
+        lblTitCorreo.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        lblTitCorreo.setForeground(new java.awt.Color(100, 110, 120));
+        lblTitCorreo.setText("Correo:");
+
+        lblFCorreo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblFCorreo.setText("correo@ejemplo.com");
+
+        lblTitCarrera1.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        lblTitCarrera1.setForeground(new java.awt.Color(100, 110, 120));
+        lblTitCarrera1.setText("Carrera:");
+
+        lblFCarrera.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblFCarrera.setText("Sistemas");
+
+        lblTitPromedio.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        lblTitPromedio.setForeground(new java.awt.Color(100, 110, 120));
+        lblTitPromedio.setText("Promedio:");
+
+        lblFProm.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        lblFProm.setText("100");
+
+        jScrollPaneMaterias.setBorder(javax.swing.BorderFactory.createTitledBorder("Materias que cursa"));
+
+        txtFMaterias.setEditable(false);
+        txtFMaterias.setColumns(20);
+        txtFMaterias.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtFMaterias.setLineWrap(true);
+        txtFMaterias.setRows(5);
+        txtFMaterias.setWrapStyleWord(true);
+        jScrollPaneMaterias.setViewportView(txtFMaterias);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPaneMaterias)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(lblTitCorreo)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblFCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblTitPromedio)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblFProm, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblFNombre)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(lblFControl)
+                                .addGap(107, 107, 107)
+                                .addComponent(lblTitCarrera1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblFCarrera, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 29, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblFNombre)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblFControl)
+                    .addComponent(lblTitCarrera1)
+                    .addComponent(lblFCarrera))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTitCorreo)
+                    .addComponent(lblFCorreo)
+                    .addComponent(lblTitPromedio)
+                    .addComponent(lblFProm))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPaneMaterias, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        btnAyuda.setText("¿Cómo busco?");
+
+        jbtnLimpiar.setText("Limpiar filtros");
 
         javax.swing.GroupLayout jP_CONSULTA_COMPLayout = new javax.swing.GroupLayout(jP_CONSULTA_COMP);
         jP_CONSULTA_COMP.setLayout(jP_CONSULTA_COMPLayout);
         jP_CONSULTA_COMPLayout.setHorizontalGroup(
             jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
                         .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jCb_Consulta_Materias, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTxt_Consulta_Buscar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
-                                .addComponent(jLb_Consulta_buscar, javax.swing.GroupLayout.Alignment.LEADING))
-                            .addComponent(jLb_Consulta_materias))
-                        .addGap(35, 35, 35)
-                        .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLb_CONSULTA_PROM)
-                            .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jCb_Consulta_Ordenar, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
-                                    .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jCb_CONSULTA_CARR, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLb_CONSULTA_CARR)
-                                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
-                                            .addGap(18, 18, 18)
-                                            .addComponent(jLb_Consulta_A)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
-                                            .addGap(39, 39, 39)
-                                            .addComponent(jLb_CONSULTA_ORDENAR, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
-                    .addComponent(jLb_Consulta_Sit_Ac)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jlblContador, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(32, 32, 32)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
-                        .addComponent(jB_Consulta_Todos)
-                        .addGap(18, 18, 18)
-                        .addComponent(jB_Consulta_Sobresal)
-                        .addGap(18, 18, 18)
-                        .addComponent(jB_Cosnulta_Aprob)
-                        .addGap(18, 18, 18)
-                        .addComponent(jB_Consulta_Riesg)
-                        .addGap(18, 18, 18)
-                        .addComponent(jB_Consulta_Rep)))
-                .addContainerGap(32, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(jPanelFiltros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_CONSULTA_COMPLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(155, 155, 155)
+                        .addComponent(btnAyuda)
+                        .addGap(52, 52, 52)
+                        .addComponent(jbtnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(129, 129, 129)))
+                .addContainerGap())
         );
         jP_CONSULTA_COMPLayout.setVerticalGroup(
             jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLb_Consulta_buscar)
-                    .addComponent(jLb_CONSULTA_CARR)
-                    .addComponent(jLb_CONSULTA_ORDENAR))
+                    .addComponent(jLabel24)
+                    .addComponent(btnAyuda)
+                    .addComponent(jbtnLimpiar))
+                .addGap(6, 6, 6)
+                .addComponent(jPanelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTxt_Consulta_Buscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCb_CONSULTA_CARR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCb_Consulta_Ordenar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLb_Consulta_materias)
-                    .addComponent(jLb_CONSULTA_PROM))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCb_Consulta_Materias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLb_Consulta_A)
-                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLb_Consulta_Sit_Ac)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jB_Consulta_Todos)
-                    .addComponent(jB_Consulta_Sobresal)
-                    .addComponent(jB_Cosnulta_Aprob)
-                    .addComponent(jB_Consulta_Riesg)
-                    .addComponent(jB_Consulta_Rep))
-                .addContainerGap(284, Short.MAX_VALUE))
+                .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
+                        .addComponent(jlblContador)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
-        jP_ConsultaC.add(jP_CONSULTA_COMP, "card2");
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 892, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jP_CONSULTA_COMP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 454, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jP_CONSULTA_COMP, javax.swing.GroupLayout.PREFERRED_SIZE, 454, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+
+        jP_ConsultaC.add(jPanel1, "card2");
 
         jP_Consulta.add(jP_ConsultaC, java.awt.BorderLayout.CENTER);
 
@@ -1148,7 +1412,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(chkConfirmo)
                 .addGap(18, 18, 18)
-                .addGroup(jP_EdConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jP_EdConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnGuardar)
                     .addComponent(btnAtras3))
                 .addGap(90, 90, 90))
@@ -1662,6 +1926,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
     private void jBttn_ConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttn_ConsultaActionPerformed
         // TODO add your handling code here:
+        iniciarConsulta();
         java.awt.CardLayout cl = (java.awt.CardLayout) jp_Contenedor.getLayout();
         cl.show(jp_Contenedor, "card3");
         Estilos.seleccionar(jBttn_Consulta);
@@ -1822,7 +2087,417 @@ public class VtnAdministrador extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_jB_GuardarActionPerformed
+    
+    
+    private void configurarEventos()
+    {
+        // Búsqueda en vivo al teclear
+        jtxtBuscar.getDocument().addDocumentListener(new DocumentListener()
+        {
+            @Override
+            public void insertUpdate(DocumentEvent e) { aplicarFiltros(); }
+            @Override
+            public void removeUpdate(DocumentEvent e) { aplicarFiltros(); }
+            @Override
+            public void changedUpdate(DocumentEvent e) { aplicarFiltros(); }
+        });
 
+        // Combos
+        jcbCarrera.addActionListener(e -> aplicarFiltros());
+        jcbMateria.addActionListener(e -> aplicarFiltros());
+        jComboBox1_C.addActionListener(e -> aplicarFiltros());
+
+        // Spinners de rango
+        jspMin.addChangeListener(e -> alCambiarRango());
+        jspMax.addChangeListener(e -> alCambiarRango());
+
+        // Selección de alumno en lista para ver ficha
+        listaAlumnos.addListSelectionListener(e ->
+        {
+            if (!e.getValueIsAdjusting())
+            {
+                mostrarFicha(listaAlumnos.getSelectedValue());
+            }
+        });
+    }
+
+    // ------------------------------------------------------------------
+    // Métodos de compatibilidad y carga de datos
+    // ------------------------------------------------------------------
+    public void cargarTabla(String filtroCarrera)
+    {
+        recargarDatos();
+        if (filtroCarrera != null)
+        {
+            cargando = true;
+            jcbCarrera.setSelectedItem(filtroCarrera);
+            if (jcbCarrera.getSelectedItem() == null)
+            {
+                jcbCarrera.setSelectedIndex(0);
+            }
+            cargando = false;
+        }
+        aplicarFiltros();
+    }
+
+    private void cargarCatalogoCarreras()
+    {
+        cargando = true;
+        DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
+        modelo.addElement(TODAS_CARRERAS);
+        List<String> carreras = catalogo.obtenerCarreras();
+        if (carreras != null)
+        {
+            for (String c : carreras)
+            {
+                if (c != null && !c.toLowerCase().startsWith("seleccione"))
+                {
+                    modelo.addElement(c);
+                }
+            }
+        }
+        jcbCarrera.setModel(modelo);
+        cargando = false;
+    }
+
+    private void recargarDatos()
+    {
+        cargando = true;
+
+        String materiaPrevia = seleccionado(jcbMateria);
+
+        List<Alumno> lista = controllerAdministracion.consultarAlumno();
+        todos = (lista == null) ? new ArrayList<>() : new ArrayList<>(lista);
+        materiasDe.clear();
+
+        TreeSet<String> materias = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+
+        for (Alumno a : todos)
+        {
+            List<String> ms = new ArrayList<>();
+            int pos = controllerAdministracion.obtenerPosicionAlumno(texto(a.getNo_control()));
+            if (pos != -1)
+            {
+                List<String> deAlumno = controllerAdministracion.obtenerMaterias(pos);
+                if (deAlumno != null)
+                {
+                    ms.addAll(deAlumno);
+                }
+            }
+            materiasDe.put(a, ms);
+            materias.addAll(ms);
+        }
+
+        DefaultComboBoxModel<String> modMaterias = new DefaultComboBoxModel<>();
+        modMaterias.addElement(TODAS_MATERIAS);
+        for (String m : materias)
+        {
+            modMaterias.addElement(m);
+        }
+        jcbMateria.setModel(modMaterias);
+        if (materias.contains(materiaPrevia))
+        {
+            jcbMateria.setSelectedItem(materiaPrevia);
+        }
+
+        cargando = false;
+    }
+
+    // ------------------------------------------------------------------
+    // Filtrado
+    // ------------------------------------------------------------------
+    private void aplicarFiltros()
+    {
+        if (cargando)
+        {
+            return;
+        }
+
+        String buscado = normalizar(jtxtBuscar.getText());
+        String[] palabras = buscado.isEmpty() ? new String[0] : buscado.split(" ");
+        String carrera = seleccionado(jcbCarrera);
+        String materia = seleccionado(jcbMateria);
+        double min = valor(jspMin);
+        double max = valor(jspMax);
+
+        List<Alumno> resultado = new ArrayList<>();
+        for (Alumno a : todos)
+        {
+            if (cumple(a, palabras, carrera, materia, min, max))
+            {
+                resultado.add(a);
+            }
+        }
+        resultado.sort(comparadorActual());
+
+        Alumno anterior = listaAlumnos.getSelectedValue();
+        modeloLista.clear();
+        for (Alumno a : resultado)
+        {
+            modeloLista.addElement(a);
+        }
+
+        if (anterior != null && resultado.contains(anterior))
+        {
+            listaAlumnos.setSelectedValue(anterior, true);
+        }
+        else
+        {
+            listaAlumnos.clearSelection();
+            mostrarFicha(null);
+        }
+
+        jlblContador.setText("Mostrando " + resultado.size() + " de " + todos.size() + " alumnos");
+    }
+
+    private boolean cumple(Alumno a, String[] palabras, String carrera, String materia, double min, double max)
+    {
+        if (palabras.length > 0)
+        {
+            String pajar = normalizar(texto(a.getNombre()) + " " + texto(a.getNo_control()) + " " + texto(a.getCorreo()));
+            for (String p : palabras)
+            {
+                if (!pajar.contains(p))
+                {
+                    return false;
+                }
+            }
+        }
+
+        if (!TODAS_CARRERAS.equals(carrera) && !carrera.isEmpty() && !carrera.equals(texto(a.getCarerra())))
+        {
+            return false;
+        }
+
+        if (!TODAS_MATERIAS.equals(materia) && !materia.isEmpty())
+        {
+            List<String> ms = materiasDe.get(a);
+            if (ms == null || !ms.contains(materia))
+            {
+                return false;
+            }
+        }
+
+        double prom = promedioDe(a);
+        return !(prom < min || prom > max);
+    }
+
+    private Comparator<Alumno> comparadorActual()
+    {
+        switch (jComboBox1_C.getSelectedIndex())
+        {
+            case 1:
+                return (x, y) -> normalizar(texto(y.getNombre())).compareTo(normalizar(texto(x.getNombre())));
+            case 2:
+                return (x, y) -> Double.compare(promedioDe(y), promedioDe(x));
+            case 3:
+                return (x, y) -> Double.compare(promedioDe(x), promedioDe(y));
+            case 4:
+                return (x, y) -> texto(x.getNo_control()).compareTo(texto(y.getNo_control()));
+            default:
+                return (x, y) -> normalizar(texto(x.getNombre())).compareTo(normalizar(texto(y.getNombre())));
+        }
+    }
+
+    private void alCambiarRango()
+    {
+        if (cargando)
+        {
+            return;
+        }
+        if (valor(jspMin) > valor(jspMax))
+        {
+            cargando = true;
+            double a = valor(jspMin);
+            jspMin.setValue(valor(jspMax));
+            jspMax.setValue(a);
+            cargando = false;
+        }
+        aplicarFiltros();
+    }
+
+    private void mostrarFicha(Alumno a)
+    {
+        if (a == null)
+        {
+            lblFNombre.setText("Selecciona un alumno");
+            lblFControl.setText("No. de control: -");
+            lblFCorreo.setText("-");
+            lblFCarrera.setText("-");
+            lblFProm.setText("-");
+            txtFMaterias.setText("");
+            return;
+        }
+
+        double prom = promedioDe(a);
+
+        lblFNombre.setText(texto(a.getNombre()));
+        lblFControl.setText("No. de control: " + texto(a.getNo_control()));
+        lblFCorreo.setText(texto(a.getCorreo()));
+        lblFCarrera.setText(texto(a.getCarerra()));
+        lblFProm.setText(formato(prom));
+
+        List<String> ms = materiasDe.get(a);
+        StringBuilder sb = new StringBuilder();
+        if (ms == null || ms.isEmpty())
+        {
+            sb.append("Sin materias asignadas");
+        }
+        else
+        {
+            for (String m : ms)
+            {
+                sb.append("• ").append(m).append("\n");
+            }
+        }
+        txtFMaterias.setText(sb.toString());
+        txtFMaterias.setCaretPosition(0);
+    }
+
+    // ------------------------------------------------------------------
+    // Utilidades
+    // ------------------------------------------------------------------
+    private static String seleccionado(javax.swing.JComboBox<String> cb)
+    {
+        Object o = cb.getSelectedItem();
+        return o == null ? "" : o.toString();
+    }
+
+    private static double valor(JSpinner sp)
+    {
+        return ((Number) sp.getValue()).doubleValue();
+    }
+
+    private static String formato(double d)
+    {
+        return (d == Math.floor(d)) ? String.valueOf((long) d) : String.format("%.1f", d);
+    }
+
+    private static String texto(Object o)
+    {
+        return o == null ? "" : o.toString();
+    }
+
+    private static String normalizar(String s)
+    {
+        if (s == null)
+        {
+            return "";
+        }
+        String n = Normalizer.normalize(s, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+        return n.toLowerCase().trim().replaceAll("\\s+", " ");
+    }
+
+    private static double promedioDe(Alumno a)
+    {
+        String crudo = String.valueOf(a.getPromedio()).trim();
+        try
+        {
+            return Double.parseDouble(crudo.replace(',', '.'));
+        }
+        catch (NumberFormatException e)
+        {
+            return 0;
+        }
+    }
+
+    private static String iniciales(String nombre)
+    {
+        String[] partes = nombre.trim().split("\\s+");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < partes.length && sb.length() < 2; i++)
+        {
+            if (!partes[i].isEmpty())
+            {
+                sb.append(Character.toUpperCase(partes[i].charAt(0)));
+            }
+        }
+        return sb.toString();
+    }
+
+    /** Círculo con las iniciales del alumno. */
+    private static class Circulo extends JLabel
+    {
+        Circulo(int tam)
+        {
+            setPreferredSize(new Dimension(tam, tam));
+            setHorizontalAlignment(SwingConstants.CENTER);
+            setFont(new Font("Segoe UI", Font.BOLD, tam / 3));
+            setForeground(new Color(60, 70, 80));
+            setOpaque(false);
+        }
+
+        void setTexto(String t)
+        {
+            setText(t);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g)
+        {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(new Color(225, 232, 240));
+            g2.fillOval(0, 0, getWidth() - 1, getHeight() - 1);
+            g2.dispose();
+            super.paintComponent(g);
+        }
+    }
+
+    /** Dibuja cada alumno en la lista: avatar con iniciales, nombre, carrera y promedio (sin situación). */
+    private class TarjetaRenderer extends JPanel implements ListCellRenderer<Alumno>
+    {
+        private final Circulo avatar = new Circulo(38);
+        private final JLabel lblNombre = new JLabel();
+        private final JLabel lblSub = new JLabel();
+        private final JLabel lblProm = new JLabel();
+
+        TarjetaRenderer()
+        {
+            setLayout(new BorderLayout(10, 0));
+            setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 0, 1, 0, BORDE),
+                    BorderFactory.createEmptyBorder(6, 10, 6, 10)));
+
+            lblNombre.setFont(F_NEGRITA);
+            lblSub.setFont(F_ETIQUETA);
+            lblSub.setForeground(TEXTO_SUAVE);
+            lblProm.setFont(F_NEGRITA);
+            lblProm.setHorizontalAlignment(SwingConstants.RIGHT);
+
+            JPanel textos = new JPanel(new GridLayout(2, 1));
+            textos.setOpaque(false);
+            textos.add(lblNombre);
+            textos.add(lblSub);
+
+            JPanel izquierda = new JPanel(new GridBagLayout());
+            izquierda.setOpaque(false);
+            izquierda.add(avatar);
+
+            add(izquierda, BorderLayout.WEST);
+            add(textos, BorderLayout.CENTER);
+            add(lblProm, BorderLayout.EAST);
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList<? extends Alumno> list, Alumno a,
+                int index, boolean isSelected, boolean cellHasFocus)
+        {
+            if (a == null)
+            {
+                return this;
+            }
+            double prom = promedioDe(a);
+            avatar.setTexto(iniciales(texto(a.getNombre())));
+            lblNombre.setText(texto(a.getNombre()));
+            lblSub.setText(texto(a.getCarerra()));
+            lblProm.setText(formato(prom));
+
+            setBackground(isSelected ? SELECCION : TARJETA);
+            return this;
+        }
+    }
+    
     private void jTBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTBuscarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTBuscarActionPerformed
@@ -2432,6 +3107,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private javax.swing.JButton btnAgregarMat;
     private javax.swing.JButton btnAtras2;
     private javax.swing.JButton btnAtras3;
+    private javax.swing.JButton btnAyuda;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCancelar2;
     private javax.swing.JButton btnContinuar2;
@@ -2444,11 +3120,6 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private javax.swing.JButton jBCancelar1;
     private javax.swing.JButton jBContinuar1;
     private javax.swing.JButton jB_Cancelar3;
-    private javax.swing.JButton jB_Consulta_Rep;
-    private javax.swing.JButton jB_Consulta_Riesg;
-    private javax.swing.JButton jB_Consulta_Sobresal;
-    private javax.swing.JButton jB_Consulta_Todos;
-    private javax.swing.JButton jB_Cosnulta_Aprob;
     private javax.swing.JButton jB_Guardar;
     private javax.swing.JButton jBttn_Alta;
     private javax.swing.JButton jBttn_Baja;
@@ -2467,9 +3138,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JComboBox<String> jCB_Carrera;
-    private javax.swing.JComboBox<String> jCb_CONSULTA_CARR;
-    private javax.swing.JComboBox<String> jCb_Consulta_Materias;
-    private javax.swing.JComboBox<String> jCb_Consulta_Ordenar;
+    private javax.swing.JComboBox<String> jComboBox1_C;
     private com.toedter.calendar.JDateChooser jDC_Nacimiento;
     private javax.swing.JLabel jL_ApellidoMat;
     private javax.swing.JLabel jL_ApellidoPat;
@@ -2494,6 +3163,7 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -2501,13 +3171,8 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JLabel jLb_CONSULTA_CARR;
     private javax.swing.JLabel jLb_CONSULTA_ORDENAR;
-    private javax.swing.JLabel jLb_CONSULTA_PROM;
     private javax.swing.JLabel jLb_Consulta_A;
-    private javax.swing.JLabel jLb_Consulta_Sit_Ac;
-    private javax.swing.JLabel jLb_Consulta_buscar;
-    private javax.swing.JLabel jLb_Consulta_materias;
     private javax.swing.JLabel jLbl_Carrera;
     private javax.swing.JLabel jLbl_Contra;
     private javax.swing.JLabel jLbl_Correo;
@@ -2536,17 +3201,20 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private javax.swing.JPanel jP_EncabezadoEd;
     private javax.swing.JPanel jP_MateriasProm;
     private javax.swing.JPanel jP_Resultado;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanelFiltros;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPaneMaterias;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
     private javax.swing.JToggleButton jTBuscar;
     private javax.swing.JToggleButton jTConfirmar;
     private javax.swing.JToggleButton jTDatos;
@@ -2561,21 +3229,41 @@ public class VtnAdministrador extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTxt_ApellidoMat;
     private javax.swing.JTextField jTxt_ApellidoPat;
-    private javax.swing.JTextField jTxt_Consulta_Buscar;
     private javax.swing.JTextField jTxt_Correo;
     private javax.swing.JTextField jTxt_NoControl;
     private javax.swing.JTextField jTxt_Promedio;
     private javax.swing.JTextField jTxt_Semestre;
     private javax.swing.JTextField jTxt_nombre;
+    private javax.swing.JButton jbtnLimpiar;
+    private javax.swing.JComboBox<String> jcbCarrera;
+    private javax.swing.JComboBox<String> jcbMateria;
+    private javax.swing.JLabel jlblContador;
+    private javax.swing.JList<String> jlistaAlumnos;
     private javax.swing.JPanel jp_Contenedor;
+    private javax.swing.JSpinner jspMax;
+    private javax.swing.JSpinner jspMin;
+    private javax.swing.JTextField jtxtBuscar;
     private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblFCarrera;
+    private javax.swing.JLabel lblFControl;
+    private javax.swing.JLabel lblFCorreo;
+    private javax.swing.JLabel lblFNombre;
+    private javax.swing.JLabel lblFProm;
     private javax.swing.JLabel lblNoControl;
     private javax.swing.JLabel lblResumen;
+    private javax.swing.JLabel lblTitBuscar;
+    private javax.swing.JLabel lblTitCarrera;
+    private javax.swing.JLabel lblTitCarrera1;
+    private javax.swing.JLabel lblTitCorreo;
+    private javax.swing.JLabel lblTitMateria;
+    private javax.swing.JLabel lblTitPromedio;
+    private javax.swing.JLabel lblTitRango;
     private javax.swing.JList<String> lstMaterias;
     private javax.swing.JTable tblCambios;
     private javax.swing.JTextField txtApMaterno;
     private javax.swing.JTextField txtApPat;
     private javax.swing.JTextField txtCorreo;
+    private javax.swing.JTextArea txtFMaterias;
     private javax.swing.JTextField txtNoControl;
     private javax.swing.JTextField txtNoControl2;
     private javax.swing.JTextField txtNombre;
