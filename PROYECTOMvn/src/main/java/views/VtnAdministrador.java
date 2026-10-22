@@ -19,8 +19,7 @@ import model.Alumno;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import validaciones.ValidadorAlumno;
 
-public class VtnAdministrador extends javax.swing.JFrame
-{
+public class VtnAdministrador extends javax.swing.JFrame {
 
     private AlumnoController controllerAdministracion;
 
@@ -37,8 +36,7 @@ public class VtnAdministrador extends javax.swing.JFrame
     private String pasoActual = "buscar";
     private final javax.swing.ButtonGroup grupoPestanasEd = new javax.swing.ButtonGroup();
 
-    public VtnAdministrador(AlumnoController controller)
-    {
+    public VtnAdministrador(AlumnoController controller) {
         initComponents();
         jP_Encabezado.setPreferredSize(new java.awt.Dimension(0, 48));
         controllerAdministracion = controller;
@@ -56,8 +54,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         this.materiasAlu = materiasAlu;
         this.semestreAlu = semestreAlu;
         this.contraseñaAlu = contraseñaAlu;
-        
-         
+
         // ---- FORMATO GENERAL ----
         Estilos.estilizarVentana(this);
 
@@ -91,8 +88,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.estilizarEtiqueta(jL_Promedio);
         Estilos.estilizarEtiqueta(jL_NoControl);
         Estilos.estilizarEtiqueta(jL_Carrera);
-        
-        
+
         // Alta: cuenta y extras
         Estilos.estilizarEtiqueta(jLbl_CuentaExtras);
         Estilos.estilizarEtiqueta(jLbl_correo);
@@ -126,9 +122,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.estilizarCampo(jTxt_Correo);
         Estilos.estilizarCampo(jTxt_NoControl);
 
-        
-        
-        
         // ---- BOTONES ----
         // Consulta: situación académica
         Estilos.estilizarBoton(jB_Consulta_Todos);
@@ -156,7 +149,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.estilizarCombo(jCb_Consulta_Ordenar);
         Estilos.estilizarCombo(jCb_Consulta_Materias);
         Estilos.estilizarCombo(jCB_Carrera);
-        
+
         Estilos.estilizarCampo(jPF_contraseña);
         Estilos.estilizarCampo(jTxt_Consulta_Buscar);
         Estilos.estilizarSpinner(jSpinner1);
@@ -188,12 +181,11 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         Estilos.estilizarPanelConSombra(jP_AltCard);
 
-        javax.swing.JPanel[] pantallasAlta =
-        {
-            jP_DatosPrincipales, jP_MateriasProm, jP_CuentasExtr
-        };
-        for (javax.swing.JPanel p : pantallasAlta)
-        {
+        javax.swing.JPanel[] pantallasAlta
+                = {
+                    jP_DatosPrincipales, jP_MateriasProm, jP_CuentasExtr
+                };
+        for (javax.swing.JPanel p : pantallasAlta) {
             p.setOpaque(true);
             p.setBackground(Estilos.CREMA_CLARO);
         }
@@ -243,16 +235,11 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.icono(jLb_CONSULTA_ORDENAR, FontAwesomeSolid.SORT_AMOUNT_DOWN, 16);
         Estilos.icono(jLb_Consulta_materias, FontAwesomeSolid.BOOK, 16);
         Estilos.icono(jLb_CONSULTA_PROM, FontAwesomeSolid.CHART_LINE, 16);
-        
-        
-        
+
         cargarCatalogos();
     }
 
-    
-
-    private void cargarCatalogos()
-    {
+    private void cargarCatalogos() {
         // ===== EDICIÓN =====
         grupoPestanasEd.add(jTBuscar);
         grupoPestanasEd.add(jTDatos);
@@ -268,10 +255,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         lstMaterias.setListData(catalogoEd.obtenerMaterias().toArray(new String[0]));
 
         // Ocultos por ahora (apellidos y botones de materias)
-        jLabel16.setVisible(false);
-        txtApPat.setVisible(false);
-        jLabel17.setVisible(false);
-        txtApMaterno.setVisible(false);
         btnAgregarMat.setVisible(false);
         btnQuitarMat.setVisible(false);
 
@@ -418,6 +401,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         jLbl_Correo = new javax.swing.JLabel();
         jLbl_Fecha = new javax.swing.JLabel();
         jLbl_Promedio = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         jBContinuar1 = new javax.swing.JButton();
         jBCancelar1 = new javax.swing.JButton();
         jP_Baja = new javax.swing.JPanel();
@@ -774,16 +758,17 @@ public class VtnAdministrador extends javax.swing.JFrame
                                 .addComponent(jCB_Carrera, javax.swing.GroupLayout.Alignment.LEADING, 0, 330, Short.MAX_VALUE))
                             .addComponent(jL_Carrera))
                         .addGap(93, 93, 93)
-                        .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jTxt_Correo, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLbl_correo)
                             .addComponent(jPF_contraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLbl_Contra)
-                            .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
-                                .addComponent(jB_Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(53, 53, 53)
-                                .addComponent(jB_Cancelar3, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(77, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_CuentasExtrLayout.createSequentialGroup()
+                                .addGap(13, 13, 13)
+                                .addComponent(jB_Cancelar3, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jB_Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(86, Short.MAX_VALUE))
         );
         jP_CuentasExtrLayout.setVerticalGroup(
             jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -806,11 +791,11 @@ public class VtnAdministrador extends javax.swing.JFrame
                 .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCB_Carrera, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPF_contraseña, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE))
-                .addGap(139, 139, 139)
+                .addGap(30, 30, 30)
                 .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jB_Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jB_Cancelar3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(225, Short.MAX_VALUE))
+                .addContainerGap(334, Short.MAX_VALUE))
         );
 
         jP_AltCard.add(jP_CuentasExtr, "card4");
@@ -1004,6 +989,11 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_EdDatos.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 60, -1, -1));
 
         txtNoControl2.setEditable(false);
+        txtNoControl2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNoControl2ActionPerformed(evt);
+            }
+        });
         jP_EdDatos.add(txtNoControl2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 60, 280, -1));
 
         jLabel15.setText("Nombre");
@@ -1043,7 +1033,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         });
         jP_EdDatos.add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 250, 280, -1));
 
-        cmbCarrera.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbCarrera.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione Carrera", "Ing. Sistemas", "Tic´s", "Quimica", "Mecatronica", "Electromecanica", "Logistica", "Gestion Ambiental" }));
         jP_EdDatos.add(cmbCarrera, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 300, 280, -1));
         jP_EdDatos.add(txtPromedio, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 350, 280, -1));
         jP_EdDatos.add(dcFechaNac, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 400, 280, -1));
@@ -1061,19 +1051,19 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_EdDatos.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 480, 470, 100));
 
         btnAgregarMat.setText("Agregar Materia");
-        jP_EdDatos.add(btnAgregarMat, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 600, -1, -1));
+        jP_EdDatos.add(btnAgregarMat, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 450, -1, -1));
 
         btnQuitarMat.setText("Quitar Materia");
-        jP_EdDatos.add(btnQuitarMat, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 600, -1, -1));
+        jP_EdDatos.add(btnQuitarMat, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 450, -1, -1));
 
         btnAtras2.setText("Atras");
-        jP_EdDatos.add(btnAtras2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 650, -1, -1));
+        jP_EdDatos.add(btnAtras2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 590, -1, -1));
 
         btnRestablecer.setText("Restablecer");
-        jP_EdDatos.add(btnRestablecer, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 650, -1, -1));
+        jP_EdDatos.add(btnRestablecer, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 590, -1, -1));
 
         btnCancelar2.setText("Cancelar");
-        jP_EdDatos.add(btnCancelar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 650, -1, -1));
+        jP_EdDatos.add(btnCancelar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 590, -1, -1));
 
         btnContinuar2.setText("Continuar");
         btnContinuar2.addActionListener(new java.awt.event.ActionListener() {
@@ -1081,7 +1071,7 @@ public class VtnAdministrador extends javax.swing.JFrame
                 btnContinuar2ActionPerformed(evt);
             }
         });
-        jP_EdDatos.add(btnContinuar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 650, -1, -1));
+        jP_EdDatos.add(btnContinuar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 590, -1, -1));
 
         jP_EdCard.add(jP_EdDatos, "datos");
 
@@ -1117,7 +1107,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         });
 
         btnGuardar.setText("Guardar cambios");
-        btnGuardar.setEnabled(false);
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuardarActionPerformed(evt);
@@ -1136,13 +1125,15 @@ public class VtnAdministrador extends javax.swing.JFrame
                             .addGroup(jP_EdConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(lblResumen, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
                                 .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 565, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(chkConfirmo, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 565, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_EdConfirmarLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(btnAtras3)
-                        .addGap(58, 58, 58)
-                        .addComponent(btnGuardar)))
+                        .addGroup(jP_EdConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_EdConfirmarLayout.createSequentialGroup()
+                                .addComponent(btnAtras3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnGuardar))
+                            .addComponent(chkConfirmo, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap(282, Short.MAX_VALUE))
         );
         jP_EdConfirmarLayout.setVerticalGroup(
@@ -1153,18 +1144,14 @@ public class VtnAdministrador extends javax.swing.JFrame
                 .addGap(18, 18, 18)
                 .addComponent(lblResumen)
                 .addGap(43, 43, 43)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jP_EdConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jP_EdConfirmarLayout.createSequentialGroup()
-                        .addGap(98, 98, 98)
-                        .addComponent(chkConfirmo)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jP_EdConfirmarLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jP_EdConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnGuardar)
-                            .addComponent(btnAtras3))
-                        .addGap(90, 90, 90))))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(chkConfirmo)
+                .addGap(18, 18, 18)
+                .addGroup(jP_EdConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnGuardar)
+                    .addComponent(btnAtras3))
+                .addGap(90, 90, 90))
         );
 
         jP_EdCard.add(jP_EdConfirmar, "confirmar");
@@ -1204,6 +1191,9 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jLbl_Promedio.setText("jLabel7");
 
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel5.setText("Promedio");
+
         javax.swing.GroupLayout jP_ResultadoLayout = new javax.swing.GroupLayout(jP_Resultado);
         jP_Resultado.setLayout(jP_ResultadoLayout);
         jP_ResultadoLayout.setHorizontalGroup(
@@ -1216,17 +1206,23 @@ public class VtnAdministrador extends javax.swing.JFrame
                     .addComponent(jLbl_Carrera, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jP_ResultadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLbl_Fecha)
                     .addGroup(jP_ResultadoLayout.createSequentialGroup()
                         .addComponent(jLbl_Semestre, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(89, 89, 89)
-                        .addComponent(jLbl_Promedio, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLbl_Fecha))
+                        .addComponent(jLbl_Promedio, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(17, 17, 17))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_ResultadoLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel5)
+                .addGap(43, 43, 43))
         );
         jP_ResultadoLayout.setVerticalGroup(
             jP_ResultadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jP_ResultadoLayout.createSequentialGroup()
-                .addGap(34, 34, 34)
+                .addGap(15, 15, 15)
+                .addComponent(jLabel5)
+                .addGap(3, 3, 3)
                 .addComponent(jLbl_Nombre)
                 .addGap(18, 18, 18)
                 .addGroup(jP_ResultadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1237,7 +1233,7 @@ public class VtnAdministrador extends javax.swing.JFrame
                 .addGroup(jP_ResultadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLbl_Correo)
                     .addComponent(jLbl_Fecha))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         jP_EdBuscar.add(jP_Resultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 540, 130));
@@ -1490,7 +1486,7 @@ public class VtnAdministrador extends javax.swing.JFrame
                 .addGap(24, 24, 24)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jP_BajaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jP_BajaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton3)
                     .addComponent(jButton2))
                 .addContainerGap(68, Short.MAX_VALUE))
@@ -1585,18 +1581,15 @@ public class VtnAdministrador extends javax.swing.JFrame
         String apellidoPat = jTxt_ApellidoPat.getText().trim();
         String apellidoMat = jTxt_ApellidoMat.getText().trim();
         Date fechaNacimiento = jDC_Nacimiento.getDate();
-       
-        
-        if (validaciones.ValidadorAlumno.esVacio(nombre))
-        {
+
+        if (validaciones.ValidadorAlumno.esVacio(nombre)) {
             JOptionPane.showMessageDialog(this,
                     "El nombre no puede ser vacio, campo obligatorio",
                     "Error de campo",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (!validaciones.ValidadorAlumno.nombreValido(nombre))
-        {
+        if (!validaciones.ValidadorAlumno.nombreValido(nombre)) {
             JOptionPane.showMessageDialog(this,
                     "El formato del nombre no es valido. Ingerese un nombre válido",
                     "Error de campo",
@@ -1604,58 +1597,51 @@ public class VtnAdministrador extends javax.swing.JFrame
             return;
         }
 
-        if (validaciones.ValidadorAlumno.esVacio(apellidoPat))
-        {
+        if (validaciones.ValidadorAlumno.esVacio(apellidoPat)) {
             JOptionPane.showMessageDialog(this,
                     "El apellido no puede ser vacio, campo obligatorio",
                     "Error de campo",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (!validaciones.ValidadorAlumno.nombreValido(apellidoPat))
-        {
+        if (!validaciones.ValidadorAlumno.nombreValido(apellidoPat)) {
             JOptionPane.showMessageDialog(this, "El formato del apellido paterno no es valido. Ingerese un apellido válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (validaciones.ValidadorAlumno.esVacio(apellidoMat))
-        {
+        if (validaciones.ValidadorAlumno.esVacio(apellidoMat)) {
             JOptionPane.showMessageDialog(this,
                     "El apellido no puede ser vacio, campo obligatorio",
                     "Error de campo",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (!validaciones.ValidadorAlumno.nombreValido(apellidoMat))
-        {
+        if (!validaciones.ValidadorAlumno.nombreValido(apellidoMat)) {
             JOptionPane.showMessageDialog(this, "El formato del apellido materno no es valido. Ingerese un apellido válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (validaciones.ValidadorAlumno.fechaVacia(fechaNacimiento))
-        {
+        if (validaciones.ValidadorAlumno.fechaVacia(fechaNacimiento)) {
             JOptionPane.showMessageDialog(this,
                     "Debe seleccionar una fecha",
                     "Error de campo",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        if (validaciones.ValidadorAlumno.fechaFutura(fechaNacimiento))
-        {
+
+        if (validaciones.ValidadorAlumno.fechaFutura(fechaNacimiento)) {
             JOptionPane.showMessageDialog(this, "No puede ingresar una fecha futura. Ingerese una fecha válida", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        if (validaciones.ValidadorAlumno.fechaPasada(fechaNacimiento))
-        {
+
+        if (validaciones.ValidadorAlumno.fechaPasada(fechaNacimiento)) {
             JOptionPane.showMessageDialog(this, "No puede ingresar una fecha anterios a 1950. Ingerese una fecha válida", "Error de campo", JOptionPane.ERROR_MESSAGE);
             return;
 
         }
-        String nombreCompleto = nombre + apellidoPat + apellidoMat;
-       
-        nombreAlu= nombreCompleto;
-        fechAlu= fechaNacimiento;
-        
+        String nombreCompleto = nombre + " " + apellidoPat + " " + apellidoMat;
+
+        nombreAlu = nombreCompleto;
+        fechAlu = fechaNacimiento;
+
         java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
         cl.show(jP_AltCard, "card3");
         Estilos.seleccionar(jBttn_MateriasProm);
@@ -1683,72 +1669,64 @@ public class VtnAdministrador extends javax.swing.JFrame
 
     private void jBttn_ContinuarMPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttn_ContinuarMPActionPerformed
         // TODO add your handling code here:
-        List<String> materias= new ArrayList<>();
-        int [] indice=jTb_Materias.getSelectedRows();
-        String semestre= jTxt_Semestre.getText().trim();
-        String promedio= jTxt_Promedio.getText().trim();
-        
-        
-        
-        if(!validaciones.ValidadorAlumno.materiasVacias(materias))
-        {
-            JOptionPane.showMessageDialog(this, 
-                    "Agregue al menos una materia", 
-                    "Error de campo", 
+        List<String> materias = new ArrayList<>();
+        int[] indice = jTb_Materias.getSelectedRows();
+        String semestre = jTxt_Semestre.getText().trim();
+        String promedio = jTxt_Promedio.getText().trim();
+
+        if (!validaciones.ValidadorAlumno.materiasVacias(materias)) {
+            JOptionPane.showMessageDialog(this,
+                    "Agregue al menos una materia",
+                    "Error de campo",
                     JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        for (int i = 0; i < indice.length; i++)
-        {
+        for (int i = 0; i < indice.length; i++) {
             materias.add((String) jTb_Materias.getValueAt(indice[i], 0));
-            
+
         }
-        
-        if (validaciones.ValidadorAlumno.esVacio(semestre))
-        {
-            JOptionPane.showMessageDialog(this, 
-                    "El semestre no puede estar vacio.", 
-                    "Error de campo", 
+
+        if (validaciones.ValidadorAlumno.esVacio(semestre)) {
+            JOptionPane.showMessageDialog(this,
+                    "El semestre no puede estar vacio.",
+                    "Error de campo",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if(!validaciones.ValidadorAlumno.validarNumericos(semestre))
-        {
-            JOptionPane.showMessageDialog(this, 
-                    "Ingrese solo numeros", 
-                    "Error de campo", 
+        if (!validaciones.ValidadorAlumno.validarNumericos(semestre)) {
+            JOptionPane.showMessageDialog(this,
+                    "Ingrese solo numeros",
+                    "Error de campo",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if(!validaciones.ValidadorAlumno.validarNumericos(promedio))
-        {
-            JOptionPane.showMessageDialog(this, 
-                    "Ingrese solo valores numericos", 
-                    "Error de campo", 
+        if (!validaciones.ValidadorAlumno.validarNumericos(promedio)) {
+            JOptionPane.showMessageDialog(this,
+                    "Ingrese solo valores numericos",
+                    "Error de campo",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        Double promedioValido= validaciones.ValidadorAlumno.promedioValido(promedio);
-        if (promedioValido==null)
-        {
-            JOptionPane.showMessageDialog(this, 
-                    "Promeido fuera del rango, ingrese un promedio entre 0 y 100", 
-                    "Error de campo", 
+
+        Double promedioValido = validaciones.ValidadorAlumno.promedioValido(promedio);
+        if (promedioValido == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Promeido fuera del rango, ingrese un promedio entre 0 y 100",
+                    "Error de campo",
                     JOptionPane.ERROR_MESSAGE);
             return;
-            
+
         }
-        
-        materiasAlu=materias;
-        semestreAlu=semestre;
-        promedioAlu= promedioValido;
-       
+
+        materiasAlu = materias;
+        semestreAlu = semestre;
+        promedioAlu = promedioValido;
+
         java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
         cl.show(jP_AltCard, "card4");
         Estilos.seleccionar(jBttn_CuentasExtr);
-        
-        
+
+
     }//GEN-LAST:event_jBttn_ContinuarMPActionPerformed
 
     private void jB_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_GuardarActionPerformed
@@ -1756,27 +1734,23 @@ public class VtnAdministrador extends javax.swing.JFrame
         String correo = jTxt_Correo.getText().trim();
         String contraseña = new String(jPF_contraseña.getPassword());
         String carrera = jCB_Carrera.getSelectedItem().toString();
-        
-        
+
         if (ValidadorAlumno.esVacio(numeroControl)) {
-            error("Campo requerido","El No.Control no puede estar vacio");
+            error("Campo requerido", "El No.Control no puede estar vacio");
             return;
         }
-        
+
         if (!ValidadorAlumno.validarNumericos(numeroControl)) {
-            error("Error en el campo","El No.Control solo puede contener numeros y no debe llevar espacios");
+            error("Error en el campo", "El No.Control solo puede contener numeros y no debe llevar espacios");
             return;
         }
-        
-       
-         if (ValidadorAlumno.seleccionCb(jCB_Carrera.getSelectedIndex())) {
-            error("Campo requerido","Seleccione una carrera");
+
+        if (ValidadorAlumno.seleccionCb(jCB_Carrera.getSelectedIndex())) {
+            error("Campo requerido", "Seleccione una carrera");
             return;
         }
-        
-        
-        if (ValidadorAlumno.esVacio(correo))
-        {
+
+        if (ValidadorAlumno.esVacio(correo)) {
             JOptionPane.showMessageDialog(this,
                     "El correo es OBLIGATORIO",
                     "Campo requerido",
@@ -1784,8 +1758,7 @@ public class VtnAdministrador extends javax.swing.JFrame
             return;
         }
 
-        if (!ValidadorAlumno.correoValido(correo))
-        {
+        if (!ValidadorAlumno.correoValido(correo)) {
             javax.swing.JOptionPane.showMessageDialog(this,
                     "El formato del correo electrónico no es válido. Ejemplo: usuario@dominio.com",
                     "Error de validación",
@@ -1794,30 +1767,24 @@ public class VtnAdministrador extends javax.swing.JFrame
             return;
         }
 
-        if (ValidadorAlumno.esVacio(contraseña))
-        {
+        if (ValidadorAlumno.esVacio(contraseña)) {
             JOptionPane.showMessageDialog(this,
                     "La contraseña no puede estar vacio",
                     "Campo requerido",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-       
+
         noControl = numeroControl;
         contraseñaAlu = contraseña;
         correoAlu = correo;
         carreraAlu = carrera;
-        
-        
-        
-        
-        Alumno nuevoAlumno= new Alumno(noControl, nombreAlu, correo, carrera, promedioAlu, fechAlu, materiasAlu);
-        
+
+        Alumno nuevoAlumno = new Alumno(noControl, nombreAlu, correo, carrera, promedioAlu, fechAlu, materiasAlu);
+
         boolean altaEstudiante = controllerAdministracion.agergarAlumno(nuevoAlumno);
 
-        if (!altaEstudiante)
-        {
+        if (!altaEstudiante) {
             JOptionPane.showMessageDialog(this,
                     "No Control duplicado.",
                     "Duplicado",
@@ -1829,10 +1796,9 @@ public class VtnAdministrador extends javax.swing.JFrame
                 "Alumno guardado correctamente.",
                 "Éxito",
                 JOptionPane.INFORMATION_MESSAGE);
-        
-         List<Alumno> listaFinal = controllerAdministracion.consultarAlumno();
-        for (Alumno alumno : listaFinal)
-        {
+
+        List<Alumno> listaFinal = controllerAdministracion.consultarAlumno();
+        for (Alumno alumno : listaFinal) {
             System.out.println("NoControl: " + alumno.getNo_control());
             System.out.println("Nombre: " + alumno.getNombre());
             System.out.println("Correo: " + alumno.getCorreo());
@@ -1841,14 +1807,14 @@ public class VtnAdministrador extends javax.swing.JFrame
             System.out.println("Materias: " + alumno.getMaterias() + "\n");
         }
 
-        nombreAlu="";
-        noControl= "";
-        correoAlu="";
-        carreraAlu="";
-        promedioAlu=null;
-        fechAlu=null;
-        materiasAlu.clear();
-        
+        nombreAlu = "";
+        noControl = "";
+        correoAlu = "";
+        carreraAlu = "";
+        promedioAlu = null;
+        fechAlu = null;
+        //materiasAlu.clear();
+
         limpiarRegistro();
         java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
         cl.show(jP_AltCard, "card2");
@@ -1870,7 +1836,11 @@ public class VtnAdministrador extends javax.swing.JFrame
     }//GEN-LAST:event_txtCorreoActionPerformed
 
     private void btnContinuar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuar2ActionPerformed
-       
+        if (!validarFormulario()) {
+            return;
+        }
+        cargarTablaCambios();
+        irA("confirmar");
     }//GEN-LAST:event_btnContinuar2ActionPerformed
 
     private void chkConfirmoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkConfirmoActionPerformed
@@ -1887,19 +1857,17 @@ public class VtnAdministrador extends javax.swing.JFrame
         // TODO add your handling code here:
         Alumno nuevo = new Alumno(
                 alumnoOriginal.getNo_control(),
-                txtNombre.getText().trim(),
+                nombreCompletoEd(),
                 txtCorreo.getText().trim(),
                 (String) cmbCarrera.getSelectedItem(),
                 Double.parseDouble(txtPromedio.getText().trim()),
                 dcFechaNac.getDate(),
                 lstMaterias.getSelectedValuesList());
 
-        if (controllerAdministracion.actualizarAlumno(nuevo))
-        {
+        if (controllerAdministracion.actualizarAlumno(nuevo)) {
             JOptionPane.showMessageDialog(this, "Alumno actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             reiniciar();
-        } else
-        {
+        } else {
             JOptionPane.showMessageDialog(this, "No se pudo actualizar el alumno.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
@@ -1914,15 +1882,13 @@ public class VtnAdministrador extends javax.swing.JFrame
         String nc = txtNoControl.getText().trim();
 
         // 1. Que no esté vacío
-        if (nc.isEmpty())
-        {
+        if (nc.isEmpty()) {
             lblEstado.setText("Escribe un número de control");
             return;
         }
 
         // 2. Que solo tenga números (sin espacios, letras ni símbolos)
-        if (!nc.matches("\\d+"))
-        {
+        if (!nc.matches("\\d+")) {
             limpiarResultado();
             alumnoOriginal = null;
             jBContinuar1.setEnabled(false);
@@ -1932,8 +1898,7 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         // 3. Buscar al alumno
         Alumno a = controllerAdministracion.buscarAlumnoPorNoControl(nc);
-        if (a == null)
-        {
+        if (a == null) {
             limpiarResultado();
             alumnoOriginal = null;
             jBContinuar1.setEnabled(false);
@@ -1981,9 +1946,12 @@ public class VtnAdministrador extends javax.swing.JFrame
         // TODO add your handling code here:
     }//GEN-LAST:event_jTxt_SemestreActionPerformed
 
+    private void txtNoControl2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNoControl2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNoControl2ActionPerformed
+
     // Edicion metodos propios
-    private void conScroll(JPanel card, String nombre)
-    {
+    private void conScroll(JPanel card, String nombre) {
         jP_EdCard.remove(card);
         card.setVisible(true);   // el CardLayout lo había ocultado
         javax.swing.JScrollPane sp = new javax.swing.JScrollPane(card);
@@ -1993,12 +1961,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_EdCard.add(sp, nombre);
     }
 
-    private void irA(String paso)
-    {
+    private void irA(String paso) {
         pasoActual = paso;
         ((java.awt.CardLayout) jP_EdCard.getLayout()).show(jP_EdCard, paso);
-        switch (paso)
-        {
+        switch (paso) {
             case "buscar":
                 jTBuscar.setSelected(true);
                 break;
@@ -2012,33 +1978,26 @@ public class VtnAdministrador extends javax.swing.JFrame
         pintarPestanas();
     }
 
-    private void pintarPestanas()
-    {
-        for (AbstractButton t : new AbstractButton[]
-        {
+    private void pintarPestanas() {
+        for (AbstractButton t : new AbstractButton[]{
             jTBuscar, jTDatos, jTConfirmar
-        })
-        {
+        }) {
             boolean activa = t.isSelected();
             t.setBackground(activa ? Estilos.NEGRO : Estilos.AZUL_OSCURO);
             t.setForeground(activa ? Estilos.NARANJA : java.awt.Color.WHITE);
         }
     }
 
-    private void poner(JPanel panel, java.awt.Component c, int x, int y, int w, int h)
-    {
+    private void poner(JPanel panel, java.awt.Component c, int x, int y, int w, int h) {
         panel.add(c, new org.netbeans.lib.awtextra.AbsoluteConstraints(x, y, w, h));
     }
 
-    private void aplicarEstilos()
-    {
+    private void aplicarEstilos() {
         Estilos.estilizarFondo(jP_EncabezadoEd);
         Estilos.estilizarPanelConSombra(jP_EdCard);
-        for (JPanel p : new JPanel[]
-        {
+        for (JPanel p : new JPanel[]{
             jP_EdBuscar, jP_EdDatos, jP_EdConfirmar, jP_Resultado
-        })
-        {
+        }) {
             p.setOpaque(true);
             p.setBackground(Estilos.CREMA_CLARO);
         }
@@ -2051,11 +2010,9 @@ public class VtnAdministrador extends javax.swing.JFrame
         jTBuscar.setText("1. BUSCAR ALUMNO");
         jTDatos.setText("2. DATOS DEL ALUMNO");
         jTConfirmar.setText("3. CONFIRMAR");
-        for (AbstractButton t : new AbstractButton[]
-        {
+        for (AbstractButton t : new AbstractButton[]{
             jTBuscar, jTDatos, jTConfirmar
-        })
-        {
+        }) {
             t.setFont(Estilos.fuente(Font.PLAIN, 20));
             t.setFocusPainted(false);
             t.setContentAreaFilled(false);
@@ -2067,12 +2024,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         }
 
         // Etiquetas
-        for (JLabel l : new JLabel[]
-        {
+        for (JLabel l : new JLabel[]{
             lblNoControl, jLabel14, jLabel15, jLabel16, jLabel17,
             jLabel18, jLabel19, jLabel20, jLabel21, jLabel22, lblResumen
-        })
-        {
+        }) {
             Estilos.estilizarEtiqueta(l);
         }
         Estilos.estilizarSubtitulo(jLabel23);
@@ -2081,16 +2036,48 @@ public class VtnAdministrador extends javax.swing.JFrame
         lblEstado.setForeground(Estilos.AZUL_OSCURO);
 
         // Tarjeta del alumno encontrado
-        jLbl_Nombre.setFont(Estilos.fuente(Font.PLAIN, 28));
-        for (JLabel l : new JLabel[]
-        {
-            jLbl_Carrera, jLbl_Semestre, jLbl_Correo, jLbl_Fecha
-        })
-        {
-            l.setFont(Estilos.fuente(Font.BOLD, 16));
-        }
-        jLbl_Promedio.setFont(Estilos.fuente(Font.PLAIN, 36));
+        jP_Resultado.removeAll();
+        jP_Resultado.setLayout(new java.awt.GridBagLayout());
+        java.awt.GridBagConstraints g = new java.awt.GridBagConstraints();
+        g.insets = new java.awt.Insets(8, 20, 8, 20);
+        g.anchor = java.awt.GridBagConstraints.WEST;
+        g.fill = java.awt.GridBagConstraints.HORIZONTAL;
+
+        jLbl_Nombre.setFont(Estilos.fuente(Font.PLAIN, 26));
+        jLbl_Carrera.setFont(Estilos.fuente(Font.BOLD, 16));
+        jLbl_Correo.setFont(Estilos.fuente(Font.BOLD, 16));
+        jLbl_Fecha.setFont(Estilos.fuente(Font.BOLD, 16));
+        jLbl_Promedio.setFont(Estilos.fuente(Font.PLAIN, 30));
         jLbl_Promedio.setForeground(Estilos.AZUL_OSCURO);
+        jLbl_Promedio.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+
+// Fila 0: nombre
+        g.gridy = 0;
+        g.gridx = 0;
+        g.gridwidth = 2;
+        g.weightx = 1;
+        jP_Resultado.add(jLbl_Nombre, g);
+
+// Fila 1: carrera | promedio
+        g.gridwidth = 1;
+        g.gridy = 1;
+        g.gridx = 0;
+        g.weightx = 1;
+        jP_Resultado.add(jLbl_Carrera, g);
+        g.gridx = 1;
+        g.weightx = 0;
+        jP_Resultado.add(jLbl_Promedio, g);
+
+// Fila 2: correo | fecha
+        g.gridy = 2;
+        g.gridx = 0;
+        g.weightx = 1;
+        jP_Resultado.add(jLbl_Correo, g);
+        g.gridx = 1;
+        g.weightx = 0;
+        jP_Resultado.add(jLbl_Fecha, g);
+
+        jLbl_Semestre.setVisible(false);   // Alumno no tiene semestre
 
         // Campos
         Estilos.estilizarCampo(txtNoControl);
@@ -2129,21 +2116,19 @@ public class VtnAdministrador extends javax.swing.JFrame
         btnAtras3.setText("ATRÁS");
         btnGuardar.setText("GUARDAR CAMBIOS");
 
-        JButton[] normales =
-        {
-            btnBuscar, jBCancelar1, btnAtras2, btnRestablecer, btnCancelar2, btnAtras3
-        };
-        JButton[] principales =
-        {
-            jBContinuar1, btnContinuar2, btnGuardar
-        };
-        for (JButton b : normales)
-        {
+        JButton[] normales
+                = {
+                    btnBuscar, jBCancelar1, btnAtras2, btnRestablecer, btnCancelar2, btnAtras3
+                };
+        JButton[] principales
+                = {
+                    jBContinuar1, btnContinuar2, btnGuardar
+                };
+        for (JButton b : normales) {
             Estilos.estilizarBoton(b);
             b.setFont(Estilos.fuente(Font.PLAIN, 18));
         }
-        for (JButton b : principales)
-        {
+        for (JButton b : principales) {
             Estilos.estilizarBotonPrincipal(b);
             b.setFont(Estilos.fuente(Font.PLAIN, 18));
         }
@@ -2166,8 +2151,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         pintarPestanas();
     }
 
-    private void limpiarResultado()
-    {
+    private void limpiarResultado() {
         jLbl_Nombre.setText("");
         jLbl_Carrera.setText("");
         jLbl_Semestre.setText("");
@@ -2178,8 +2162,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_Resultado.setVisible(false);
     }
 
-    private void reiniciar()
-    {
+    private void reiniciar() {
         txtNoControl.setText("");
         alumnoOriginal = null;
         limpiarResultado();
@@ -2187,73 +2170,168 @@ public class VtnAdministrador extends javax.swing.JFrame
         irA("buscar");
     }
 
-    private void llenarFormulario(Alumno a)
-    {
+    private void llenarFormulario(Alumno a) {
         txtNoControl2.setText(a.getNo_control());
         txtNoControl2.setEditable(false);
+
         txtNombre.setText(a.getNombre());
         txtCorreo.setText(a.getCorreo());
         cmbCarrera.setSelectedItem(a.getCarerra());
         txtPromedio.setText(String.valueOf(a.getPromedio()));
         dcFechaNac.setDate(a.getFechaNaciomiento());
         seleccionarMaterias(a.getMaterias());
+
+        txtNoControl2.setText(a.getNo_control());
+        txtNoControl2.setEditable(false);
+
+        String[] p = a.getNombre().trim().split("\\s+");
+        if (p.length >= 3) {
+            txtApMaterno.setText(p[p.length - 1]);
+            txtApPat.setText(p[p.length - 2]);
+            txtNombre.setText(String.join(" ", java.util.Arrays.copyOf(p, p.length - 2)));
+        } else {
+            txtNombre.setText(a.getNombre());
+            txtApPat.setText("");
+            txtApMaterno.setText("");
+        }
+
+        txtCorreo.setText(a.getCorreo());
+        //cmbCarrera.setSelectedItem(a.getCarerra());
+
+        String carreraGuardada = a.getCarerra() == null ? "" : a.getCarerra().trim();
+        boolean encontrada = false;
+        for (int i = 0; i < cmbCarrera.getItemCount(); i++) {
+            if (cmbCarrera.getItemAt(i).trim().equalsIgnoreCase(carreraGuardada)) {
+                cmbCarrera.setSelectedIndex(i);
+                encontrada = true;
+                break;
+            }
+        }
+        if (!encontrada && !carreraGuardada.isEmpty()) {
+            cmbCarrera.addItem(carreraGuardada);
+            cmbCarrera.setSelectedItem(carreraGuardada);
+        }
+
+        txtPromedio.setText(String.valueOf(a.getPromedio()));
+        dcFechaNac.setDate(a.getFechaNaciomiento());
+        seleccionarMaterias(a.getMaterias());
+
     }
 
-    private void seleccionarMaterias(List<String> materias)
-    {
+    private void seleccionarMaterias(List<String> materias) {
         List<Integer> idx = new ArrayList<>();
         ListModel<String> m = lstMaterias.getModel();
-        for (int i = 0; i < m.getSize(); i++)
-        {
-            if (materias.contains(m.getElementAt(i)))
-            {
+        for (int i = 0; i < m.getSize(); i++) {
+            if (materias.contains(m.getElementAt(i))) {
                 idx.add(i);
             }
         }
         lstMaterias.setSelectedIndices(idx.stream().mapToInt(Integer::intValue).toArray());
     }
 
-    private void error(String titulo, String msg)
-    {
+    private void error(String titulo, String msg) {
         JOptionPane.showMessageDialog(this, msg, titulo, JOptionPane.ERROR_MESSAGE);
     }
 
-    private boolean fechaAnterior1950(Date f)
-    {
+    private boolean fechaAnterior1950(Date f) {
         java.util.Calendar c = java.util.Calendar.getInstance();
         c.setTime(f);
         return c.get(java.util.Calendar.YEAR) < 1950;
     }
 
-    
-    private void agregarSiCambio(DefaultTableModel m, String campo, String antes, String despues)
-    {
-        if (!java.util.Objects.equals(antes, despues))
-        {
-            m.addRow(new Object[]
-            {
+    private boolean validarFormulario() {
+        String nombre = txtNombre.getText().trim();
+        String correo = txtCorreo.getText().trim();
+        String promedio = txtPromedio.getText().trim();
+        Date fecha = dcFechaNac.getDate();
+
+        if (ValidadorAlumno.esVacio(nombre)) {
+            error("Campo requerido", "El nombre es OBLIGATORIO");
+            return false;
+        }
+        if (!ValidadorAlumno.nombreValido(nombre)) {
+            error("Error de validación", "El nombre solo puede contener letras y espacios.");
+            return false;
+        }
+
+        if (ValidadorAlumno.esVacio(txtApPat.getText().trim()) || !ValidadorAlumno.nombreValido(txtApPat.getText().trim())) {
+            error("Campo requerido", "Apellido paterno obligatorio y válido");
+            return false;
+        }
+        if (ValidadorAlumno.esVacio(txtApMaterno.getText().trim()) || !ValidadorAlumno.nombreValido(txtApMaterno.getText().trim())) {
+            error("Campo requerido", "Apellido materno obligatorio y válido");
+            return false;
+        }
+
+        if (ValidadorAlumno.esVacio(correo)) {
+            error("Campo requerido", "El correo es OBLIGATORIO");
+            return false;
+        }
+        if (!ValidadorAlumno.correoValido(correo)) {
+            error("Error de validación", "El formato del correo no es válido. Ejemplo: usuario@dominio.com");
+            txtCorreo.requestFocus();
+            return false;
+        }
+        if (ValidadorAlumno.seleccionCb(cmbCarrera.getSelectedIndex())) {
+            error("Campo requerido", "La carrera es OBLIGATORIA");
+            return false;
+        }
+
+        // Validación adaptada del promedio usando la nueva firma de ValidadorAlumno
+        if (ValidadorAlumno.esVacio(promedio)) {
+            error("Campo requerido", "No puede quedar vacío el Promedio");
+            return false;
+        }
+        if (ValidadorAlumno.promedioValido(promedio) == null) {
+            error("Error de validación", "El promedio debe ser numérico y estar en un rango de 0 a 100");
+            return false;
+        }
+
+        if (ValidadorAlumno.fechaVacia(fecha)) {
+            error("Campo requerido", "Debe ingresar la fecha de nacimiento");
+            return false;
+        }
+
+        // Validación adaptada de la fecha usando fechaPasada en lugar de fechaAnterior1950
+        if (ValidadorAlumno.fechaFutura(fecha) || ValidadorAlumno.fechaPasada(fecha)) {
+            error("Error en fecha", "La fecha no puede ser futura ni anterior a 1950");
+            return false;
+        }
+
+        if (ValidadorAlumno.materiasVacias(lstMaterias.getSelectedValuesList())) {
+            error("Campo requerido", "Debe seleccionar al menos una materia");
+            return false;
+        }
+        return true;
+    }
+
+    private void agregarSiCambio(DefaultTableModel m, String campo, String antes, String despues) {
+        if (!java.util.Objects.equals(antes, despues)) {
+            m.addRow(new Object[]{
                 campo, antes, despues
             });
         }
     }
 
-    private void cargarTablaCambios()
-    {
-        DefaultTableModel m = new DefaultTableModel(new String[]
-        {
+    private String nombreCompletoEd() {
+        return (txtNombre.getText().trim() + " "
+                + txtApPat.getText().trim() + " "
+                + txtApMaterno.getText().trim()).trim().replaceAll("\\s+", " ");
+    }
+
+    private void cargarTablaCambios() {
+        DefaultTableModel m = new DefaultTableModel(new String[]{
             "Campo", "Antes", "Después"
-        }, 0)
-        {
+        }, 0) {
             @Override
-            public boolean isCellEditable(int r, int c)
-            {
+            public boolean isCellEditable(int r, int c) {
                 return false;
             }
         };
         Alumno a = alumnoOriginal;
         SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
 
-        agregarSiCambio(m, "Nombre", a.getNombre(), txtNombre.getText().trim());
+        agregarSiCambio(m, "Nombre", a.getNombre(), nombreCompletoEd());
         agregarSiCambio(m, "Correo", a.getCorreo(), txtCorreo.getText().trim());
         agregarSiCambio(m, "Carrera", a.getCarerra(), (String) cmbCarrera.getSelectedItem());
         agregarSiCambio(m, "Promedio", String.valueOf(a.getPromedio()),
@@ -2267,10 +2345,8 @@ public class VtnAdministrador extends javax.swing.JFrame
         chkConfirmo.setSelected(false);
         btnGuardar.setEnabled(false);
     }
-    
-    
-    private void limpiarRegistro()
-    {
+
+    private void limpiarRegistro() {
         jTxt_nombre.setText("");
         jTxt_ApellidoPat.setText("");
         jTxt_ApellidoMat.setText("");
@@ -2280,21 +2356,18 @@ public class VtnAdministrador extends javax.swing.JFrame
         jTxt_Correo.setText("");
         jPF_contraseña.setText("");
         jTb_Materias.clearSelection();
-//        jTxt_NoControl.setText("");
-//        jTxt_Nombre.setText("");
-//        jTxt_Correo.setText("");
-//        jCbCarrera.setSelectedIndex(0);
-//        jTxt_Promedio.setText("");
-//        jListMaterias.clearSelection();
-//        jDCFechaNac.setDate(null);
-    
+        jTxt_NoControl.setText("");
+
+        jTxt_Correo.setText("");
+        jCB_Carrera.setSelectedIndex(0);
+        jTxt_Promedio.setText("");
+        jTb_Materias.clearSelection();
+
     }
 
-    public void cargarTabla()
-    {
+    public void cargarTabla() {
         String[] columnas
-                =
-                {
+                = {
                     "Materia",
                     "Horario",
                     "Agregar Mat."
@@ -2304,36 +2377,31 @@ public class VtnAdministrador extends javax.swing.JFrame
         //me la vole UwU
 
         String[] mat1
-                =
-                {
+                = {
                     "Top. Avan. Prog.",
                     "Mar/Jue 7 am - 9 am",
                     "Agregar"
                 };
         String[] mat2
-                =
-                {
+                = {
                     "Simulacion",
                     "Mar/Jue 9 am - 11 am",
                     "Agregar"
                 };
         String[] mat3
-                =
-                {
+                = {
                     "Metodos Numericos",
                     "Mie/Vie 1 pm - 3 pm",
                     "Agregar"
                 };
         String[] mat4
-                =
-                {
+                = {
                     "Prolog",
                     "Mie/Vie 11 am - 1 pm",
                     "Agregar"
                 };
         String[] mat5
-                =
-                {
+                = {
                     "Arq.Computadoras.",
                     "Lun/Mie/Vie 7 am - 9 am",
                     "Agregar"
@@ -2428,6 +2496,7 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;

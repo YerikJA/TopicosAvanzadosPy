@@ -15,11 +15,11 @@ public class CatalogoController {
     
     //cualquier ventana q use el combo
     public List<String> obtenerCarreras(){
-        return Arrays.asList("Seleccione una carrera", "Sistemas", "Logistica", "Electronica");
+        return Arrays.asList("Seleccione una carrera","Ing. Sistemas","Tic´s","Quimica","Mecatronica","Electromecanica","Logistica","Gestion Ambiental" );
     }
     
     public List<String> obtenerMaterias(){
-        return Arrays.asList("Ingles", "Fisica", "Simulacion", "Telecom");
+        return Arrays.asList("Top. Avan. Prog.","Simulacion","Metodos Numericos","Prolog","Arq.Computadoras.");
     }
 
     
