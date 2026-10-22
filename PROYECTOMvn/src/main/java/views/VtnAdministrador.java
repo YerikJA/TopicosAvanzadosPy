@@ -25,6 +25,14 @@ public class VtnAdministrador extends javax.swing.JFrame
     private AlumnoController controllerAdministracion;
 
     private Alumno alumnoOriginal;
+    private int noControl;
+    private String nombreAlu;
+    private String correoAlu;
+    private String carreraAlu;
+    private Double promedioAlu;
+    private String semestreAlu;
+    private Date fechAlu;
+    private List<String> materiasAlu;
     private String pasoActual = "buscar";
     private final javax.swing.ButtonGroup grupoPestanasEd = new javax.swing.ButtonGroup();
 
@@ -38,6 +46,14 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         setTitle("Administracion");
         cargarTabla();
+        this.noControl = noControl;
+        this.nombreAlu = nombreAlu;
+        this.correoAlu = correoAlu;
+        this.carreraAlu = carreraAlu;
+        this.promedioAlu = promedioAlu;
+        this.fechAlu = fechAlu;
+        this.materiasAlu = materiasAlu;
+        this.semestreAlu= semestreAlu;
 
         // ---- FORMATO GENERAL ----
         Estilos.estilizarVentana(this);
@@ -218,6 +234,8 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         cargarCatalogos();
     }
+
+    
 
     private void cargarCatalogos()
     {
@@ -494,6 +512,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_Alta.setLayout(new java.awt.BorderLayout());
 
         jBttn_DatosPrincipales.setText("1. DATOS PRINCIPALES");
+        jBttn_DatosPrincipales.setEnabled(false);
         jBttn_DatosPrincipales.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -504,9 +523,11 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_Encabezado.add(jBttn_DatosPrincipales);
 
         jBttn_MateriasProm.setText("2. MATERIAS Y PROMEDIO");
+        jBttn_MateriasProm.setEnabled(false);
         jP_Encabezado.add(jBttn_MateriasProm);
 
         jBttn_CuentasExtr.setText("3. CUENTA Y EXTRAS");
+        jBttn_CuentasExtr.setEnabled(false);
         jP_Encabezado.add(jBttn_CuentasExtr);
 
         jP_Alta.add(jP_Encabezado, java.awt.BorderLayout.NORTH);
@@ -610,6 +631,13 @@ public class VtnAdministrador extends javax.swing.JFrame
         });
 
         jBttn_Cancelar_2.setText("Cancelar");
+        jBttn_Cancelar_2.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jBttn_Cancelar_2ActionPerformed(evt);
+            }
+        });
 
         jL_Semestre.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jL_Semestre.setText("Semestre");
@@ -736,18 +764,20 @@ public class VtnAdministrador extends javax.swing.JFrame
                 .addGap(53, 53, 53)
                 .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
+                        .addComponent(jLbl_CuentaExtras)
+                        .addContainerGap(635, Short.MAX_VALUE))
+                    .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
                         .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jLbl_Contra)
                                 .addComponent(jTxt_Correo, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
                                 .addComponent(jPF_contraseña))
                             .addComponent(jLbl_correo))
-                        .addGap(240, 240, 240)
-                        .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jB_Cancelar3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jB_Guardar, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)))
-                    .addComponent(jLbl_CuentaExtras))
-                .addContainerGap(126, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jB_Cancelar3, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jB_Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(181, 181, 181))))
         );
         jP_CuentasExtrLayout.setVerticalGroup(
             jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -756,17 +786,21 @@ public class VtnAdministrador extends javax.swing.JFrame
                 .addComponent(jLbl_CuentaExtras)
                 .addGap(51, 51, 51)
                 .addComponent(jLbl_correo)
-                .addGap(18, 18, 18)
+                .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jP_CuentasExtrLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jTxt_Correo, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_CuentasExtrLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                        .addComponent(jB_Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)))
                 .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTxt_Correo, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLbl_Contra)
                     .addComponent(jB_Cancelar3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
-                .addComponent(jLbl_Contra)
                 .addGap(18, 18, 18)
-                .addGroup(jP_CuentasExtrLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jPF_contraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jB_Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(307, Short.MAX_VALUE))
+                .addComponent(jPF_contraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(296, Short.MAX_VALUE))
         );
 
         jP_AltCard.add(jP_CuentasExtr, "card4");
@@ -935,7 +969,7 @@ public class VtnAdministrador extends javax.swing.JFrame
                 .addComponent(jTDatos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTConfirmar)
-                .addContainerGap(244, Short.MAX_VALUE))
+                .addContainerGap(231, Short.MAX_VALUE))
         );
         jP_EncabezadoEdLayout.setVerticalGroup(
             jP_EncabezadoEdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1682,6 +1716,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         String apellidoPat = jTxt_ApellidoPat.getText().trim();
         String apellidoMat = jTxt_ApellidoMat.getText().trim();
         Date fechaNacimiento = jDC_Nacimiento.getDate();
+       
         
         if (validaciones.ValidadorAlumno.esVacio(nombre))
         {
@@ -1747,7 +1782,10 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         }
         String nombreCompleto = nombre + apellidoPat + apellidoMat;
-
+       
+        nombreAlu= nombreCompleto;
+        fechAlu= fechaNacimiento;
+        
         java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
         cl.show(jP_AltCard, "card3");
         Estilos.seleccionar(jBttn_MateriasProm);
@@ -1777,6 +1815,8 @@ public class VtnAdministrador extends javax.swing.JFrame
         int [] indice=jTb_Materias.getSelectedRows();
         String semestre= jTxt_Semestre.getText().trim();
         String promedio= jTxt_Promedio.getText().trim();
+        
+        
         
         if(!validaciones.ValidadorAlumno.materiasVacias(materias))
         {
@@ -1828,7 +1868,10 @@ public class VtnAdministrador extends javax.swing.JFrame
             
         }
         
-        
+        materiasAlu=materias;
+        semestreAlu=semestre;
+        promedioAlu= promedioValido;
+       
         java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
         cl.show(jP_AltCard, "card4");
         Estilos.seleccionar(jBttn_CuentasExtr);
@@ -1837,7 +1880,6 @@ public class VtnAdministrador extends javax.swing.JFrame
     }//GEN-LAST:event_jBttn_ContinuarMPActionPerformed
 
     private void jB_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_GuardarActionPerformed
-        // TODO add your handling code here:
         String correo = jTxt_Correo.getText().trim();
         String contraseña = new String(jPF_contraseña.getPassword());
 
@@ -1868,6 +1910,50 @@ public class VtnAdministrador extends javax.swing.JFrame
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
+        
+        
+        Alumno nuevoAlumno= new Alumno(correo, nombreAlu, correo, correo, promedioAlu, fechAlu, materiasAlu);
+        
+        boolean altaEstudiante = controllerAdministracion.agergarAlumno(nuevoAlumno);
+
+        if (!altaEstudiante)
+        {
+            JOptionPane.showMessageDialog(this,
+                    "No Control duplicado.",
+                    "Duplicado",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        JOptionPane.showMessageDialog(this,
+                "Alumno guardado correctamente.",
+                "Éxito",
+                JOptionPane.INFORMATION_MESSAGE);
+        
+         List<Alumno> listaFinal = controllerAdministracion.consultarAlumno();
+        for (Alumno alumno : listaFinal)
+        {
+            System.out.println("NoControl: " + alumno.getNo_control());
+            System.out.println("Nombre: " + alumno.getNombre());
+            System.out.println("Correo: " + alumno.getCorreo());
+            System.out.println("Carrera: " + alumno.getCarerra());
+            System.out.println("Promedio: " + alumno.getPromedio());
+            System.out.println("Materias: " + alumno.getMaterias() + "\n");
+        }
+
+        nombreAlu="";
+        noControl= -1;
+        correoAlu="";
+        carreraAlu="";
+        promedioAlu=null;
+        fechAlu=null;
+        materiasAlu.clear();
+        
+        limpiarRegistro();
+        java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
+        cl.show(jP_AltCard, "card2");
+        Estilos.seleccionar(jBttn_DatosPrincipales);
 
 
     }//GEN-LAST:event_jB_GuardarActionPerformed
@@ -1980,10 +2066,17 @@ public class VtnAdministrador extends javax.swing.JFrame
 
     private void jB_Cancelar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_Cancelar3ActionPerformed
         // TODO add your handling code here:
-
         java.awt.CardLayout cExtra = (java.awt.CardLayout) jP_AltCard.getLayout();
         cExtra.previous(jP_AltCard);
     }//GEN-LAST:event_jB_Cancelar3ActionPerformed
+
+    private void jBttn_Cancelar_2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_Cancelar_2ActionPerformed
+    {//GEN-HEADEREND:event_jBttn_Cancelar_2ActionPerformed
+        // TODO add your handling code here:
+        java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
+        cl.show(jP_AltCard, "card2");
+        Estilos.seleccionar(jBttn_DatosPrincipales);
+    }//GEN-LAST:event_jBttn_Cancelar_2ActionPerformed
 
     // Edicion metodos propios
     private void conScroll(JPanel card, String nombre)
@@ -2270,6 +2363,28 @@ public class VtnAdministrador extends javax.swing.JFrame
         lblResumen.setText(m.getRowCount() == 0 ? "Sin cambios" : m.getRowCount() + " campo(s) modificado(s)");
         chkConfirmo.setSelected(false);
         btnGuardar.setEnabled(false);
+    }
+    
+    
+    private void limpiarRegistro()
+    {
+        jTxt_nombre.setText("");
+        jTxt_ApellidoPat.setText("");
+        jTxt_ApellidoMat.setText("");
+        jDC_Nacimiento.setDate(null);
+        jTxt_Semestre.setText("");
+        jTxt_Promedio.setText("");
+        jTxt_Correo.setText("");
+        jPF_contraseña.setText("");
+        jTb_Materias.clearSelection();
+//        jTxt_NoControl.setText("");
+//        jTxt_Nombre.setText("");
+//        jTxt_Correo.setText("");
+//        jCbCarrera.setSelectedIndex(0);
+//        jTxt_Promedio.setText("");
+//        jListMaterias.clearSelection();
+//        jDCFechaNac.setDate(null);
+    
     }
 
     public void cargarTabla()
