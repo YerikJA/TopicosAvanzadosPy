@@ -290,6 +290,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.icono(lblFProm, FontAwesomeSolid.CHART_LINE, 16);
 
         Estilos.icono(jLabel24, FontAwesomeSolid.COG, 24);
+        jTb_Materias.setDefaultEditor(Object.class, null);
         cargarCatalogos();
         iniciarConsulta();
     }
