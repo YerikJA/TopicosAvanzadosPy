@@ -18,7 +18,8 @@ import javax.swing.table.DefaultTableModel;
 import model.Alumno;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import validaciones.ValidadorAlumno;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -51,9 +52,12 @@ import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import model.Alumno;
+import utils.Pdf;
 
 public class VtnAdministrador extends javax.swing.JFrame
 {
+
+    private static final Logger log = LoggerFactory.getLogger(VtnAdministrador.class);
 
     private AlumnoController controllerAdministracion;
 
@@ -159,21 +163,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.estilizarEtiqueta(jLbl_Contra);
         jLbl_Contra.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
 
-        // Consulta
-//        Estilos.estilizarEtiqueta(jLb_CONSULTA_CARR);
-//        jLb_CONSULTA_CARR.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-//        Estilos.estilizarEtiqueta(jLb_CONSULTA_ORDENAR);
-//        jLb_CONSULTA_ORDENAR.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-//        Estilos.estilizarEtiqueta(jLb_CONSULTA_PROM);
-//        jLb_CONSULTA_PROM.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-//        Estilos.estilizarEtiqueta(jLb_Consulta_A);
-//        jLb_Consulta_A.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-//        Estilos.estilizarEtiqueta(jLb_Consulta_Sit_Ac);
-//        jLb_Consulta_Sit_Ac.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-//        Estilos.estilizarEtiqueta(jLb_Consulta_buscar);
-//        jLb_Consulta_buscar.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
-//        Estilos.estilizarEtiqueta(jLb_Consulta_materias);
-//        jLb_Consulta_materias.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
         // ---- CAMPOS DE TEXTO ----
         Estilos.estilizarCampo(jTxt_Semestre);
         Estilos.estilizarCampo(jTxt_Promedio);
@@ -185,12 +174,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.estilizarCampo(jTxt_NoControl);
 
         // ---- BOTONES ----
-        // Consulta: situación académica
-//        Estilos.estilizarBoton(btnAyuda);
-//        Estilos.estilizarBoton(jbtnLimpiar);
-//        Estilos.estilizarBoton(jB_Cosnulta_Aprob);
-//        Estilos.estilizarBoton(jB_Consulta_Riesg);
-//        Estilos.estilizarBoton(jB_Consulta_Rep);
         // Alta: datos principales
         Estilos.estilizarBotonPrincipal(jBttn_ContinuarDP);
         Estilos.estilizarBoton(jBttn_Cancelar);
@@ -386,7 +369,8 @@ public class VtnAdministrador extends javax.swing.JFrame
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents()
+    {
 
         jPanel2 = new javax.swing.JPanel();
         jL_TituloGeneral = new javax.swing.JLabel();
@@ -471,6 +455,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         txtFMaterias = new javax.swing.JTextArea();
         btnAyuda = new javax.swing.JButton();
         jbtnLimpiar = new javax.swing.JButton();
+        jBttn_Pdf = new javax.swing.JButton();
         jP_Edicion = new javax.swing.JPanel();
         jP_EncabezadoEd = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -562,40 +547,50 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jBttn_Edicion.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Edicion.setText("EDICIÓN");
-        jBttn_Edicion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBttn_Edicion.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBttn_EdicionActionPerformed(evt);
             }
         });
 
         jBttn_Alta.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Alta.setText("ALTA");
-        jBttn_Alta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBttn_Alta.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBttn_AltaActionPerformed(evt);
             }
         });
 
         jBttn_Consulta.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Consulta.setText("CONSULTA");
-        jBttn_Consulta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBttn_Consulta.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBttn_ConsultaActionPerformed(evt);
             }
         });
 
         jBttn_Baja.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Baja.setText("BAJA");
-        jBttn_Baja.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBttn_Baja.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBttn_BajaActionPerformed(evt);
             }
         });
 
         jBttn_Regresar.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jBttn_Regresar.setText("REGRESAR");
-        jBttn_Regresar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBttn_Regresar.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBttn_RegresarActionPerformed(evt);
             }
         });
@@ -633,12 +628,12 @@ public class VtnAdministrador extends javax.swing.JFrame
                 .addComponent(jBttn_Baja, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(46, 46, 46)
                 .addComponent(jBttn_Regresar, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(194, Short.MAX_VALUE))
         );
 
         jp_Contenedor.setLayout(new java.awt.CardLayout());
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
         jLabel2.setText("BIENVENIDO");
 
         javax.swing.GroupLayout jP_BienvenidaLayout = new javax.swing.GroupLayout(jP_Bienvenida);
@@ -646,16 +641,16 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_BienvenidaLayout.setHorizontalGroup(
             jP_BienvenidaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jP_BienvenidaLayout.createSequentialGroup()
-                .addGap(245, 245, 245)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(270, Short.MAX_VALUE))
+                .addGap(295, 295, 295)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(289, Short.MAX_VALUE))
         );
         jP_BienvenidaLayout.setVerticalGroup(
             jP_BienvenidaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jP_BienvenidaLayout.createSequentialGroup()
-                .addGap(153, 153, 153)
+                .addGap(229, 229, 229)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(237, Short.MAX_VALUE))
+                .addContainerGap(310, Short.MAX_VALUE))
         );
 
         jp_Contenedor.add(jP_Bienvenida, "card6");
@@ -664,8 +659,10 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jBttn_DatosPrincipales.setText("1. DATOS PRINCIPALES");
         jBttn_DatosPrincipales.setEnabled(false);
-        jBttn_DatosPrincipales.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBttn_DatosPrincipales.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBttn_DatosPrincipalesActionPerformed(evt);
             }
         });
@@ -700,8 +697,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         jBttn_Cancelar.setText("Cancelar");
 
         jBttn_ContinuarDP.setText("Continuar");
-        jBttn_ContinuarDP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBttn_ContinuarDP.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBttn_ContinuarDPActionPerformed(evt);
             }
         });
@@ -769,15 +768,19 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_AltCard.add(jP_DatosPrincipales, "card2");
 
         jBttn_ContinuarMP.setText("Continuar");
-        jBttn_ContinuarMP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBttn_ContinuarMP.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBttn_ContinuarMPActionPerformed(evt);
             }
         });
 
-        jBttn_Cancelar_2.setText("Cancelar");
-        jBttn_Cancelar_2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBttn_Cancelar_2.setText("Volver");
+        jBttn_Cancelar_2.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBttn_Cancelar_2ActionPerformed(evt);
             }
         });
@@ -789,13 +792,15 @@ public class VtnAdministrador extends javax.swing.JFrame
         jL_Materias.setText("Materias");
 
         jTb_Materias.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object [][]
+            {
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null}
             },
-            new String [] {
+            new String []
+            {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
@@ -805,15 +810,19 @@ public class VtnAdministrador extends javax.swing.JFrame
         jL_Promedio.setText("Promedio General");
 
         jTxt_Semestre.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jTxt_Semestre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jTxt_Semestre.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jTxt_SemestreActionPerformed(evt);
             }
         });
 
         jTxt_Promedio.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jTxt_Promedio.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jTxt_Promedio.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jTxt_PromedioActionPerformed(evt);
             }
         });
@@ -882,16 +891,20 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jB_Cancelar3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jB_Cancelar3.setText("Volver");
-        jB_Cancelar3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jB_Cancelar3.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jB_Cancelar3ActionPerformed(evt);
             }
         });
 
         jB_Guardar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jB_Guardar.setText("Guardar");
-        jB_Guardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jB_Guardar.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jB_GuardarActionPerformed(evt);
             }
         });
@@ -1077,7 +1090,8 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jlblContador.setText("Mostrando 0 de 0 alumnos");
 
-        jlistaAlumnos.setModel(new javax.swing.AbstractListModel<String>() {
+        jlistaAlumnos.setModel(new javax.swing.AbstractListModel<String>()
+        {
             String[] strings = { " " };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
@@ -1167,62 +1181,80 @@ public class VtnAdministrador extends javax.swing.JFrame
                     .addComponent(lblTitPromedio)
                     .addComponent(lblFProm))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPaneMaterias, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                .addComponent(jScrollPaneMaterias, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         btnAyuda.setText("¿Cómo busco?");
-        btnAyuda.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnAyuda.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 btnAyudaActionPerformed(evt);
             }
         });
 
         jbtnLimpiar.setText("Limpiar filtros");
 
+        jBttn_Pdf.setText("PDF");
+        jBttn_Pdf.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jBttn_PdfActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jP_CONSULTA_COMPLayout = new javax.swing.GroupLayout(jP_CONSULTA_COMP);
         jP_CONSULTA_COMP.setLayout(jP_CONSULTA_COMPLayout);
         jP_CONSULTA_COMPLayout.setHorizontalGroup(
             jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
-                .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
+                .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jP_CONSULTA_COMPLayout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jlblContador, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(32, 32, 32)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 15, Short.MAX_VALUE))
-                    .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
+                        .addGap(0, 10, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jP_CONSULTA_COMPLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanelFiltros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_CONSULTA_COMPLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
+                        .addGap(19, 19, 19)
                         .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(155, 155, 155)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jBttn_Pdf, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnAyuda)
-                        .addGap(52, 52, 52)
+                        .addGap(18, 18, 18)
                         .addComponent(jbtnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(129, 129, 129)))
+                        .addGap(235, 235, 235)))
                 .addContainerGap())
         );
         jP_CONSULTA_COMPLayout.setVerticalGroup(
             jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel24)
-                    .addComponent(btnAyuda)
-                    .addComponent(jbtnLimpiar))
-                .addGap(6, 6, 6)
+                .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
+                        .addComponent(jLabel24)
+                        .addGap(8, 8, 8))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jP_CONSULTA_COMPLayout.createSequentialGroup()
+                        .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnAyuda)
+                            .addComponent(jbtnLimpiar)
+                            .addComponent(jBttn_Pdf))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(jPanelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jP_CONSULTA_COMPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jP_CONSULTA_COMPLayout.createSequentialGroup()
                         .addComponent(jlblContador)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE))
+                        .addComponent(jScrollPane4))
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -1231,21 +1263,17 @@ public class VtnAdministrador extends javax.swing.JFrame
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 892, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jP_CONSULTA_COMP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jP_CONSULTA_COMP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 454, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jP_CONSULTA_COMP, javax.swing.GroupLayout.PREFERRED_SIZE, 454, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jP_CONSULTA_COMP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jP_ConsultaC.add(jPanel1, "card2");
@@ -1260,8 +1288,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         jLabel1.setText("EDICION");
 
         jTBuscar.setText("1.Buscar");
-        jTBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jTBuscar.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jTBuscarActionPerformed(evt);
             }
         });
@@ -1283,7 +1313,7 @@ public class VtnAdministrador extends javax.swing.JFrame
                 .addComponent(jTDatos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTConfirmar)
-                .addContainerGap(231, Short.MAX_VALUE))
+                .addContainerGap(243, Short.MAX_VALUE))
         );
         jP_EncabezadoEdLayout.setVerticalGroup(
             jP_EncabezadoEdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1310,8 +1340,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_EdDatos.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 60, -1, -1));
 
         txtNoControl2.setEditable(false);
-        txtNoControl2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        txtNoControl2.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 txtNoControl2ActionPerformed(evt);
             }
         });
@@ -1338,8 +1370,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         jLabel21.setText("Fecha nac.");
         jP_EdDatos.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 400, -1, -1));
 
-        txtNombre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        txtNombre.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 txtNombreActionPerformed(evt);
             }
         });
@@ -1347,8 +1381,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_EdDatos.add(txtApPat, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 160, 280, -1));
         jP_EdDatos.add(txtApMaterno, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 210, 280, -1));
 
-        txtCorreo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        txtCorreo.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 txtCorreoActionPerformed(evt);
             }
         });
@@ -1362,7 +1398,8 @@ public class VtnAdministrador extends javax.swing.JFrame
         jLabel22.setText("Materias");
         jP_EdDatos.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 450, -1, -1));
 
-        lstMaterias.setModel(new javax.swing.AbstractListModel<String>() {
+        lstMaterias.setModel(new javax.swing.AbstractListModel<String>()
+        {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
@@ -1387,8 +1424,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_EdDatos.add(btnCancelar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 590, -1, -1));
 
         btnContinuar2.setText("Continuar");
-        btnContinuar2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnContinuar2.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 btnContinuar2ActionPerformed(evt);
             }
         });
@@ -1401,35 +1440,43 @@ public class VtnAdministrador extends javax.swing.JFrame
         lblResumen.setText("Resumen del tramite");
 
         tblCambios.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object [][]
+            {
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null}
             },
-            new String [] {
+            new String []
+            {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
         jScrollPane3.setViewportView(tblCambios);
 
         chkConfirmo.setText("Revise los cambios y deseo guardarlos");
-        chkConfirmo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        chkConfirmo.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 chkConfirmoActionPerformed(evt);
             }
         });
 
         btnAtras3.setText("Atras");
-        btnAtras3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnAtras3.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 btnAtras3ActionPerformed(evt);
             }
         });
 
         btnGuardar.setText("Guardar cambios");
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnGuardar.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 btnGuardarActionPerformed(evt);
             }
         });
@@ -1482,16 +1529,20 @@ public class VtnAdministrador extends javax.swing.JFrame
         lblNoControl.setText("No. de control");
         jP_EdBuscar.add(lblNoControl, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 60, -1, -1));
 
-        txtNoControl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        txtNoControl.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 txtNoControlActionPerformed(evt);
             }
         });
         jP_EdBuscar.add(txtNoControl, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 110, 240, 20));
 
         btnBuscar.setText("Buscar");
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnBuscar.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 btnBuscarActionPerformed(evt);
             }
         });
@@ -1561,16 +1612,20 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         jBContinuar1.setText("Continuar");
         jBContinuar1.setEnabled(false);
-        jBContinuar1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBContinuar1.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBContinuar1ActionPerformed(evt);
             }
         });
         jP_EdBuscar.add(jBContinuar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 320, -1, 20));
 
         jBCancelar1.setText("Cancelar");
-        jBCancelar1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jBCancelar1.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jBCancelar1ActionPerformed(evt);
             }
         });
@@ -1598,8 +1653,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         JBtnBuscarBaja.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         JBtnBuscarBaja.setText("BUSCAR");
         JBtnBuscarBaja.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        JBtnBuscarBaja.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        JBtnBuscarBaja.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 JBtnBuscarBajaActionPerformed(evt);
             }
         });
@@ -1614,8 +1671,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         jTxtFieldNombre.setBackground(new java.awt.Color(255, 252, 243));
         jTxtFieldNombre.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jTxtFieldNombre.setBorder(null);
-        jTxtFieldNombre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jTxtFieldNombre.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jTxtFieldNombreActionPerformed(evt);
             }
         });
@@ -1666,8 +1725,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         jButtonCancelarBaja.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButtonCancelarBaja.setText("CANCELAR");
         jButtonCancelarBaja.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        jButtonCancelarBaja.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonCancelarBaja.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jButtonCancelarBajaActionPerformed(evt);
             }
         });
@@ -1676,8 +1737,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         jButtonDarBaja.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButtonDarBaja.setText("DAR BAJA");
         jButtonDarBaja.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
-        jButtonDarBaja.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonDarBaja.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
                 jButtonDarBajaActionPerformed(evt);
             }
         });
@@ -1808,7 +1871,7 @@ public class VtnAdministrador extends javax.swing.JFrame
                     .addComponent(jTxtEstatusBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(75, Short.MAX_VALUE))
+                .addContainerGap(187, Short.MAX_VALUE))
         );
 
         jp_Contenedor.add(jP_Baja, "card5");
@@ -1826,11 +1889,11 @@ public class VtnAdministrador extends javax.swing.JFrame
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(188, 188, 188)
-                .addComponent(jp_Contenedor, javax.swing.GroupLayout.PREFERRED_SIZE, 454, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(172, Short.MAX_VALUE))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(78, 78, 78)
+                .addComponent(jp_Contenedor, javax.swing.GroupLayout.PREFERRED_SIZE, 616, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -2121,6 +2184,7 @@ public class VtnAdministrador extends javax.swing.JFrame
             System.out.println("Materias: " + alumno.getMaterias() + "\n");
         }
 
+        log.info("Alumno {} se ha dado de alta con el numero de control {}", nombreAlu, numeroControl);
         nombreAlu = "";
         noControl = "";
         correoAlu = "";
@@ -2130,6 +2194,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         //materiasAlu.clear();
 
         limpiarRegistro();
+
         java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
         cl.show(jP_AltCard, "card2");
         Estilos.seleccionar(jBttn_DatosPrincipales);
@@ -2611,6 +2676,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         {
             JOptionPane.showMessageDialog(this, "No se pudo actualizar el alumno.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        log.info("Alumno con numero de control {} actualizado", noControl);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void txtNoControlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNoControlActionPerformed
@@ -2777,6 +2843,7 @@ public class VtnAdministrador extends javax.swing.JFrame
             controllerAdministracion.darBajaAlumno(alumnoOriginal);
 
             limpiarBaja();
+            log.info("Alumno con número de control {} fue dado de baja correctamente" , noControl);
 
         }
     }//GEN-LAST:event_jButtonDarBajaActionPerformed
@@ -2814,6 +2881,21 @@ public class VtnAdministrador extends javax.swing.JFrame
         jTxtFieldNombre.setText("");
         jTxtEstatusBusqueda.setText("");
     }//GEN-LAST:event_jButtonCancelarBajaActionPerformed
+
+    private void jBttn_PdfActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_PdfActionPerformed
+    {//GEN-HEADEREND:event_jBttn_PdfActionPerformed
+        List<Alumno> lista= new ArrayList<>();
+        for (int i = 0; i < modeloLista.size(); i++)
+        {
+            lista.add(modeloLista.get(i));
+        }
+        if (lista.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "No hay informacion suficiente para crear el documento", "Error de creacion", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        Pdf.generarPdf(lista);
+    }//GEN-LAST:event_jBttn_PdfActionPerformed
 
     // Edicion metodos propios
     private void conScroll(JPanel card, String nombre)
@@ -3387,6 +3469,7 @@ public class VtnAdministrador extends javax.swing.JFrame
     private javax.swing.JButton jBttn_DatosPrincipales;
     private javax.swing.JButton jBttn_Edicion;
     private javax.swing.JButton jBttn_MateriasProm;
+    private javax.swing.JButton jBttn_Pdf;
     private javax.swing.JButton jBttn_Regresar;
     private javax.swing.JButton jButtonCancelarBaja;
     private javax.swing.JButton jButtonDarBaja;

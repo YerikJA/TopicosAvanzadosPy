@@ -6,9 +6,12 @@ import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class VtnHome extends javax.swing.JFrame
 {
+    private static final Logger log = LoggerFactory.getLogger(VtnHome.class);
 
     private AlumnoController controllerGeneral;
 
@@ -209,6 +212,7 @@ public class VtnHome extends javax.swing.JFrame
 
     private void jBtt_Administrador1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBtt_Administrador1ActionPerformed
     {//GEN-HEADEREND:event_jBtt_Administrador1ActionPerformed
+        log.info("Ingreso de administrador"); 
         VtnAdministrador administrador = new VtnAdministrador(controllerGeneral);
         administrador.setVisible(true);
         this.dispose();
