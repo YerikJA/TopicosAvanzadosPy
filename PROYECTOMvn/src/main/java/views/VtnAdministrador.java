@@ -2,6 +2,7 @@ package views;
 
 import controller.*;
 import estilos.Estilos;
+import exception.AppException;
 import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -342,9 +343,26 @@ public class VtnAdministrador extends javax.swing.JFrame
         jTConfirmar.addActionListener(soloIndicador);
 
         CatalogoController catalogoEd = new CatalogoController();
-        cmbCarrera.setModel(new javax.swing.DefaultComboBoxModel<>(
-                catalogoEd.obtenerCarreras().toArray(new String[0])));
-        lstMaterias.setListData(catalogoEd.obtenerMaterias().toArray(new String[0]));
+//        cmbCarrera.setModel(new javax.swing.DefaultComboBoxModel<>(
+//                catalogoEd.obtenerCarreras().toArray(new String[0])));
+//        lstMaterias.setListData(catalogoEd.obtenerMaterias().toArray(new String[0]));
+        CatalogoController catalogo = new CatalogoController();
+
+        try
+        {
+            lstMaterias.setListData(catalogo.obtenerMaterias().toArray(new String[0]));
+            cmbCarrera.setModel(new javax.swing.DefaultComboBoxModel<>(
+                    catalogo.obtenerCarreras().toArray(new String[0])));
+        } catch (AppException e)
+        {
+            log.error("Error al cargar los catalogos", e);
+
+            JOptionPane.showMessageDialog(this,
+                    e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+
+        }
 
         // Ocultos por ahora (apellidos y botones de materias)
         btnAgregarMat.setVisible(false);
@@ -2270,6 +2288,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         cargando = true;
         DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
         modelo.addElement(TODAS_CARRERAS);
+        //verificar
         List<String> carreras = catalogo.obtenerCarreras();
         if (carreras != null)
         {
@@ -2844,7 +2863,7 @@ public class VtnAdministrador extends javax.swing.JFrame
             controllerAdministracion.darBajaAlumno(alumnoOriginal);
 
             limpiarBaja();
-            log.info("Alumno con número de control {} fue dado de baja correctamente" , noControl);
+            log.info("Alumno con número de control {} fue dado de baja correctamente", noControl);
 
         }
     }//GEN-LAST:event_jButtonDarBajaActionPerformed
@@ -2885,7 +2904,7 @@ public class VtnAdministrador extends javax.swing.JFrame
 
     private void jBttn_PdfActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_PdfActionPerformed
     {//GEN-HEADEREND:event_jBttn_PdfActionPerformed
-        List<Alumno> lista= new ArrayList<>();
+        List<Alumno> lista = new ArrayList<>();
         for (int i = 0; i < modeloLista.size(); i++)
         {
             lista.add(modeloLista.get(i));

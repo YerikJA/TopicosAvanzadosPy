@@ -3,7 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package controller;
-
+import database.CatalogoDAO;
+import exception.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,13 +15,19 @@ import java.util.List;
  */
 public class CatalogoController {
     
-    //cualquier ventana q use el combo
-    public List<String> obtenerCarreras(){
-        return Arrays.asList("Seleccione una carrera","Ing. Sistemas","Tic´s","Quimica","Mecatronica","Electromecanica","Logistica","Gestion Ambiental" );
+    private CatalogoDAO catalogoDAO= new CatalogoDAO();
+
+    public List<String> obtenerCarreras() throws AppException
+    {
+        List<String> carreras = new ArrayList<>();
+        carreras.add("Seleccone una carrera");
+        carreras.addAll(catalogoDAO.obtenerCarreras());
+        return carreras;
     }
-    
-    public List<String> obtenerMaterias(){
-        return Arrays.asList("Top. Avan. Prog.","Simulacion","Metodos Numericos","Prolog","Arq.Computadoras.");
+
+    public List<String> obtenerMaterias() throws AppException
+    {
+        return catalogoDAO.obtenerMaterias();
     }
 
     
