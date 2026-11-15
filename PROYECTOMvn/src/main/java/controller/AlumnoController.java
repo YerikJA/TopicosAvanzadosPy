@@ -7,6 +7,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 import model.Alumno;
+import model.ItemCatalogo;
 
 /**
  *
@@ -52,7 +53,7 @@ public class AlumnoController
         return -1;
     }
 
-    public List<String> obtenerMaterias(int posicion)
+    public List<ItemCatalogo> obtenerMaterias(int posicion)
     {
 
         return alumnos.get(posicion).getMaterias();

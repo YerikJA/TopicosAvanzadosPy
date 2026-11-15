@@ -6,8 +6,8 @@ package controller;
 import database.CatalogoDAO;
 import exception.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import model.ItemCatalogo;
 
 /**
  *
@@ -25,7 +25,7 @@ public class CatalogoController {
         return carreras;
     }
 
-    public List<String> obtenerMaterias() throws AppException
+    public List<ItemCatalogo> obtenerMaterias() throws AppException
     {
         return catalogoDAO.obtenerMaterias();
     }

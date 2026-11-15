@@ -1,27 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package model;
 
 import java.util.Date;
 import java.util.List;
 
-/**
- *
- * @author Luigi
- */
 public class Alumno {
     
     private String no_control;
     private String nombre;
     private String correo;
-    private String carerra;
+    private ItemCatalogo carerra;
     private double promedio;
     private Date fechaNaciomiento;
-    private List<String> materias;
+    private List<ItemCatalogo> materias;
     
-    public Alumno(String no_control, String nombre, String correo, String carerra, double promedio, Date fechaNacimiento ,List<String> materias)
+    public Alumno(String no_control, String nombre, String correo, ItemCatalogo carerra, double promedio, Date fechaNacimiento ,List<ItemCatalogo> materias)
     {
         this.no_control = no_control;
         this.nombre = nombre;
@@ -47,7 +40,7 @@ public class Alumno {
         return correo;
     }
 
-    public String getCarerra()
+    public ItemCatalogo getCarerra()
     {
         return carerra;
     }
@@ -63,7 +56,7 @@ public class Alumno {
     }
 
     
-    public List<String> getMaterias()
+    public List<ItemCatalogo> getMaterias()
     {
         return materias;
     }
