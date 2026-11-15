@@ -1,23 +1,31 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package database;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
-public class Conexion
-{
+public class Conexion {
+    private static final Properties CONFIG = new Properties();
 
-    private static final String URL = "aun no";
-    private static final String USUARIO = "aun no";
-    private static final String CLAVE = "aun no";
-
-    public static Connection obetenerConexion() throws SQLException
-    {
-        return DriverManager.getConnection(URL, USUARIO, CLAVE);
+    static {
+        try (java.io.InputStream in = Conexion.class.getClassLoader()
+                .getResourceAsStream("config.properties")) {
+            if (in == null) {
+                throw new RuntimeException("No se encontró config.properties en src/main/resources");
+            }
+            CONFIG.load(in);
+        } catch (IOException e) {
+            throw new RuntimeException("Error al leer config.properties", e);
+        }
     }
 
+    public static Connection obtenerConexion() throws SQLException {
+        return DriverManager.getConnection(
+                CONFIG.getProperty("db.url"),
+                CONFIG.getProperty("db.usuario"),
+                CONFIG.getProperty("db.clave")
+        );
+    }
 }
