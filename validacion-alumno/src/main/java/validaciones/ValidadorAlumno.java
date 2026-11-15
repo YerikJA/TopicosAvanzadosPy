@@ -1,5 +1,7 @@
 package validaciones;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -20,11 +22,11 @@ public class ValidadorAlumno
     {
         return texto == null || texto.trim().isEmpty();
     }
-    
+
     public static boolean validarNumericos(String numericos)
     {
-        return numericos !=null && NUMERICOS.matcher(numericos.trim()).matches();
-        
+        return numericos != null && NUMERICOS.matcher(numericos.trim()).matches();
+
     }
 
     public static boolean nombreValido(String nombre)
@@ -69,7 +71,7 @@ public class ValidadorAlumno
         return ind <= 0;
     }
 
-    public static boolean materiasVacias(List<String> materias)
+    public static boolean materiasVacias(List<?> materias)
     {
         return materias == null || materias.isEmpty();
     }
@@ -94,7 +96,9 @@ public class ValidadorAlumno
     {
         if (fechaNacimiento != null)
         {
-            return fechaNacimiento.before(new Date(01 / 01 / 1950));
+            Date limite = Date.from(LocalDate.of(1950, 1, 1)
+                    .atStartOfDay(ZoneId.systemDefault()).toInstant());
+            return fechaNacimiento.before(limite);
         }
         return false;
     }
