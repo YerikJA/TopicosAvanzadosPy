@@ -15,15 +15,26 @@ import org.kordamp.ikonli.fontawesome5.*;
 import org.slf4j.*;
 import utils.*;
 import validaciones.*;
+import views.helpers.*;
 
+/**
+ * Ventana principal de administración para el sistema escolar. Centraliza las
+ * cuatro operaciones fundamentales (CRUD): - Alta (Create) - Consulta (Read) -
+ * Edición (Update) - Baja (Delete)
+ *
+ * La lógica compleja de filtrado, renderizado y comparación de datos ha sido
+ * delegada a sus respectivos servicios auxiliares en views.helpers.
+ */
 public class VtnAdministrador extends javax.swing.JFrame
 {
 
     private static final Logger log = LoggerFactory.getLogger(VtnAdministrador.class);
 
+    // ==================================================================
+    // ESTADO Y CONTROLADORES
+    // ==================================================================
     private AlumnoController controllerAdministracion;
 
-    private Alumno alumnoOriginal;
     private String noControl;
     private String nombreAlu;
     private String correoAlu;
@@ -31,32 +42,16 @@ public class VtnAdministrador extends javax.swing.JFrame
     private Double promedioAlu;
     private String semestreAlu;
     private Date fechAlu;
-    private String contraseñaAlu;
+    private String contraseniaAlu;
     private List<ItemCatalogo> materiasAlu;
+
+    //edicion
+    private Alumno alumnoOriginal;
     private String pasoActual = "buscar";
     private final javax.swing.ButtonGroup grupoPestanasEd = new javax.swing.ButtonGroup();
 
-    // ------------------------------------------------------------------
-    // Constantes
-    // ------------------------------------------------------------------
-    private static final String TODAS_CARRERAS = "Todas las carreras";
-    private static final String TODAS_MATERIAS = "Todas las materias";
-
-    private static final Color FONDO = new Color(240, 245, 243);
-    private static final Color TARJETA = Color.WHITE;
-    private static final Color BORDE = new Color(200, 215, 225);
-    private static final Color TEXTO_SUAVE = new Color(100, 110, 120);
-    private static final Color SELECCION = new Color(214, 234, 255);
-
-    private static final Font F_NORMAL = new Font("Segoe UI", Font.PLAIN, 15);
-    private static final Font F_NEGRITA = new Font("Segoe UI", Font.BOLD, 15);
-    private static final Font F_ETIQUETA = new Font("Segoe UI", Font.PLAIN, 13);
-
-    // ------------------------------------------------------------------
-    // Estado y Controladores
-    // ------------------------------------------------------------------
+    //módulo de Consulta
     private final CatalogoController catalogo = new CatalogoController();
-
     private List<Alumno> todos = new ArrayList<>();
     private final Map<Alumno, List<String>> materiasDe = new HashMap<>();
     private boolean cargando = false;
@@ -67,63 +62,55 @@ public class VtnAdministrador extends javax.swing.JFrame
     public VtnAdministrador(AlumnoController controller)
     {
         initComponents();
-        jP_Encabezado.setPreferredSize(new java.awt.Dimension(0, 48));
-        controllerAdministracion = controller;
-
+        this.controllerAdministracion = controller;
         setTitle("Administracion");
-        cargarTabla();
-        this.noControl = noControl;
-        this.nombreAlu = nombreAlu;
-        this.correoAlu = correoAlu;
-        this.carreraAlu = carreraAlu;
-        this.promedioAlu = promedioAlu;
-        this.fechAlu = fechAlu;
-        this.materiasAlu = materiasAlu;
-        this.semestreAlu = semestreAlu;
-        this.contraseñaAlu = contraseñaAlu;
 
-        // ---- FORMATO GENERAL ----
+        inicializarEstilosVisuales();
+        cargarTabla(); // Carga tabla estática de materias para el alta
+        cargarCatalogos();
+        iniciarConsulta();
+    }
+
+    // INICIALIZACIÓN VISUAL Y CATÁLOGOS
+    private void inicializarEstilosVisuales()
+    {
+        jP_Encabezado.setPreferredSize(new java.awt.Dimension(0, 48));
+
+        // Formato de ventana y títulos
         Estilos.estilizarVentana(this);
-
         Estilos.estilizarTitulo(jL_TituloGeneral);
         jL_TituloGeneral.setFont(Estilos.fuente(java.awt.Font.PLAIN, 48));
         Estilos.estilizarTitulo(jLabel2);
-        jLabel2.setFont(Estilos.fuente(java.awt.Font.PLAIN, 48));   // corregido
+        jLabel2.setFont(Estilos.fuente(java.awt.Font.PLAIN, 48));
 
-//        Estilos.estilizarTitulo(jLb_Consulta_buscar);
-        // ---- MENÚ Y PESTAÑAS ----
+        // Menú principal y pestañas
         Estilos.estilizarMenu(jBttn_Alta, jBttn_Consulta, jBttn_Edicion, jBttn_Baja);
         Estilos.estilizarBoton(jBttn_Regresar);
         Estilos.estilizarPestanas(jBttn_DatosPrincipales, jBttn_MateriasProm, jBttn_CuentasExtr);
 
-        // ---- PANELES ----
-        Estilos.estilizarFondo(jp_Contenedor); // sin borde: cada pantalla lleva el suyo
+        // Fondos
+        Estilos.estilizarFondo(jp_Contenedor);
         Estilos.estilizarFondo(jP_Bienvenida);
         jPanel2.setBackground(Estilos.AZUL_OSCURO);
-        // Panel de alta
         Estilos.estilizarFondo(jP_Alta);
 
-        // ---- ETIQUETAS ----
-        // Alta: datos principales
+        // Etiquetas de Alta
         Estilos.estilizarEtiqueta(jL_Nombres1);
         Estilos.estilizarEtiqueta(jL_ApellidoPat);
         Estilos.estilizarEtiqueta(jL_ApellidoMat);
         Estilos.estilizarEtiqueta(jL_Fecha);
-        // Alta: materias y promedio
         Estilos.estilizarEtiqueta(jL_Materias);
         Estilos.estilizarEtiqueta(jL_Semestre);
         Estilos.estilizarEtiqueta(jL_Promedio);
         Estilos.estilizarEtiqueta(jL_NoControl);
         Estilos.estilizarEtiqueta(jL_Carrera);
-
-        // Alta: cuenta y extras
         Estilos.estilizarEtiqueta(jLbl_CuentaExtras);
         Estilos.estilizarEtiqueta(jLbl_correo);
         jLbl_CuentaExtras.setFont(Estilos.fuente(java.awt.Font.PLAIN, 24));
         Estilos.estilizarEtiqueta(jLbl_Contra);
         jLbl_Contra.setFont(Estilos.fuente(java.awt.Font.PLAIN, 16));
 
-        // ---- CAMPOS DE TEXTO ----
+        // Campos de texto de Alta
         Estilos.estilizarCampo(jTxt_Semestre);
         Estilos.estilizarCampo(jTxt_Promedio);
         Estilos.estilizarCampo(jTxt_ApellidoMat);
@@ -132,29 +119,26 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.estilizarFecha(jDC_Nacimiento);
         Estilos.estilizarCampo(jTxt_Correo);
         Estilos.estilizarCampo(jTxt_NoControl);
+        Estilos.estilizarCampo(jPF_contraseña);
 
-        // ---- BOTONES ----
-        // Alta: datos principales
+        // Botones de Alta
         Estilos.estilizarBotonPrincipal(jBttn_ContinuarDP);
         Estilos.estilizarBoton(jBttn_Cancelar);
-        // Alta: materias y promedio
         Estilos.estilizarBotonPrincipal(jBttn_ContinuarMP);
         Estilos.estilizarBoton(jBttn_Cancelar_2);
-        // Alta: cuenta y extras
         Estilos.estilizarBotonPrincipal(jB_Guardar);
         Estilos.estilizarBoton(jB_Cancelar3);
-        // Consulta y Baja
-        Estilos.estilizarBotonPrincipal(JBtnBuscarBaja);   // BUSCAR
-        Estilos.estilizarBotonPrincipal(jButtonDarBaja);   // DAR BAJA
-        Estilos.estilizarBoton(jButtonCancelarBaja);            // CANCELAR
 
-        // ---- COMBOS ----
+        // Botones de Consulta y Baja
+        Estilos.estilizarBotonPrincipal(JBtnBuscarBaja);
+        Estilos.estilizarBotonPrincipal(jButtonDarBaja);
+        Estilos.estilizarBoton(jButtonCancelarBaja);
+
+        // Combos y scrolls
         Estilos.estilizarCombo(jcbCarrera);
         Estilos.estilizarCombo(jComboBox1_C);
         Estilos.estilizarCombo(jcbMateria);
         Estilos.estilizarCombo(jCB_Carrera);
-
-        Estilos.estilizarCampo(jPF_contraseña);
         Estilos.estilizarScroll(jScrollPane1);
 
         jP_ConsultaC.setOpaque(true);
@@ -163,32 +147,26 @@ public class VtnAdministrador extends javax.swing.JFrame
         jP_CONSULTA_COMP.setBackground(Estilos.CREMA_CLARO);
         jP_CONSULTA_COMP.setBorder(null);
 
-        // ---- TABLAS ----
+        // Tablas y sombras
         Estilos.estilizarTabla(jTb_Materias);
-
-        // ---- PANELES CON SOMBRA ----
         Estilos.estilizarPanelConSombra(jP_Bienvenida);
         Estilos.estilizarPanelConSombra(jP_Consulta);
         Estilos.estilizarFondo(jP_Edicion);
         Estilos.estilizarPanelConSombra(jP_Baja);
         Estilos.estilizarPanelConSombra(jPanelFiltros);
 
-        // ---- ALTA: PESTAÑAS ARRIBA, CAJA DEBAJO ----
+        // Distribución de pestañas en panel de Alta
         jP_Alta.add(jP_Encabezado, java.awt.BorderLayout.NORTH);
         jP_Alta.add(jP_AltCard, java.awt.BorderLayout.CENTER);
-
         jP_Encabezado.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 6, 0));
         jP_Encabezado.setPreferredSize(new java.awt.Dimension(0, 48));
         Estilos.estilizarFondo(jP_Encabezado);
-
         Estilos.estilizarPanelConSombra(jP_AltCard);
 
-        javax.swing.JPanel[] pantallasAlta
-                =
-                {
-                    jP_DatosPrincipales, jP_MateriasProm, jP_CuentasExtr
-                };
-        for (javax.swing.JPanel p : pantallasAlta)
+        for (javax.swing.JPanel p : new javax.swing.JPanel[]
+        {
+            jP_DatosPrincipales, jP_MateriasProm, jP_CuentasExtr
+        })
         {
             p.setOpaque(true);
             p.setBackground(Estilos.CREMA_CLARO);
@@ -198,11 +176,15 @@ public class VtnAdministrador extends javax.swing.JFrame
         jBttn_DatosPrincipales.addActionListener(e -> tarjetas.show(jP_AltCard, "card2"));
         jBttn_MateriasProm.addActionListener(e -> tarjetas.show(jP_AltCard, "card3"));
         jBttn_CuentasExtr.addActionListener(e -> tarjetas.show(jP_AltCard, "card4"));
-
         tarjetas.show(jP_AltCard, "card2");
         Estilos.seleccionar(jBttn_DatosPrincipales);
 
-        // ---- ICONOS VECTORIALES ----
+        inicializarIconos();
+        jTb_Materias.setDefaultEditor(Object.class, null);
+    }
+
+    private void inicializarIconos()
+    {
         Estilos.icono(jBttn_Alta, FontAwesomeSolid.USER_PLUS, 22);
         Estilos.icono(jBttn_Consulta, FontAwesomeSolid.SEARCH, 22);
         Estilos.icono(jBttn_Edicion, FontAwesomeSolid.PENCIL_ALT, 22);
@@ -220,10 +202,8 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.icono(jB_Cancelar3, FontAwesomeSolid.TIMES, 18);
         Estilos.icono(jB_Guardar, FontAwesomeSolid.SAVE, 18);
 
-        // etiquetas
         Estilos.icono(jLbl_CuentaExtras, FontAwesomeSolid.COG, 24);
         Estilos.icono(jLbl_Contra, FontAwesomeSolid.KEY, 16);
-
         Estilos.icono(jL_Semestre, FontAwesomeSolid.CALENDAR_ALT, 16);
         Estilos.icono(jL_Materias, FontAwesomeSolid.BOOK, 16);
         Estilos.icono(jL_Promedio, FontAwesomeSolid.CHART_LINE, 16);
@@ -233,63 +213,19 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.icono(jLb_CONSULTA_ORDENAR, FontAwesomeSolid.SORT_AMOUNT_DOWN, 16);
         Estilos.icono(lblTitCarrera, FontAwesomeSolid.BOOK, 16);
         Estilos.icono(lblTitRango, FontAwesomeSolid.CHART_LINE, 16);
-        Estilos.icono(jLb_CONSULTA_ORDENAR, FontAwesomeSolid.SORT_AMOUNT_DOWN, 16);
-        Estilos.icono(lblTitCarrera, FontAwesomeSolid.BOOK, 16);
         Estilos.icono(lblFControl, FontAwesomeSolid.CHART_LINE, 16);
 
         Estilos.icono(jlblContador, FontAwesomeSolid.SORT_AMOUNT_DOWN, 16);
         Estilos.icono(lblFNombre, FontAwesomeSolid.BOOK, 16);
-
         Estilos.icono(lblTitCorreo, FontAwesomeSolid.CHART_LINE, 16);
         Estilos.icono(lblFCorreo, FontAwesomeSolid.SORT_AMOUNT_DOWN, 16);
-
         Estilos.icono(lblTitPromedio, FontAwesomeSolid.BOOK, 16);
         Estilos.icono(lblFProm, FontAwesomeSolid.CHART_LINE, 16);
-
         Estilos.icono(jLabel24, FontAwesomeSolid.COG, 24);
-        jTb_Materias.setDefaultEditor(Object.class, null);
-        cargarCatalogos();
-        iniciarConsulta();
-    }
-
-    private void iniciarConsulta()
-    {
-        jScrollPane4.setViewportView(listaAlumnos);
-        listaAlumnos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        listaAlumnos.setCellRenderer(new TarjetaRenderer());
-
-        jtxtBuscar.setText("");
-        jComboBox1_C.setModel(new DefaultComboBoxModel<>(new String[]
-        {
-            "Nombre (A-Z)", "Nombre (Z-A)", "Promedio (mayor)",
-            "Promedio (menor)", "No. de control"
-        }));
-        jspMin.setModel(new javax.swing.SpinnerNumberModel(0.0, 0.0, 100.0, 1.0));
-        jspMax.setModel(new javax.swing.SpinnerNumberModel(100.0, 0.0, 100.0, 1.0));
-        jbtnLimpiar.addActionListener(e -> limpiarFiltros());
-
-        cargarCatalogoCarreras();
-        recargarDatos();
-        configurarEventos();
-        aplicarFiltros();
-    }
-
-    private void limpiarFiltros()
-    {
-        cargando = true;
-        jtxtBuscar.setText("");
-        jcbCarrera.setSelectedIndex(0);
-        jcbMateria.setSelectedIndex(0);
-        jComboBox1_C.setSelectedIndex(0);
-        jspMin.setValue(0.0);
-        jspMax.setValue(100.0);
-        cargando = false;
-        aplicarFiltros();
     }
 
     private void cargarCatalogos()
     {
-        // ===== EDICIÓN =====
         grupoPestanasEd.add(jTBuscar);
         grupoPestanasEd.add(jTDatos);
         grupoPestanasEd.add(jTConfirmar);
@@ -299,43 +235,32 @@ public class VtnAdministrador extends javax.swing.JFrame
         jTConfirmar.addActionListener(soloIndicador);
 
         CatalogoController catalogoEd = new CatalogoController();
-
-        CatalogoController catalogo = new CatalogoController();
-
         try
         {
-            lstMaterias.setListData(nombres(catalogo.obtenerMaterias()).toArray(new String[0]));
+            lstMaterias.setListData(EdicionHelper.nombres(catalogoEd.obtenerMaterias()).toArray(new String[0]));
             cmbCarrera.setModel(new javax.swing.DefaultComboBoxModel<>(
-                    catalogo.obtenerCarreras().toArray(new String[0])));
+                    catalogoEd.obtenerCarreras().toArray(new String[0])));
         } catch (AppException e)
         {
-            log.error("Error al cargar los catalogos", e);
-
-            JOptionPane.showMessageDialog(this,
-                    e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-
+            log.error("Error al cargar los catálogos", e);
+            error("Error", e.getMessage());
         }
 
-        // Ocultos por ahora (apellidos y botones de materias)
         btnAgregarMat.setVisible(false);
         btnQuitarMat.setVisible(false);
 
         btnAtras2.addActionListener(e -> irA("buscar"));
-        btnRestablecer.addActionListener(e -> llenarFormulario(alumnoOriginal));
-        btnCancelar2.addActionListener(e -> reiniciar());
+        btnRestablecer.addActionListener(e -> llenarFormularioEdicion(alumnoOriginal));
+        btnCancelar2.addActionListener(e -> reiniciarEdicion());
 
-        limpiarResultado();
+        limpiarResultadoEdicion();
         conScroll(jP_EdBuscar, "buscar");
         conScroll(jP_EdDatos, "datos");
         conScroll(jP_EdConfirmar, "confirmar");
-        aplicarEstilos();
+        aplicarEstilosEdicion();
         irA("buscar");
-
     }
 
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents()
     {
@@ -1867,16 +1792,16 @@ public class VtnAdministrador extends javax.swing.JFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // MANEJADORES DE EVENTOS DE NAVEGACIÓN Y MENÚ
+
     private void jBttn_RegresarActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_RegresarActionPerformed
     {//GEN-HEADEREND:event_jBttn_RegresarActionPerformed
-        // TODO add your handling code here:
         new VtnHome(controllerAdministracion).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jBttn_RegresarActionPerformed
 
     private void jBttn_DatosPrincipalesActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_DatosPrincipalesActionPerformed
     {//GEN-HEADEREND:event_jBttn_DatosPrincipalesActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jBttn_DatosPrincipalesActionPerformed
 
     private void jBttn_AltaActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_AltaActionPerformed
@@ -1886,90 +1811,14 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.seleccionar(jBttn_Alta);
     }//GEN-LAST:event_jBttn_AltaActionPerformed
 
-    private void jBttn_ContinuarDPActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_ContinuarDPActionPerformed
-    {//GEN-HEADEREND:event_jBttn_ContinuarDPActionPerformed
-        // TODO add your handling code here:
-        String nombre = jTxt_nombre.getText().trim();
-        String apellidoPat = jTxt_ApellidoPat.getText().trim();
-        String apellidoMat = jTxt_ApellidoMat.getText().trim();
-        Date fechaNacimiento = jDC_Nacimiento.getDate();
-
-        if (validaciones.ValidadorAlumno.esVacio(nombre))
-        {
-            JOptionPane.showMessageDialog(this,
-                    "El nombre no puede ser vacio, campo obligatorio",
-                    "Error de campo",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (!validaciones.ValidadorAlumno.nombreValido(nombre))
-        {
-            JOptionPane.showMessageDialog(this,
-                    "El formato del nombre no es valido. Ingerese un nombre válido",
-                    "Error de campo",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (validaciones.ValidadorAlumno.esVacio(apellidoPat))
-        {
-            JOptionPane.showMessageDialog(this,
-                    "El apellido no puede ser vacio, campo obligatorio",
-                    "Error de campo",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (!validaciones.ValidadorAlumno.nombreValido(apellidoPat))
-        {
-            JOptionPane.showMessageDialog(this, "El formato del apellido paterno no es valido. Ingerese un apellido válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (validaciones.ValidadorAlumno.esVacio(apellidoMat))
-        {
-            JOptionPane.showMessageDialog(this,
-                    "El apellido no puede ser vacio, campo obligatorio",
-                    "Error de campo",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (!validaciones.ValidadorAlumno.nombreValido(apellidoMat))
-        {
-            JOptionPane.showMessageDialog(this, "El formato del apellido materno no es valido. Ingerese un apellido válido", "Error de campo", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (validaciones.ValidadorAlumno.fechaVacia(fechaNacimiento))
-        {
-            JOptionPane.showMessageDialog(this,
-                    "Debe seleccionar una fecha",
-                    "Error de campo",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (validaciones.ValidadorAlumno.fechaFutura(fechaNacimiento))
-        {
-            JOptionPane.showMessageDialog(this, "No puede ingresar una fecha futura. Ingerese una fecha válida", "Error de campo", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (validaciones.ValidadorAlumno.fechaPasada(fechaNacimiento))
-        {
-            JOptionPane.showMessageDialog(this, "No puede ingresar una fecha anterios a 1950. Ingerese una fecha válida", "Error de campo", JOptionPane.ERROR_MESSAGE);
-            return;
-
-        }
-        String nombreCompleto = nombre + " " + apellidoPat + " " + apellidoMat;
-
-        nombreAlu = nombreCompleto;
-        fechAlu = fechaNacimiento;
-
-        java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
-        cl.show(jP_AltCard, "card3");
-        Estilos.seleccionar(jBttn_MateriasProm);
-    }//GEN-LAST:event_jBttn_ContinuarDPActionPerformed
+    private void jBttn_ConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttn_ConsultaActionPerformed
+        iniciarConsulta();
+        java.awt.CardLayout cl = (java.awt.CardLayout) jp_Contenedor.getLayout();
+        cl.show(jp_Contenedor, "card3");
+        Estilos.seleccionar(jBttn_Consulta);
+    }//GEN-LAST:event_jBttn_ConsultaActionPerformed
 
     private void jBttn_EdicionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttn_EdicionActionPerformed
-        // TODO add your handling code here:
         java.awt.CardLayout cl = (java.awt.CardLayout) jp_Contenedor.getLayout();
         cl.show(jp_Contenedor, "card4");
         Estilos.seleccionar(jBttn_Edicion);
@@ -1981,69 +1830,185 @@ public class VtnAdministrador extends javax.swing.JFrame
         Estilos.seleccionar(jBttn_Baja);
     }//GEN-LAST:event_jBttn_BajaActionPerformed
 
-    private void jBttn_ConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttn_ConsultaActionPerformed
-        // TODO add your handling code here:
-        iniciarConsulta();
-        java.awt.CardLayout cl = (java.awt.CardLayout) jp_Contenedor.getLayout();
-        cl.show(jp_Contenedor, "card3");
-        Estilos.seleccionar(jBttn_Consulta);
-    }//GEN-LAST:event_jBttn_ConsultaActionPerformed
+    // MANEJADORES DE EVENTOS: ALTA (CREATE)
+    private void jBttn_ContinuarDPActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_ContinuarDPActionPerformed
+    {//GEN-HEADEREND:event_jBttn_ContinuarDPActionPerformed
+        avanzarPasoDatosPrincipales();
+    }//GEN-LAST:event_jBttn_ContinuarDPActionPerformed
 
     private void jBttn_ContinuarMPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttn_ContinuarMPActionPerformed
-        // TODO add your handling code here:
-        List<ItemCatalogo> materias = new ArrayList<>();
+        avanzarPasoMaterias();
+    }//GEN-LAST:event_jBttn_ContinuarMPActionPerformed
+
+    private void jB_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_GuardarActionPerformed
+        guardarNuevoAlumno();
+    }//GEN-LAST:event_jB_GuardarActionPerformed
+
+    private void jBttn_Cancelar_2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_Cancelar_2ActionPerformed
+    {//GEN-HEADEREND:event_jBttn_Cancelar_2ActionPerformed
+        java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
+        cl.show(jP_AltCard, "card2");
+        Estilos.seleccionar(jBttn_DatosPrincipales);
+    }//GEN-LAST:event_jBttn_Cancelar_2ActionPerformed
+
+    private void jB_Cancelar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_Cancelar3ActionPerformed
+        java.awt.CardLayout cExtra = (java.awt.CardLayout) jP_AltCard.getLayout();
+        cExtra.previous(jP_AltCard);
+    }//GEN-LAST:event_jB_Cancelar3ActionPerformed
+
+    private void jTxt_SemestreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxt_SemestreActionPerformed
+    }//GEN-LAST:event_jTxt_SemestreActionPerformed
+
+    private void jTxt_PromedioActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jTxt_PromedioActionPerformed
+    {//GEN-HEADEREND:event_jTxt_PromedioActionPerformed
+    }//GEN-LAST:event_jTxt_PromedioActionPerformed
+
+    // MANEJADORES DE EVENTOS: BAJA (DELETE)
+    private void JBtnBuscarBajaActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_JBtnBuscarBajaActionPerformed
+    {//GEN-HEADEREND:event_JBtnBuscarBajaActionPerformed
+        buscarAlumnoParaBaja();
+    }//GEN-LAST:event_JBtnBuscarBajaActionPerformed
+
+    private void jButtonDarBajaActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButtonDarBajaActionPerformed
+    {//GEN-HEADEREND:event_jButtonDarBajaActionPerformed
+        confirmarBajaAlumno();
+    }//GEN-LAST:event_jButtonDarBajaActionPerformed
+
+    private void jButtonCancelarBajaActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButtonCancelarBajaActionPerformed
+    {//GEN-HEADEREND:event_jButtonCancelarBajaActionPerformed
+        limpiarBaja();
+    }//GEN-LAST:event_jButtonCancelarBajaActionPerformed
+
+    private void jTxtFieldNombreActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jTxtFieldNombreActionPerformed
+    {//GEN-HEADEREND:event_jTxtFieldNombreActionPerformed
+    }//GEN-LAST:event_jTxtFieldNombreActionPerformed
+
+    // MANEJADORES DE EVENTOS: EDICIÓN (UPDATE)
+    private void jTBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTBuscarActionPerformed
+    }//GEN-LAST:event_jTBuscarActionPerformed
+
+    private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
+    }//GEN-LAST:event_txtNombreActionPerformed
+
+    private void txtCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoActionPerformed
+    }//GEN-LAST:event_txtCorreoActionPerformed
+
+    private void txtNoControlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNoControlActionPerformed
+        btnBuscar.doClick();
+    }//GEN-LAST:event_txtNoControlActionPerformed
+
+    private void txtNoControl2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNoControl2ActionPerformed
+    }//GEN-LAST:event_txtNoControl2ActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        buscarAlumnoParaEdicion();
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void jBContinuar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBContinuar1ActionPerformed
+        llenarFormularioEdicion(alumnoOriginal);
+        irA("datos");
+    }//GEN-LAST:event_jBContinuar1ActionPerformed
+
+    private void jBCancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelar1ActionPerformed
+        reiniciarEdicion();
+    }//GEN-LAST:event_jBCancelar1ActionPerformed
+
+    private void btnContinuar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuar2ActionPerformed
+        avanzarPasoEdicionConfirmacion();
+    }//GEN-LAST:event_btnContinuar2ActionPerformed
+
+    private void btnAtras3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtras3ActionPerformed
+        irA("datos");
+    }//GEN-LAST:event_btnAtras3ActionPerformed
+
+    private void chkConfirmoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkConfirmoActionPerformed
+        btnGuardar.setEnabled(chkConfirmo.isSelected() && tblCambios.getRowCount() > 0);
+    }//GEN-LAST:event_chkConfirmoActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        guardarCambiosEdicion();
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    // MANEJADORES DE EVENTOS: CONSULTA Y REPORTES (READ)
+    private void btnAyudaActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnAyudaActionPerformed
+    {//GEN-HEADEREND:event_btnAyudaActionPerformed
+        mostrarDialogoAyuda();
+    }//GEN-LAST:event_btnAyudaActionPerformed
+
+    private void jBttn_PdfActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_PdfActionPerformed
+    {//GEN-HEADEREND:event_jBttn_PdfActionPerformed
+        generarReportePdf();
+    }//GEN-LAST:event_jBttn_PdfActionPerformed
+
+    // LÓGICA DE ALTA (CREATE)
+    private void avanzarPasoDatosPrincipales()
+    {
+        String nombre = jTxt_nombre.getText().trim();
+        String apellidoPat = jTxt_ApellidoPat.getText().trim();
+        String apellidoMat = jTxt_ApellidoMat.getText().trim();
+        Date fechaNacimiento = jDC_Nacimiento.getDate();
+
+        if (ValidadorAlumno.esVacio(nombre) || !ValidadorAlumno.nombreValido(nombre))
+        {
+            error("Error de campo", "Ingrese un nombre válido (solo letras y espacios).");
+            return;
+        }
+        if (ValidadorAlumno.esVacio(apellidoPat) || !ValidadorAlumno.nombreValido(apellidoPat))
+        {
+            error("Error de campo", "El apellido paterno es obligatorio y debe ser válido.");
+            return;
+        }
+        if (ValidadorAlumno.esVacio(apellidoMat) || !ValidadorAlumno.nombreValido(apellidoMat))
+        {
+            error("Error de campo", "El apellido materno es obligatorio y debe ser válido.");
+            return;
+        }
+        if (ValidadorAlumno.fechaVacia(fechaNacimiento))
+        {
+            error("Error de campo", "Debe seleccionar una fecha de nacimiento.");
+            return;
+        }
+        if (ValidadorAlumno.fechaFutura(fechaNacimiento) || ValidadorAlumno.fechaPasada(fechaNacimiento))
+        {
+            error("Error de campo", "La fecha de nacimiento no puede ser futura ni anterior a 1950.");
+            return;
+        }
+
+        nombreAlu = EdicionHelper.armarNombreCompleto(nombre, apellidoPat, apellidoMat);
+        fechAlu = fechaNacimiento;
+
+        java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
+        cl.show(jP_AltCard, "card3");
+        Estilos.seleccionar(jBttn_MateriasProm);
+    }
+
+    private void avanzarPasoMaterias()
+    {
         int[] indice = jTb_Materias.getSelectedRows();
         String semestre = jTxt_Semestre.getText().trim();
         String promedio = jTxt_Promedio.getText().trim();
 
+        if (ValidadorAlumno.esVacio(semestre) || !ValidadorAlumno.validarNumericos(semestre))
+        {
+            error("Error de campo", "El semestre es obligatorio y debe ser numérico.");
+            return;
+        }
+        if (ValidadorAlumno.esVacio(promedio))
+        {
+            error("Error de campo", "El promedio no puede estar vacío.");
+            return;
+        }
+        Double promedioValido = ValidadorAlumno.promedioValido(promedio);
+        if (promedioValido == null)
+        {
+            error("Error de campo", "Promedio fuera de rango. Ingrese un número entre 0 y 100.");
+            return;
+        }
+
+        List<ItemCatalogo> materias = new ArrayList<>();
         for (int i = 0; i < indice.length; i++)
         {
             materias.add(new ItemCatalogo(0, String.valueOf(jTb_Materias.getValueAt(indice[i], 0))));
-        }
-
-        if (validaciones.ValidadorAlumno.esVacio(semestre))
-        {
-            JOptionPane.showMessageDialog(this,
-                    "El semestre no puede estar vacio.",
-                    "Error de campo",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (!validaciones.ValidadorAlumno.validarNumericos(semestre))
-        {
-            JOptionPane.showMessageDialog(this,
-                    "Ingrese solo numeros",
-                    "Error de campo",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (validaciones.ValidadorAlumno.esVacio(promedio))
-        {
-            JOptionPane.showMessageDialog(this,
-                    "El promedio no puede ser vacio",
-                    "Error de campo",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (!validaciones.ValidadorAlumno.validarNumericos(promedio))
-        {
-            JOptionPane.showMessageDialog(this,
-                    "Ingrese solo valores numericos",
-                    "Error de campo",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        Double promedioValido = validaciones.ValidadorAlumno.promedioValido(promedio);
-        if (promedioValido == null)
-        {
-            JOptionPane.showMessageDialog(this,
-                    "Promeido fuera del rango, ingrese un promedio entre 0 y 100",
-                    "Error de campo",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-
         }
 
         materiasAlu = materias;
@@ -2053,64 +2018,39 @@ public class VtnAdministrador extends javax.swing.JFrame
         java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
         cl.show(jP_AltCard, "card4");
         Estilos.seleccionar(jBttn_CuentasExtr);
+    }
 
-
-    }//GEN-LAST:event_jBttn_ContinuarMPActionPerformed
-
-    private void jB_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_GuardarActionPerformed
+    private void guardarNuevoAlumno()
+    {
         String numeroControl = jTxt_NoControl.getText().trim();
         String correo = jTxt_Correo.getText().trim();
-        String contraseña = new String(jPF_contraseña.getPassword());
-        String carrera = jCB_Carrera.getSelectedItem().toString();
+        String contrasenia = new String(jPF_contraseña.getPassword());
+        String carrera = jCB_Carrera.getSelectedItem() != null ? jCB_Carrera.getSelectedItem().toString() : "";
 
-        if (ValidadorAlumno.esVacio(numeroControl))
+        if (ValidadorAlumno.esVacio(numeroControl) || !ValidadorAlumno.validarNumericos(numeroControl))
         {
-            error("Campo requerido", "El No.Control no puede estar vacio");
+            error("Error en el campo", "El No. de Control es obligatorio y solo puede contener números.");
             return;
         }
-
-        if (!ValidadorAlumno.validarNumericos(numeroControl))
-        {
-            error("Error en el campo", "El No.Control solo puede contener numeros y no debe llevar espacios");
-            return;
-        }
-
         if (ValidadorAlumno.seleccionCb(jCB_Carrera.getSelectedIndex()))
         {
-            error("Campo requerido", "Seleccione una carrera");
+            error("Campo requerido", "Seleccione una carrera.");
             return;
         }
-
-        if (ValidadorAlumno.esVacio(correo))
+        if (ValidadorAlumno.esVacio(correo) || !ValidadorAlumno.correoValido(correo))
         {
-            JOptionPane.showMessageDialog(this,
-                    "El correo es OBLIGATORIO",
-                    "Campo requerido",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (!ValidadorAlumno.correoValido(correo))
-        {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "El formato del correo electrónico no es válido. Ejemplo: usuario@dominio.com",
-                    "Error de validación",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            error("Error de validación", "El formato del correo electrónico no es válido. Ejemplo: usuario@dominio.com");
             jTxt_Correo.requestFocus();
             return;
         }
-
-        if (ValidadorAlumno.esVacio(contraseña))
+        if (ValidadorAlumno.esVacio(contrasenia))
         {
-            JOptionPane.showMessageDialog(this,
-                    "La contraseña no puede estar vacio",
-                    "Campo requerido",
-                    JOptionPane.ERROR_MESSAGE);
+            error("Campo requerido", "La contraseña no puede estar vacía.");
             return;
         }
 
         noControl = numeroControl;
-        contraseñaAlu = contraseña;
+        contraseniaAlu = contrasenia;
         correoAlu = correo;
         carreraAlu = new ItemCatalogo(0, carrera);
 
@@ -2119,81 +2059,679 @@ public class VtnAdministrador extends javax.swing.JFrame
 
         if (!altaEstudiante)
         {
-            JOptionPane.showMessageDialog(this,
-                    "No Control duplicado.",
-                    "Duplicado",
-                    JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "El No. de Control ya está registrado.", "Duplicado", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
-        JOptionPane.showMessageDialog(this,
-                "Alumno guardado correctamente.",
-                "Éxito",
-                JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Alumno guardado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        log.info("Alumno {} registrado con No. Control {}", nombreAlu, numeroControl);
 
-        List<Alumno> listaFinal = controllerAdministracion.consultarAlumno();
-        for (Alumno alumno : listaFinal)
-        {
-            System.out.println("NoControl: " + alumno.getNo_control());
-            System.out.println("Nombre: " + alumno.getNombre());
-            System.out.println("Correo: " + alumno.getCorreo());
-            System.out.println("Carrera: " + alumno.getCarerra());
-            System.out.println("Promedio: " + alumno.getPromedio());
-            System.out.println("Materias: " + alumno.getMaterias() + "\n");
-        }
+        limpiarRegistroAlta();
+        java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
+        cl.show(jP_AltCard, "card2");
+        Estilos.seleccionar(jBttn_DatosPrincipales);
+    }
 
-        log.info("Alumno {} se ha dado de alta con el numero de control {}", nombreAlu, numeroControl);
+    private void limpiarRegistroAlta()
+    {
+        jTxt_nombre.setText("");
+        jTxt_ApellidoPat.setText("");
+        jTxt_ApellidoMat.setText("");
+        jDC_Nacimiento.setDate(null);
+        jTxt_Semestre.setText("");
+        jTxt_Promedio.setText("");
+        jTxt_Correo.setText("");
+        jPF_contraseña.setText("");
+        jTb_Materias.clearSelection();
+        jTxt_NoControl.setText("");
+        jCB_Carrera.setSelectedIndex(0);
+
         nombreAlu = "";
         noControl = "";
         correoAlu = "";
         carreraAlu = null;
         promedioAlu = null;
         fechAlu = null;
-        //materiasAlu.clear();
+        materiasAlu = null;
+    }
 
-        limpiarRegistro();
+    public void cargarTabla()
+    {
+        String[] columnas =
+        {
+            "Materia", "Horario", "Agregar Mat."
+        };
+        DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
 
-        java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
-        cl.show(jP_AltCard, "card2");
-        Estilos.seleccionar(jBttn_DatosPrincipales);
+        modelo.addRow(new String[]
+        {
+            "Top. Avan. Prog.", "Mar/Jue 7 am - 9 am", "Agregar"
+        });
+        modelo.addRow(new String[]
+        {
+            "Simulacion", "Mar/Jue 9 am - 11 am", "Agregar"
+        });
+        modelo.addRow(new String[]
+        {
+            "Metodos Numericos", "Mie/Vie 1 pm - 3 pm", "Agregar"
+        });
+        modelo.addRow(new String[]
+        {
+            "Prolog", "Mie/Vie 11 am - 1 pm", "Agregar"
+        });
+        modelo.addRow(new String[]
+        {
+            "Arq.Computadoras.", "Lun/Mie/Vie 7 am - 9 am", "Agregar"
+        });
 
+        jTb_Materias.getTableHeader().setReorderingAllowed(false);
+        jTb_Materias.getTableHeader().setResizingAllowed(false);
+        jTb_Materias.setModel(modelo);
+    }
 
-    }//GEN-LAST:event_jB_GuardarActionPerformed
+    // LÓGICA DE BAJA (DELETE)
+    private void buscarAlumnoParaBaja()
+    {
+        String nc = jTxtBuscarBaja.getText().trim();
+        if (nc.isEmpty())
+        {
+            limpiarBaja();
+            jTxtEstatusBusqueda.setText("Escribe un número de control");
+            return;
+        }
+        if (!nc.matches("\\d+"))
+        {
+            limpiarBaja();
+            alumnoOriginal = null;
+            jTxtEstatusBusqueda.setText("X Alumno no encontrado");
+            return;
+        }
+
+        Alumno a = controllerAdministracion.buscarAlumnoPorNoControl(nc);
+        if (a == null)
+        {
+            limpiarBaja();
+            alumnoOriginal = null;
+            jTxtEstatusBusqueda.setText("X Alumno no encontrado");
+            return;
+        }
+
+        alumnoOriginal = a;
+        jTxtEstatusBusqueda.setText("✓ Alumno encontrado");
+        jTxtFieldNombre.setText(a.getNombre());
+        jTxtCarreraBaja.setText(ConsultaFiltroHelper.texto(a.getCarerra()));
+        jTxtCorreoBaja.setText(a.getCorreo());
+        jTxtPromedioBaja.setText(String.valueOf(a.getPromedio()));
+        jTextSemestreBaja.setText(semestreAlu != null ? semestreAlu : "");
+        jTxtFechaNacBaja.setText(a.getFechaNaciomiento() != null
+                ? new SimpleDateFormat("dd/MM/yyyy").format(a.getFechaNaciomiento()) : "");
+    }
+
+    private void confirmarBajaAlumno()
+    {
+        if (alumnoOriginal == null)
+        {
+            error("Aviso", "Primero busque un alumno para dar de baja.");
+            return;
+        }
+
+        int respuesta = JOptionPane.showConfirmDialog(
+                this,
+                "¿Estás seguro de que deseas dar de baja al alumno?",
+                "Confirmar baja de alumno",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (respuesta == JOptionPane.YES_OPTION)
+        {
+            controllerAdministracion.darBajaAlumno(alumnoOriginal);
+            log.info("Alumno con número de control {} fue dado de baja correctamente", alumnoOriginal.getNo_control());
+            limpiarBaja();
+            alumnoOriginal = null;
+            JOptionPane.showMessageDialog(this, "Alumno dado de baja exitosamente.", "Baja exitosa", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void limpiarBaja()
+    {
+        jTxtCarreraBaja.setEditable(false);
+        jTextSemestreBaja.setEditable(false);
+        jTxtCorreoBaja.setEditable(false);
+        jTxtFechaNacBaja.setEditable(false);
+        jTxtPromedioBaja.setEditable(false);
+        jTxtFieldNombre.setEditable(false);
+
+        jTxtCarreraBaja.setText("");
+        jTextSemestreBaja.setText("");
+        jTxtCorreoBaja.setText("");
+        jTxtFechaNacBaja.setText("");
+        jTxtPromedioBaja.setText("");
+        jTxtFieldNombre.setText("");
+        jTxtBuscarBaja.setText("");
+        jTxtEstatusBusqueda.setText("");
+    }
+
+    // LÓGICA DE EDICIÓN (UPDATE)
+    private void buscarAlumnoParaEdicion()
+    {
+        String nc = txtNoControl.getText().trim();
+        if (nc.isEmpty())
+        {
+            lblEstado.setText("Escribe un número de control");
+            return;
+        }
+        if (!nc.matches("\\d+"))
+        {
+            limpiarResultadoEdicion();
+            alumnoOriginal = null;
+            jBContinuar1.setEnabled(false);
+            lblEstado.setText("El No. de control solo debe tener números, sin espacios ni símbolos");
+            return;
+        }
+
+        Alumno a = controllerAdministracion.buscarAlumnoPorNoControl(nc);
+        if (a == null)
+        {
+            limpiarResultadoEdicion();
+            alumnoOriginal = null;
+            jBContinuar1.setEnabled(false);
+            lblEstado.setText("Alumno no encontrado");
+            return;
+        }
+
+        alumnoOriginal = a;
+        lblEstado.setText("✓ Alumno encontrado");
+        jLbl_Nombre.setText(a.getNombre());
+        jLbl_Carrera.setText(ConsultaFiltroHelper.texto(a.getCarerra()));
+        jLbl_Correo.setText(a.getCorreo());
+        jLbl_Promedio.setText(String.valueOf(a.getPromedio()));
+        jLbl_Fecha.setText(a.getFechaNaciomiento() != null
+                ? new SimpleDateFormat("dd/MM/yyyy").format(a.getFechaNaciomiento()) : "");
+        jP_Resultado.setVisible(true);
+        jBContinuar1.setEnabled(true);
+    }
+
+    private void avanzarPasoEdicionConfirmacion()
+    {
+        if (!validarFormularioEdicion())
+        {
+            return;
+        }
+        cargarTablaCambios();
+        irA("confirmar");
+    }
+
+    private void guardarCambiosEdicion()
+    {
+        if (alumnoOriginal == null)
+        {
+            error("Aviso", "No hay alumno seleccionado para editar.");
+            return;
+        }
+
+        String nombreCompleto = EdicionHelper.armarNombreCompleto(
+                txtNombre.getText().trim(),
+                txtApPat.getText().trim(),
+                txtApMaterno.getText().trim());
+
+        Alumno nuevo = new Alumno(
+                alumnoOriginal.getNo_control(),
+                nombreCompleto,
+                txtCorreo.getText().trim(),
+                new ItemCatalogo(0, (String) cmbCarrera.getSelectedItem()),
+                Double.parseDouble(txtPromedio.getText().trim()),
+                dcFechaNac.getDate(),
+                EdicionHelper.aItems(lstMaterias.getSelectedValuesList()));
+
+        if (controllerAdministracion.actualizarAlumno(nuevo))
+        {
+            JOptionPane.showMessageDialog(this, "Alumno actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            log.info("Alumno con número de control {} actualizado", alumnoOriginal.getNo_control());
+            reiniciarEdicion();
+        } else
+        {
+            JOptionPane.showMessageDialog(this, "No se pudo actualizar el alumno.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void llenarFormularioEdicion(Alumno a)
+    {
+        if (a == null)
+        {
+            return;
+        }
+        txtNoControl2.setText(a.getNo_control());
+        txtNoControl2.setEditable(false);
+
+        String[] partes = EdicionHelper.descomponerNombre(a.getNombre());
+        txtNombre.setText(partes[0]);
+        txtApPat.setText(partes[1]);
+        txtApMaterno.setText(partes[2]);
+
+        txtCorreo.setText(a.getCorreo());
+
+        String carreraGuardada = ConsultaFiltroHelper.texto(a.getCarerra()).trim();
+        boolean encontrada = false;
+        for (int i = 0; i < cmbCarrera.getItemCount(); i++)
+        {
+            if (cmbCarrera.getItemAt(i).trim().equalsIgnoreCase(carreraGuardada))
+            {
+                cmbCarrera.setSelectedIndex(i);
+                encontrada = true;
+                break;
+            }
+        }
+        if (!encontrada && !carreraGuardada.isEmpty())
+        {
+            cmbCarrera.addItem(carreraGuardada);
+            cmbCarrera.setSelectedItem(carreraGuardada);
+        }
+
+        txtPromedio.setText(String.valueOf(a.getPromedio()));
+        dcFechaNac.setDate(a.getFechaNaciomiento());
+        seleccionarMateriasEdicion(a.getMaterias());
+    }
+
+    private void seleccionarMateriasEdicion(List<ItemCatalogo> materias)
+    {
+        List<Integer> idx = new ArrayList<>();
+        List<String> nombresMat = EdicionHelper.nombres(materias);
+        ListModel<String> m = lstMaterias.getModel();
+        for (int i = 0; i < m.getSize(); i++)
+        {
+            if (nombresMat.contains(m.getElementAt(i)))
+            {
+                idx.add(i);
+            }
+        }
+        lstMaterias.setSelectedIndices(idx.stream().mapToInt(Integer::intValue).toArray());
+    }
+
+    private boolean validarFormularioEdicion()
+    {
+        String nombre = txtNombre.getText().trim();
+        String apPat = txtApPat.getText().trim();
+        String apMat = txtApMaterno.getText().trim();
+        String correo = txtCorreo.getText().trim();
+        String promedio = txtPromedio.getText().trim();
+        Date fecha = dcFechaNac.getDate();
+
+        if (ValidadorAlumno.esVacio(nombre) || !ValidadorAlumno.nombreValido(nombre))
+        {
+            error("Error de validación", "El nombre es obligatorio y solo puede contener letras y espacios.");
+            return false;
+        }
+        if (ValidadorAlumno.esVacio(apPat) || !ValidadorAlumno.nombreValido(apPat))
+        {
+            error("Error de validación", "El apellido paterno es obligatorio y debe ser válido.");
+            return false;
+        }
+        if (ValidadorAlumno.esVacio(apMat) || !ValidadorAlumno.nombreValido(apMat))
+        {
+            error("Error de validación", "El apellido materno es obligatorio y debe ser válido.");
+            return false;
+        }
+        if (ValidadorAlumno.esVacio(correo) || !ValidadorAlumno.correoValido(correo))
+        {
+            error("Error de validación", "El formato del correo no es válido. Ejemplo: usuario@dominio.com");
+            txtCorreo.requestFocus();
+            return false;
+        }
+        if (ValidadorAlumno.seleccionCb(cmbCarrera.getSelectedIndex()))
+        {
+            error("Error de validación", "La carrera es obligatoria.");
+            return false;
+        }
+        if (ValidadorAlumno.esVacio(promedio) || ValidadorAlumno.promedioValido(promedio) == null)
+        {
+            error("Error de validación", "El promedio debe ser numérico y estar en el rango de 0 a 100.");
+            return false;
+        }
+        if (ValidadorAlumno.fechaVacia(fecha) || ValidadorAlumno.fechaFutura(fecha) || ValidadorAlumno.fechaPasada(fecha))
+        {
+            error("Error de validación", "La fecha de nacimiento no puede ser futura ni anterior a 1950.");
+            return false;
+        }
+        if (ValidadorAlumno.materiasVacias(lstMaterias.getSelectedValuesList()))
+        {
+            error("Error de validación", "Debe seleccionar al menos una materia.");
+            return false;
+        }
+        return true;
+    }
+
+    private void cargarTablaCambios()
+    {
+        DefaultTableModel m = new DefaultTableModel(new String[]
+        {
+            "Campo", "Antes", "Después"
+        }, 0)
+        {
+            @Override
+            public boolean isCellEditable(int r, int c)
+            {
+                return false;
+            }
+        };
+
+        SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
+        String fechaTexto = dcFechaNac.getDate() != null ? f.format(dcFechaNac.getDate()) : "";
+
+        String nombreCompleto = EdicionHelper.armarNombreCompleto(
+                txtNombre.getText().trim(),
+                txtApPat.getText().trim(),
+                txtApMaterno.getText().trim());
+
+        List<Object[]> cambios = EdicionHelper.calcularCambios(
+                alumnoOriginal,
+                nombreCompleto,
+                txtCorreo.getText().trim(),
+                (String) cmbCarrera.getSelectedItem(),
+                txtPromedio.getText().trim(),
+                fechaTexto,
+                lstMaterias.getSelectedValuesList());
+
+        for (Object[] fila : cambios)
+        {
+            m.addRow(fila);
+        }
+
+        tblCambios.setModel(m);
+        lblResumen.setText(m.getRowCount() == 0 ? "Sin cambios" : m.getRowCount() + " campo(s) modificado(s)");
+        chkConfirmo.setSelected(false);
+        btnGuardar.setEnabled(false);
+    }
+
+    private void conScroll(JPanel card, String nombre)
+    {
+        jP_EdCard.remove(card);
+        card.setVisible(true);
+        javax.swing.JScrollPane sp = new javax.swing.JScrollPane(card);
+        sp.setBorder(null);
+        sp.getViewport().setBackground(Estilos.CREMA_CLARO);
+        sp.getVerticalScrollBar().setUnitIncrement(16);
+        jP_EdCard.add(sp, nombre);
+    }
+
+    private void irA(String paso)
+    {
+        pasoActual = paso;
+        ((java.awt.CardLayout) jP_EdCard.getLayout()).show(jP_EdCard, paso);
+        switch (paso)
+        {
+            case "buscar":
+                jTBuscar.setSelected(true);
+                break;
+            case "datos":
+                jTDatos.setSelected(true);
+                break;
+            case "confirmar":
+                jTConfirmar.setSelected(true);
+                break;
+        }
+        pintarPestanasEdicion();
+    }
+
+    private void pintarPestanasEdicion()
+    {
+        for (AbstractButton t : new AbstractButton[]
+        {
+            jTBuscar, jTDatos, jTConfirmar
+        })
+        {
+            boolean activa = t.isSelected();
+            t.setBackground(activa ? Estilos.NEGRO : Estilos.AZUL_OSCURO);
+            t.setForeground(activa ? Estilos.NARANJA : java.awt.Color.WHITE);
+        }
+    }
+
+    private void poner(JPanel panel, java.awt.Component c, int x, int y, int w, int h)
+    {
+        panel.add(c, new org.netbeans.lib.awtextra.AbsoluteConstraints(x, y, w, h));
+    }
+
+    private void aplicarEstilosEdicion()
+    {
+        Estilos.estilizarFondo(jP_EncabezadoEd);
+        Estilos.estilizarPanelConSombra(jP_EdCard);
+        for (JPanel p : new JPanel[]
+        {
+            jP_EdBuscar, jP_EdDatos, jP_EdConfirmar, jP_Resultado
+        })
+        {
+            p.setOpaque(true);
+            p.setBackground(Estilos.CREMA_CLARO);
+        }
+        jP_Resultado.setBorder(Estilos.borde(2));
+
+        jLabel1.setVisible(false);
+        jP_EncabezadoEd.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 6, 8));
+        jP_EncabezadoEd.setPreferredSize(new java.awt.Dimension(0, 56));
+        jTBuscar.setText("1. BUSCAR ALUMNO");
+        jTDatos.setText("2. DATOS DEL ALUMNO");
+        jTConfirmar.setText("3. CONFIRMAR");
+
+        for (AbstractButton t : new AbstractButton[]
+        {
+            jTBuscar, jTDatos, jTConfirmar
+        })
+        {
+            t.setFont(Estilos.fuente(Font.PLAIN, 20));
+            t.setFocusPainted(false);
+            t.setContentAreaFilled(false);
+            t.setOpaque(true);
+            t.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
+            t.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(Estilos.NEGRO, 3),
+                    BorderFactory.createEmptyBorder(3, 14, 3, 14)));
+        }
+
+        for (JLabel l : new JLabel[]
+        {
+            lblNoControl, jLabel14, jLabel15, jLabel16, jLabel17,
+            jLabel18, jLabel19, jLabel20, jLabel21, jLabel22, lblResumen
+        })
+        {
+            Estilos.estilizarEtiqueta(l);
+        }
+        Estilos.estilizarSubtitulo(jLabel23);
+        jLabel23.setText("CONFIRMAR CAMBIOS");
+        lblEstado.setFont(Estilos.fuente(Font.BOLD, 16));
+        lblEstado.setForeground(Estilos.AZUL_OSCURO);
+
+        // Tarjeta de alumno en resultado
+        jP_Resultado.removeAll();
+        jP_Resultado.setLayout(new java.awt.GridBagLayout());
+        java.awt.GridBagConstraints g = new java.awt.GridBagConstraints();
+        g.insets = new java.awt.Insets(8, 20, 8, 20);
+        g.anchor = java.awt.GridBagConstraints.WEST;
+        g.fill = java.awt.GridBagConstraints.HORIZONTAL;
+
+        jLbl_Nombre.setFont(Estilos.fuente(Font.PLAIN, 26));
+        jLbl_Carrera.setFont(Estilos.fuente(Font.BOLD, 16));
+        jLbl_Correo.setFont(Estilos.fuente(Font.BOLD, 16));
+        jLbl_Fecha.setFont(Estilos.fuente(Font.BOLD, 16));
+        jLbl_Promedio.setFont(Estilos.fuente(Font.PLAIN, 30));
+        jLbl_Promedio.setForeground(Estilos.AZUL_OSCURO);
+        jLbl_Promedio.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+
+        g.gridy = 0;
+        g.gridx = 0;
+        g.gridwidth = 2;
+        g.weightx = 1;
+        jP_Resultado.add(jLbl_Nombre, g);
+
+        g.gridwidth = 1;
+        g.gridy = 1;
+        g.gridx = 0;
+        g.weightx = 1;
+        jP_Resultado.add(jLbl_Carrera, g);
+        g.gridx = 1;
+        g.weightx = 0;
+        jP_Resultado.add(jLbl_Promedio, g);
+
+        g.gridy = 2;
+        g.gridx = 0;
+        g.weightx = 1;
+        jP_Resultado.add(jLbl_Correo, g);
+        g.gridx = 1;
+        g.weightx = 0;
+        jP_Resultado.add(jLbl_Fecha, g);
+
+        jLbl_Semestre.setVisible(false);
+
+        Estilos.estilizarCampo(txtNoControl);
+        Estilos.estilizarCampo(txtNoControl2);
+        txtNoControl2.setBackground(Estilos.CREMA);
+        Estilos.estilizarCampo(txtNombre);
+        Estilos.estilizarCampo(txtApPat);
+        Estilos.estilizarCampo(txtApMaterno);
+        Estilos.estilizarCampo(txtCorreo);
+        Estilos.estilizarCampo(txtPromedio);
+        Estilos.estilizarCombo(cmbCarrera);
+        Estilos.estilizarFecha(dcFechaNac);
+
+        lstMaterias.setFont(Estilos.fuente(Font.PLAIN, 18));
+        lstMaterias.setBackground(Estilos.CREMA_CLARO);
+        lstMaterias.setSelectionBackground(Estilos.NARANJA);
+        lstMaterias.setSelectionForeground(Estilos.NEGRO);
+        jScrollPane2.setBorder(Estilos.borde(2));
+
+        Estilos.estilizarTabla(tblCambios);
+        jScrollPane3.setBorder(Estilos.borde(2));
+        chkConfirmo.setOpaque(false);
+        chkConfirmo.setFont(Estilos.fuente(Font.BOLD, 16));
+        chkConfirmo.setForeground(Estilos.NEGRO);
+        chkConfirmo.setText("ENTIENDO QUE ESTA ACCIÓN MODIFICA LOS DATOS DEL ALUMNO");
+
+        btnBuscar.setText("BUSCAR");
+        jBCancelar1.setText("CANCELAR");
+        jBContinuar1.setText("CONTINUAR");
+        btnAtras2.setText("ATRÁS");
+        btnRestablecer.setText("RESTABLECER");
+        btnCancelar2.setText("CANCELAR");
+        btnContinuar2.setText("CONTINUAR");
+        btnAtras3.setText("ATRÁS");
+        btnGuardar.setText("GUARDAR CAMBIOS");
+
+        for (JButton b : new JButton[]
+        {
+            btnBuscar, jBCancelar1, btnAtras2, btnRestablecer, btnCancelar2, btnAtras3
+        })
+        {
+            Estilos.estilizarBoton(b);
+            b.setFont(Estilos.fuente(Font.PLAIN, 18));
+        }
+        for (JButton b : new JButton[]
+        {
+            jBContinuar1, btnContinuar2, btnGuardar
+        })
+        {
+            Estilos.estilizarBotonPrincipal(b);
+            b.setFont(Estilos.fuente(Font.PLAIN, 18));
+        }
+
+        poner(jP_EdBuscar, lblNoControl, 60, 20, -1, -1);
+        poner(jP_EdBuscar, txtNoControl, 60, 45, 300, 40);
+        poner(jP_EdBuscar, btnBuscar, 380, 45, -1, 40);
+        poner(jP_EdBuscar, lblEstado, 60, 95, 600, -1);
+        poner(jP_EdBuscar, jP_Resultado, 60, 130, 540, 130);
+        poner(jP_EdBuscar, jBCancelar1, 60, 280, -1, -1);
+        poner(jP_EdBuscar, jBContinuar1, 220, 280, -1, -1);
+
+        poner(jP_EdDatos, btnAtras2, 60, 600, -1, -1);
+        poner(jP_EdDatos, btnRestablecer, 200, 600, -1, -1);
+        poner(jP_EdDatos, btnCancelar2, 360, 600, -1, -1);
+        poner(jP_EdDatos, btnContinuar2, 500, 600, -1, -1);
+
+        pintarPestanasEdicion();
+    }
+
+    private void limpiarResultadoEdicion()
+    {
+        jLbl_Nombre.setText("");
+        jLbl_Carrera.setText("");
+        jLbl_Semestre.setText("");
+        jLbl_Correo.setText("");
+        jLbl_Fecha.setText("");
+        jLbl_Promedio.setText("");
+        lblEstado.setText("");
+        jP_Resultado.setVisible(false);
+    }
+
+    private void reiniciarEdicion()
+    {
+        txtNoControl.setText("");
+        alumnoOriginal = null;
+        limpiarResultadoEdicion();
+        jBContinuar1.setEnabled(false);
+        irA("buscar");
+    }
+
+    // LÓGICA DE CONSULTA (READ)
+    private void iniciarConsulta()
+    {
+        jScrollPane4.setViewportView(listaAlumnos);
+        listaAlumnos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listaAlumnos.setCellRenderer(new AlumnoTarjetaRenderer());
+
+        jtxtBuscar.setText("");
+        jComboBox1_C.setModel(new DefaultComboBoxModel<>(new String[]
+        {
+            "Nombre (A-Z)", "Nombre (Z-A)", "Promedio (mayor)",
+            "Promedio (menor)", "No. de control"
+        }));
+        jspMin.setModel(new javax.swing.SpinnerNumberModel(0.0, 0.0, 100.0, 1.0));
+        jspMax.setModel(new javax.swing.SpinnerNumberModel(100.0, 0.0, 100.0, 1.0));
+        jbtnLimpiar.addActionListener(e -> limpiarFiltros());
+
+        cargarCatalogoCarreras();
+        recargarDatos();
+        configurarEventos();
+        aplicarFiltros();
+    }
+
+    private void limpiarFiltros()
+    {
+        cargando = true;
+        jtxtBuscar.setText("");
+        jcbCarrera.setSelectedIndex(0);
+        jcbMateria.setSelectedIndex(0);
+        jComboBox1_C.setSelectedIndex(0);
+        jspMin.setValue(0.0);
+        jspMax.setValue(100.0);
+        cargando = false;
+        aplicarFiltros();
+    }
 
     private void configurarEventos()
     {
-        // Búsqueda en vivo al teclear
         jtxtBuscar.getDocument().addDocumentListener(new DocumentListener()
         {
-            @Override
             public void insertUpdate(DocumentEvent e)
             {
                 aplicarFiltros();
             }
 
-            @Override
             public void removeUpdate(DocumentEvent e)
             {
                 aplicarFiltros();
             }
 
-            @Override
             public void changedUpdate(DocumentEvent e)
             {
                 aplicarFiltros();
             }
         });
 
-        // Combos
         jcbCarrera.addActionListener(e -> aplicarFiltros());
         jcbMateria.addActionListener(e -> aplicarFiltros());
         jComboBox1_C.addActionListener(e -> aplicarFiltros());
 
-        // Spinners de rango
         jspMin.addChangeListener(e -> alCambiarRango());
         jspMax.addChangeListener(e -> alCambiarRango());
 
-        // Selección de alumno en lista para ver ficha
         listaAlumnos.addListSelectionListener(e ->
         {
             if (!e.getValueIsAdjusting())
@@ -2203,9 +2741,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         });
     }
 
-    // ------------------------------------------------------------------
-    // Métodos de compatibilidad y carga de datos
-    // ------------------------------------------------------------------
     public void cargarTabla(String filtroCarrera)
     {
         recargarDatos();
@@ -2226,7 +2761,7 @@ public class VtnAdministrador extends javax.swing.JFrame
     {
         cargando = true;
         DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
-        modelo.addElement(TODAS_CARRERAS);
+        modelo.addElement(ConsultaFiltroHelper.TODAS_CARRERAS);
         try
         {
             List<String> carreras = catalogo.obtenerCarreras();
@@ -2243,7 +2778,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         } catch (AppException e)
         {
             log.error("Error al cargar las carreras", e);
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            error("Error", e.getMessage());
         }
         jcbCarrera.setModel(modelo);
         cargando = false;
@@ -2252,7 +2787,6 @@ public class VtnAdministrador extends javax.swing.JFrame
     private void recargarDatos()
     {
         cargando = true;
-
         String materiaPrevia = seleccionado(jcbMateria);
 
         List<Alumno> lista = controllerAdministracion.consultarAlumno();
@@ -2260,17 +2794,16 @@ public class VtnAdministrador extends javax.swing.JFrame
         materiasDe.clear();
 
         TreeSet<String> materias = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-
         for (Alumno a : todos)
         {
             List<String> ms = new ArrayList<>();
-            int pos = controllerAdministracion.obtenerPosicionAlumno(texto(a.getNo_control()));
+            int pos = controllerAdministracion.obtenerPosicionAlumno(ConsultaFiltroHelper.texto(a.getNo_control()));
             if (pos != -1)
             {
                 List<ItemCatalogo> deAlumno = controllerAdministracion.obtenerMaterias(pos);
                 if (deAlumno != null)
                 {
-                    ms.addAll(nombres(deAlumno));
+                    ms.addAll(EdicionHelper.nombres(deAlumno));
                 }
             }
             materiasDe.put(a, ms);
@@ -2278,7 +2811,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         }
 
         DefaultComboBoxModel<String> modMaterias = new DefaultComboBoxModel<>();
-        modMaterias.addElement(TODAS_MATERIAS);
+        modMaterias.addElement(ConsultaFiltroHelper.TODAS_MATERIAS);
         for (String m : materias)
         {
             modMaterias.addElement(m);
@@ -2288,13 +2821,9 @@ public class VtnAdministrador extends javax.swing.JFrame
         {
             jcbMateria.setSelectedItem(materiaPrevia);
         }
-
         cargando = false;
     }
 
-    // ------------------------------------------------------------------
-    // Filtrado
-    // ------------------------------------------------------------------
     private void aplicarFiltros()
     {
         if (cargando)
@@ -2302,22 +2831,15 @@ public class VtnAdministrador extends javax.swing.JFrame
             return;
         }
 
-        String buscado = normalizar(jtxtBuscar.getText());
-        String[] palabras = buscado.isEmpty() ? new String[0] : buscado.split(" ");
+        String buscado = jtxtBuscar.getText();
         String carrera = seleccionado(jcbCarrera);
         String materia = seleccionado(jcbMateria);
         double min = valor(jspMin);
         double max = valor(jspMax);
+        int criterioOrden = jComboBox1_C.getSelectedIndex();
 
-        List<Alumno> resultado = new ArrayList<>();
-        for (Alumno a : todos)
-        {
-            if (cumple(a, palabras, carrera, materia, min, max))
-            {
-                resultado.add(a);
-            }
-        }
-        resultado.sort(comparadorActual());
+        List<Alumno> resultado = ConsultaFiltroHelper.filtrar(
+                todos, buscado, carrera, materia, min, max, criterioOrden, materiasDe);
 
         Alumno anterior = listaAlumnos.getSelectedValue();
         modeloLista.clear();
@@ -2336,55 +2858,6 @@ public class VtnAdministrador extends javax.swing.JFrame
         }
 
         jlblContador.setText("Mostrando " + resultado.size() + " de " + todos.size() + " alumnos");
-    }
-
-    private boolean cumple(Alumno a, String[] palabras, String carrera, String materia, double min, double max)
-    {
-        if (palabras.length > 0)
-        {
-            String pajar = normalizar(texto(a.getNombre()) + " " + texto(a.getNo_control()) + " " + texto(a.getCorreo()));
-            for (String p : palabras)
-            {
-                if (!pajar.contains(p))
-                {
-                    return false;
-                }
-            }
-        }
-
-        if (!TODAS_CARRERAS.equals(carrera) && !carrera.isEmpty() && !carrera.equals(texto(a.getCarerra())))
-        {
-            return false;
-        }
-
-        if (!TODAS_MATERIAS.equals(materia) && !materia.isEmpty())
-        {
-            List<String> ms = materiasDe.get(a);
-            if (ms == null || !ms.contains(materia))
-            {
-                return false;
-            }
-        }
-
-        double prom = promedioDe(a);
-        return !(prom < min || prom > max);
-    }
-
-    private Comparator<Alumno> comparadorActual()
-    {
-        switch (jComboBox1_C.getSelectedIndex())
-        {
-            case 1:
-                return (x, y) -> normalizar(texto(y.getNombre())).compareTo(normalizar(texto(x.getNombre())));
-            case 2:
-                return (x, y) -> Double.compare(promedioDe(y), promedioDe(x));
-            case 3:
-                return (x, y) -> Double.compare(promedioDe(x), promedioDe(y));
-            case 4:
-                return (x, y) -> texto(x.getNo_control()).compareTo(texto(y.getNo_control()));
-            default:
-                return (x, y) -> normalizar(texto(x.getNombre())).compareTo(normalizar(texto(y.getNombre())));
-        }
     }
 
     private void alCambiarRango()
@@ -2417,13 +2890,13 @@ public class VtnAdministrador extends javax.swing.JFrame
             return;
         }
 
-        double prom = promedioDe(a);
+        double prom = ConsultaFiltroHelper.promedioDe(a);
 
-        lblFNombre.setText(texto(a.getNombre()));
-        lblFControl.setText("No. de control: " + texto(a.getNo_control()));
-        lblFCorreo.setText(texto(a.getCorreo()));
-        lblFCarrera.setText(texto(a.getCarerra()));
-        lblFProm.setText(formato(prom));
+        lblFNombre.setText(ConsultaFiltroHelper.texto(a.getNombre()));
+        lblFControl.setText("No. de control: " + ConsultaFiltroHelper.texto(a.getNo_control()));
+        lblFCorreo.setText(ConsultaFiltroHelper.texto(a.getCorreo()));
+        lblFCarrera.setText(ConsultaFiltroHelper.texto(a.getCarerra()));
+        lblFProm.setText(ConsultaFiltroHelper.formatoPromedio(prom));
 
         List<String> ms = materiasDe.get(a);
         StringBuilder sb = new StringBuilder();
@@ -2441,9 +2914,38 @@ public class VtnAdministrador extends javax.swing.JFrame
         txtFMaterias.setCaretPosition(0);
     }
 
-    // ------------------------------------------------------------------
-    // Utilidades
-    // ------------------------------------------------------------------
+    // REPORTES Y UTILIDADES
+    private void generarReportePdf()
+    {
+        List<Alumno> lista = new ArrayList<>();
+        for (int i = 0; i < modeloLista.size(); i++)
+        {
+            lista.add(modeloLista.get(i));
+        }
+        if (lista.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "No hay información suficiente para crear el documento.", "Error de creación", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        Pdf.generarPdf(lista);
+    }
+
+    private void mostrarDialogoAyuda()
+    {
+        JOptionPane.showMessageDialog(this,
+                "• Escribe en «Buscar» un nombre, un número de control o un correo.\n"
+                + "• Elige carrera, materia o ajusta el rango de promedio: la lista se actualiza sola.\n"
+                + "• Puedes usar un solo filtro o varios a la vez; se combinan.\n"
+                + "• Haz clic en un alumno de la lista para ver su información a la derecha.\n"
+                + "• Pulsa «Limpiar filtros» para reiniciar la búsqueda.",
+                "¿Cómo busco?", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void error(String titulo, String msg)
+    {
+        JOptionPane.showMessageDialog(this, msg, titulo, JOptionPane.ERROR_MESSAGE);
+    }
+
     private static String seleccionado(javax.swing.JComboBox<String> cb)
     {
         Object o = cb.getSelectedItem();
@@ -2453,981 +2955,6 @@ public class VtnAdministrador extends javax.swing.JFrame
     private static double valor(JSpinner sp)
     {
         return ((Number) sp.getValue()).doubleValue();
-    }
-
-    private static String formato(double d)
-    {
-        return (d == Math.floor(d)) ? String.valueOf((long) d) : String.format("%.1f", d);
-    }
-
-    private static String texto(Object o)
-    {
-        return o == null ? "" : o.toString();
-    }
-
-    private static String normalizar(String s)
-    {
-        if (s == null)
-        {
-            return "";
-        }
-        String n = Normalizer.normalize(s, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
-        return n.toLowerCase().trim().replaceAll("\\s+", " ");
-    }
-
-    private static double promedioDe(Alumno a)
-    {
-        String crudo = String.valueOf(a.getPromedio()).trim();
-        try
-        {
-            return Double.parseDouble(crudo.replace(',', '.'));
-        } catch (NumberFormatException e)
-        {
-            return 0;
-        }
-    }
-
-    private static String iniciales(String nombre)
-    {
-        String[] partes = nombre.trim().split("\\s+");
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < partes.length && sb.length() < 2; i++)
-        {
-            if (!partes[i].isEmpty())
-            {
-                sb.append(Character.toUpperCase(partes[i].charAt(0)));
-            }
-        }
-        return sb.toString();
-    }
-
-    /**
-     * Círculo con las iniciales del alumno.
-     */
-    private static class Circulo extends JLabel
-    {
-
-        Circulo(int tam)
-        {
-            setPreferredSize(new Dimension(tam, tam));
-            setHorizontalAlignment(SwingConstants.CENTER);
-            setFont(new Font("Segoe UI", Font.BOLD, tam / 3));
-            setForeground(new Color(60, 70, 80));
-            setOpaque(false);
-        }
-
-        void setTexto(String t)
-        {
-            setText(t);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g)
-        {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(new Color(225, 232, 240));
-            g2.fillOval(0, 0, getWidth() - 1, getHeight() - 1);
-            g2.dispose();
-            super.paintComponent(g);
-        }
-    }
-
-    /**
-     * Dibuja cada alumno en la lista: avatar con iniciales, nombre, carrera y
-     * promedio (sin situación).
-     */
-    private class TarjetaRenderer extends JPanel implements ListCellRenderer<Alumno>
-    {
-
-        private final Circulo avatar = new Circulo(38);
-        private final JLabel lblNombre = new JLabel();
-        private final JLabel lblSub = new JLabel();
-        private final JLabel lblProm = new JLabel();
-
-        TarjetaRenderer()
-        {
-            setLayout(new BorderLayout(10, 0));
-            setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createMatteBorder(0, 0, 1, 0, BORDE),
-                    BorderFactory.createEmptyBorder(6, 10, 6, 10)));
-
-            lblNombre.setFont(F_NEGRITA);
-            lblSub.setFont(F_ETIQUETA);
-            lblSub.setForeground(TEXTO_SUAVE);
-            lblProm.setFont(F_NEGRITA);
-            lblProm.setHorizontalAlignment(SwingConstants.RIGHT);
-
-            JPanel textos = new JPanel(new GridLayout(2, 1));
-            textos.setOpaque(false);
-            textos.add(lblNombre);
-            textos.add(lblSub);
-
-            JPanel izquierda = new JPanel(new GridBagLayout());
-            izquierda.setOpaque(false);
-            izquierda.add(avatar);
-
-            add(izquierda, BorderLayout.WEST);
-            add(textos, BorderLayout.CENTER);
-            add(lblProm, BorderLayout.EAST);
-        }
-
-        @Override
-        public Component getListCellRendererComponent(JList<? extends Alumno> list, Alumno a,
-                int index, boolean isSelected, boolean cellHasFocus)
-        {
-            if (a == null)
-            {
-                return this;
-            }
-            double prom = promedioDe(a);
-            avatar.setTexto(iniciales(texto(a.getNombre())));
-            lblNombre.setText(texto(a.getNombre()));
-            lblSub.setText(texto(a.getCarerra()));
-            lblProm.setText(formato(prom));
-
-            setBackground(isSelected ? SELECCION : TARJETA);
-            return this;
-        }
-    }
-
-    private void jTBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTBuscarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTBuscarActionPerformed
-
-    private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNombreActionPerformed
-
-    private void txtCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCorreoActionPerformed
-
-    private void btnContinuar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuar2ActionPerformed
-        if (!validarFormulario())
-        {
-            return;
-        }
-        cargarTablaCambios();
-        irA("confirmar");
-    }//GEN-LAST:event_btnContinuar2ActionPerformed
-
-    private void chkConfirmoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkConfirmoActionPerformed
-        // TODO add your handling code here:
-        btnGuardar.setEnabled(chkConfirmo.isSelected() && tblCambios.getRowCount() > 0);
-    }//GEN-LAST:event_chkConfirmoActionPerformed
-
-    private void btnAtras3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtras3ActionPerformed
-        // TODO add your handling code here:
-        irA("datos");
-    }//GEN-LAST:event_btnAtras3ActionPerformed
-
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
-        Alumno nuevo = new Alumno(
-                alumnoOriginal.getNo_control(),
-                nombreCompletoEd(),
-                txtCorreo.getText().trim(),
-                new ItemCatalogo(0, (String) cmbCarrera.getSelectedItem()),
-                Double.parseDouble(txtPromedio.getText().trim()),
-                dcFechaNac.getDate(),
-                aItems(lstMaterias.getSelectedValuesList()));
-
-        if (controllerAdministracion.actualizarAlumno(nuevo))
-        {
-            JOptionPane.showMessageDialog(this, "Alumno actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            reiniciar();
-        } else
-        {
-            JOptionPane.showMessageDialog(this, "No se pudo actualizar el alumno.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        log.info("Alumno con numero de control {} actualizado", noControl);
-    }//GEN-LAST:event_btnGuardarActionPerformed
-
-    private void txtNoControlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNoControlActionPerformed
-        // TODO add your handling code here:
-        btnBuscar.doClick();
-    }//GEN-LAST:event_txtNoControlActionPerformed
-
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
-        String nc = txtNoControl.getText().trim();
-
-        // 1. Que no esté vacío
-        if (nc.isEmpty())
-        {
-            lblEstado.setText("Escribe un número de control");
-            return;
-        }
-
-        // 2. Que solo tenga números (sin espacios, letras ni símbolos)
-        if (!nc.matches("\\d+"))
-        {
-            limpiarResultado();
-            alumnoOriginal = null;
-            jBContinuar1.setEnabled(false);
-            lblEstado.setText("El No. de control solo debe tener números, sin espacios ni símbolos");
-            return;
-        }
-
-        // 3. Buscar al alumno
-        Alumno a = controllerAdministracion.buscarAlumnoPorNoControl(nc);
-        if (a == null)
-        {
-            limpiarResultado();
-            alumnoOriginal = null;
-            jBContinuar1.setEnabled(false);
-            lblEstado.setText("Alumno no encontrado");
-            return;
-        }
-
-        // 4. Mostrar el resultado
-        alumnoOriginal = a;
-        lblEstado.setText("✓ Alumno encontrado");
-        jLbl_Nombre.setText(a.getNombre());
-        jLbl_Carrera.setText(texto(a.getCarerra()));
-        jLbl_Correo.setText(a.getCorreo());
-        jLbl_Promedio.setText(String.valueOf(a.getPromedio()));
-        jLbl_Fecha.setText(new SimpleDateFormat("dd/MM/yyyy").format(a.getFechaNaciomiento()));
-        jP_Resultado.setVisible(true);
-        jBContinuar1.setEnabled(true);
-    }//GEN-LAST:event_btnBuscarActionPerformed
-
-    private void jBContinuar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBContinuar1ActionPerformed
-        llenarFormulario(alumnoOriginal);
-        irA("datos");
-    }//GEN-LAST:event_jBContinuar1ActionPerformed
-
-    private void jBCancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelar1ActionPerformed
-        // TODO add your handling code here:
-        reiniciar();
-    }//GEN-LAST:event_jBCancelar1ActionPerformed
-
-    private void jB_Cancelar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_Cancelar3ActionPerformed
-        // TODO add your handling code here:
-        java.awt.CardLayout cExtra = (java.awt.CardLayout) jP_AltCard.getLayout();
-        cExtra.previous(jP_AltCard);
-    }//GEN-LAST:event_jB_Cancelar3ActionPerformed
-
-    private void jBttn_Cancelar_2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_Cancelar_2ActionPerformed
-    {//GEN-HEADEREND:event_jBttn_Cancelar_2ActionPerformed
-        // TODO add your handling code here:
-        java.awt.CardLayout cl = (java.awt.CardLayout) jP_AltCard.getLayout();
-        cl.show(jP_AltCard, "card2");
-        Estilos.seleccionar(jBttn_DatosPrincipales);
-    }//GEN-LAST:event_jBttn_Cancelar_2ActionPerformed
-
-    private void jTxt_SemestreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxt_SemestreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTxt_SemestreActionPerformed
-
-    private void txtNoControl2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNoControl2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNoControl2ActionPerformed
-
-    private void JBtnBuscarBajaActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_JBtnBuscarBajaActionPerformed
-    {//GEN-HEADEREND:event_JBtnBuscarBajaActionPerformed
-        ////BUSCAR
-        ///6,,5,7,8
-        String nc = jTxtBuscarBaja.getText().trim();
-        // 1. Que no esté vacío
-        if (nc.isEmpty())
-        {
-            limpiarBaja();
-            jTxtEstatusBusqueda.setText("Escribe un número de control");
-            return;
-        }
-
-        // 2. Que solo tenga números (sin espacios, letras ni símbolos)
-        if (!nc.matches("\\d+"))
-        {
-            limpiarBaja();
-            alumnoOriginal = null;
-            jTxtEstatusBusqueda.setText("X Alumno no encntrado");
-            return;
-        }
-
-        // 3. Buscar al alumno
-        Alumno a = controllerAdministracion.buscarAlumnoPorNoControl(nc);
-        if (a == null)
-        {
-            limpiarBaja();
-            alumnoOriginal = null;
-            jTxtEstatusBusqueda.setText("X Alumno no encntrado");
-            return;
-        }
-
-        // 4. Mostrar el resultado
-        jTxtCarreraBaja.setEditable(false);
-        jTextSemestreBaja.setEditable(false);
-        jTxtCorreoBaja.setEditable(false);
-        jTxtFechaNacBaja.setEditable(false);
-        jTxtPromedioBaja.setEditable(false);
-        jTxtFieldNombre.setEditable(false);
-        alumnoOriginal = a;
-        jTxtEstatusBusqueda.setText("✓ Alumno encontrado");
-        jTxtFieldNombre.setText(a.getNombre());
-        jTxtCarreraBaja.setText(texto(a.getCarerra()));
-        jTxtCorreoBaja.setText(a.getCorreo());
-        jTxtPromedioBaja.setText(String.valueOf(a.getPromedio()));
-        jTextSemestreBaja.setText(semestreAlu);
-        jTxtFechaNacBaja.setText(new SimpleDateFormat("dd/MM/yyyy").format(a.getFechaNaciomiento()));
-    }//GEN-LAST:event_JBtnBuscarBajaActionPerformed
-    private void limpiarBaja()
-    {
-        jTxtCarreraBaja.setEditable(false);
-        jTextSemestreBaja.setEditable(false);
-        jTxtCorreoBaja.setEditable(false);
-        jTxtFechaNacBaja.setEditable(false);
-        jTxtPromedioBaja.setEditable(false);
-        jTxtFieldNombre.setEditable(false);
-        jTxtCarreraBaja.setText("");
-        jTextSemestreBaja.setText("");
-        jTxtCorreoBaja.setText("");
-        jTxtFechaNacBaja.setText("");
-        jTxtPromedioBaja.setText("");
-        jTxtFieldNombre.setText("");
-        jTxtBuscarBaja.setText("");
-        jTxtEstatusBusqueda.setText("");
-    }
-
-
-    private void jButtonDarBajaActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButtonDarBajaActionPerformed
-    {//GEN-HEADEREND:event_jButtonDarBajaActionPerformed
-        int respuesta = JOptionPane.showConfirmDialog(
-                this,
-                "¿Estás seguro de que deseas dar de baja al alumno?",
-                "Confirmar baja de alumno",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE
-        );
-
-        if (respuesta == JOptionPane.YES_OPTION)
-        {
-
-            controllerAdministracion.darBajaAlumno(alumnoOriginal);
-
-            limpiarBaja();
-            log.info("Alumno con número de control {} fue dado de baja correctamente", noControl);
-
-        }
-    }//GEN-LAST:event_jButtonDarBajaActionPerformed
-
-    private void jTxtFieldNombreActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jTxtFieldNombreActionPerformed
-    {//GEN-HEADEREND:event_jTxtFieldNombreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTxtFieldNombreActionPerformed
-
-    private void btnAyudaActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnAyudaActionPerformed
-    {//GEN-HEADEREND:event_btnAyudaActionPerformed
-        JOptionPane.showMessageDialog(this,
-                "• Escribe en «Buscar» un nombre, un número de control o un correo.\n"
-                + "• Elige carrera, materia o ajusta el rango de promedio: la lista se actualiza sola.\n"
-                + "• Puedes usar un solo filtro o varios a la vez; se combinan.\n"
-                + "• Haz clic en un alumno de la lista para ver su información a la derecha.\n"
-                + "• Pulsa «Limpiar filtros» para reiniciar la búsqueda.",
-                "¿Cómo busco?", JOptionPane.INFORMATION_MESSAGE);
-    }//GEN-LAST:event_btnAyudaActionPerformed
-
-    private void jTxt_PromedioActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jTxt_PromedioActionPerformed
-    {//GEN-HEADEREND:event_jTxt_PromedioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTxt_PromedioActionPerformed
-
-    private void jButtonCancelarBajaActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButtonCancelarBajaActionPerformed
-    {//GEN-HEADEREND:event_jButtonCancelarBajaActionPerformed
-        // TODO add your handling code here:
-        jTxtBuscarBaja.setText("");
-        jTxtCarreraBaja.setText("");
-        jTextSemestreBaja.setText("");
-        jTxtCorreoBaja.setText("");
-        jTxtFechaNacBaja.setText("");
-        jTxtPromedioBaja.setText("");
-        jTxtFieldNombre.setText("");
-        jTxtEstatusBusqueda.setText("");
-    }//GEN-LAST:event_jButtonCancelarBajaActionPerformed
-
-    private void jBttn_PdfActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jBttn_PdfActionPerformed
-    {//GEN-HEADEREND:event_jBttn_PdfActionPerformed
-        List<Alumno> lista = new ArrayList<>();
-        for (int i = 0; i < modeloLista.size(); i++)
-        {
-            lista.add(modeloLista.get(i));
-        }
-        if (lista.isEmpty())
-        {
-            JOptionPane.showMessageDialog(this, "No hay informacion suficiente para crear el documento", "Error de creacion", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        Pdf.generarPdf(lista);
-    }//GEN-LAST:event_jBttn_PdfActionPerformed
-
-    // Edicion metodos propios
-    private void conScroll(JPanel card, String nombre)
-    {
-        jP_EdCard.remove(card);
-        card.setVisible(true);   // el CardLayout lo había ocultado
-        javax.swing.JScrollPane sp = new javax.swing.JScrollPane(card);
-        sp.setBorder(null);
-        sp.getViewport().setBackground(Estilos.CREMA_CLARO);
-        sp.getVerticalScrollBar().setUnitIncrement(16);
-        jP_EdCard.add(sp, nombre);
-    }
-
-    private void irA(String paso)
-    {
-        pasoActual = paso;
-        ((java.awt.CardLayout) jP_EdCard.getLayout()).show(jP_EdCard, paso);
-        switch (paso)
-        {
-            case "buscar":
-                jTBuscar.setSelected(true);
-                break;
-            case "datos":
-                jTDatos.setSelected(true);
-                break;
-            case "confirmar":
-                jTConfirmar.setSelected(true);
-                break;
-        }
-        pintarPestanas();
-    }
-
-    private void pintarPestanas()
-    {
-        for (AbstractButton t : new AbstractButton[]
-        {
-            jTBuscar, jTDatos, jTConfirmar
-        })
-        {
-            boolean activa = t.isSelected();
-            t.setBackground(activa ? Estilos.NEGRO : Estilos.AZUL_OSCURO);
-            t.setForeground(activa ? Estilos.NARANJA : java.awt.Color.WHITE);
-        }
-    }
-
-    private void poner(JPanel panel, java.awt.Component c, int x, int y, int w, int h)
-    {
-        panel.add(c, new org.netbeans.lib.awtextra.AbsoluteConstraints(x, y, w, h));
-    }
-
-    private void aplicarEstilos()
-    {
-        Estilos.estilizarFondo(jP_EncabezadoEd);
-        Estilos.estilizarPanelConSombra(jP_EdCard);
-        for (JPanel p : new JPanel[]
-        {
-            jP_EdBuscar, jP_EdDatos, jP_EdConfirmar, jP_Resultado
-        })
-        {
-            p.setOpaque(true);
-            p.setBackground(Estilos.CREMA_CLARO);
-        }
-        jP_Resultado.setBorder(Estilos.borde(2));
-
-        // Encabezado: solo las pestañas, a la izquierda
-        jLabel1.setVisible(false);
-        jP_EncabezadoEd.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 6, 8));
-        jP_EncabezadoEd.setPreferredSize(new java.awt.Dimension(0, 56));
-        jTBuscar.setText("1. BUSCAR ALUMNO");
-        jTDatos.setText("2. DATOS DEL ALUMNO");
-        jTConfirmar.setText("3. CONFIRMAR");
-        for (AbstractButton t : new AbstractButton[]
-        {
-            jTBuscar, jTDatos, jTConfirmar
-        })
-        {
-            t.setFont(Estilos.fuente(Font.PLAIN, 20));
-            t.setFocusPainted(false);
-            t.setContentAreaFilled(false);
-            t.setOpaque(true);
-            t.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
-            t.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(Estilos.NEGRO, 3),
-                    BorderFactory.createEmptyBorder(3, 14, 3, 14)));
-        }
-
-        // Etiquetas
-        for (JLabel l : new JLabel[]
-        {
-            lblNoControl, jLabel14, jLabel15, jLabel16, jLabel17,
-            jLabel18, jLabel19, jLabel20, jLabel21, jLabel22, lblResumen
-        })
-        {
-            Estilos.estilizarEtiqueta(l);
-        }
-        Estilos.estilizarSubtitulo(jLabel23);
-        jLabel23.setText("CONFIRMAR CAMBIOS");
-        lblEstado.setFont(Estilos.fuente(Font.BOLD, 16));
-        lblEstado.setForeground(Estilos.AZUL_OSCURO);
-
-        // Tarjeta del alumno encontrado
-        jP_Resultado.removeAll();
-        jP_Resultado.setLayout(new java.awt.GridBagLayout());
-        java.awt.GridBagConstraints g = new java.awt.GridBagConstraints();
-        g.insets = new java.awt.Insets(8, 20, 8, 20);
-        g.anchor = java.awt.GridBagConstraints.WEST;
-        g.fill = java.awt.GridBagConstraints.HORIZONTAL;
-
-        jLbl_Nombre.setFont(Estilos.fuente(Font.PLAIN, 26));
-        jLbl_Carrera.setFont(Estilos.fuente(Font.BOLD, 16));
-        jLbl_Correo.setFont(Estilos.fuente(Font.BOLD, 16));
-        jLbl_Fecha.setFont(Estilos.fuente(Font.BOLD, 16));
-        jLbl_Promedio.setFont(Estilos.fuente(Font.PLAIN, 30));
-        jLbl_Promedio.setForeground(Estilos.AZUL_OSCURO);
-        jLbl_Promedio.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-
-// Fila 0: nombre
-        g.gridy = 0;
-        g.gridx = 0;
-        g.gridwidth = 2;
-        g.weightx = 1;
-        jP_Resultado.add(jLbl_Nombre, g);
-
-// Fila 1: carrera | promedio
-        g.gridwidth = 1;
-        g.gridy = 1;
-        g.gridx = 0;
-        g.weightx = 1;
-        jP_Resultado.add(jLbl_Carrera, g);
-        g.gridx = 1;
-        g.weightx = 0;
-        jP_Resultado.add(jLbl_Promedio, g);
-
-// Fila 2: correo | fecha
-        g.gridy = 2;
-        g.gridx = 0;
-        g.weightx = 1;
-        jP_Resultado.add(jLbl_Correo, g);
-        g.gridx = 1;
-        g.weightx = 0;
-        jP_Resultado.add(jLbl_Fecha, g);
-
-        jLbl_Semestre.setVisible(false);   // Alumno no tiene semestre
-
-        // Campos
-        Estilos.estilizarCampo(txtNoControl);
-        Estilos.estilizarCampo(txtNoControl2);
-        txtNoControl2.setBackground(Estilos.CREMA);
-        Estilos.estilizarCampo(txtNombre);
-        Estilos.estilizarCampo(txtApPat);
-        Estilos.estilizarCampo(txtApMaterno);
-        Estilos.estilizarCampo(txtCorreo);
-        Estilos.estilizarCampo(txtPromedio);
-        Estilos.estilizarCombo(cmbCarrera);
-        Estilos.estilizarFecha(dcFechaNac);
-
-        lstMaterias.setFont(Estilos.fuente(Font.PLAIN, 18));
-        lstMaterias.setBackground(Estilos.CREMA_CLARO);
-        lstMaterias.setSelectionBackground(Estilos.NARANJA);
-        lstMaterias.setSelectionForeground(Estilos.NEGRO);
-        jScrollPane2.setBorder(Estilos.borde(2));   // lista de materias
-
-        // Paso 3
-        Estilos.estilizarTabla(tblCambios);
-        jScrollPane3.setBorder(Estilos.borde(2));   // tabla de cambios
-        chkConfirmo.setOpaque(false);
-        chkConfirmo.setFont(Estilos.fuente(Font.BOLD, 16));
-        chkConfirmo.setForeground(Estilos.NEGRO);
-        chkConfirmo.setText("ENTIENDO QUE ESTA ACCIÓN MODIFICA LOS DATOS DEL ALUMNO");
-
-        // Botones
-        btnBuscar.setText("BUSCAR");
-        jBCancelar1.setText("CANCELAR");
-        jBContinuar1.setText("CONTINUAR");
-        btnAtras2.setText("ATRÁS");
-        btnRestablecer.setText("RESTABLECER");
-        btnCancelar2.setText("CANCELAR");
-        btnContinuar2.setText("CONTINUAR");
-        btnAtras3.setText("ATRÁS");
-        btnGuardar.setText("GUARDAR CAMBIOS");
-
-        JButton[] normales
-                =
-                {
-                    btnBuscar, jBCancelar1, btnAtras2, btnRestablecer, btnCancelar2, btnAtras3
-                };
-        JButton[] principales
-                =
-                {
-                    jBContinuar1, btnContinuar2, btnGuardar
-                };
-        for (JButton b : normales)
-        {
-            Estilos.estilizarBoton(b);
-            b.setFont(Estilos.fuente(Font.PLAIN, 18));
-        }
-        for (JButton b : principales)
-        {
-            Estilos.estilizarBotonPrincipal(b);
-            b.setFont(Estilos.fuente(Font.PLAIN, 18));
-        }
-
-        // Posiciones
-        // Paso 1
-        poner(jP_EdBuscar, lblNoControl, 60, 20, -1, -1);
-        poner(jP_EdBuscar, txtNoControl, 60, 45, 300, 40);
-        poner(jP_EdBuscar, btnBuscar, 380, 45, -1, 40);
-        poner(jP_EdBuscar, lblEstado, 60, 95, 600, -1);
-        poner(jP_EdBuscar, jP_Resultado, 60, 130, 540, 130);
-        poner(jP_EdBuscar, jBCancelar1, 60, 280, -1, -1);
-        poner(jP_EdBuscar, jBContinuar1, 220, 280, -1, -1);
-
-        poner(jP_EdDatos, btnAtras2, 60, 600, -1, -1);
-        poner(jP_EdDatos, btnRestablecer, 200, 600, -1, -1);
-        poner(jP_EdDatos, btnCancelar2, 360, 600, -1, -1);
-        poner(jP_EdDatos, btnContinuar2, 500, 600, -1, -1);
-
-        pintarPestanas();
-    }
-
-    private void limpiarResultado()
-    {
-        jLbl_Nombre.setText("");
-        jLbl_Carrera.setText("");
-        jLbl_Semestre.setText("");
-        jLbl_Correo.setText("");
-        jLbl_Fecha.setText("");
-        jLbl_Promedio.setText("");
-        lblEstado.setText("");
-        jP_Resultado.setVisible(false);
-    }
-
-    private void reiniciar()
-    {
-        txtNoControl.setText("");
-        alumnoOriginal = null;
-        limpiarResultado();
-        jBContinuar1.setEnabled(false);
-        irA("buscar");
-    }
-
-    private void llenarFormulario(Alumno a)
-    {
-        txtNoControl2.setText(a.getNo_control());
-        txtNoControl2.setEditable(false);
-
-        txtNombre.setText(a.getNombre());
-        txtCorreo.setText(a.getCorreo());
-        cmbCarrera.setSelectedItem(texto(a.getCarerra()));
-        txtPromedio.setText(String.valueOf(a.getPromedio()));
-        dcFechaNac.setDate(a.getFechaNaciomiento());
-        seleccionarMaterias(a.getMaterias());
-
-        txtNoControl2.setText(a.getNo_control());
-        txtNoControl2.setEditable(false);
-
-        String[] p = a.getNombre().trim().split("\\s+");
-        if (p.length >= 3)
-        {
-            txtApMaterno.setText(p[p.length - 1]);
-            txtApPat.setText(p[p.length - 2]);
-            txtNombre.setText(String.join(" ", java.util.Arrays.copyOf(p, p.length - 2)));
-        } else
-        {
-            txtNombre.setText(a.getNombre());
-            txtApPat.setText("");
-            txtApMaterno.setText("");
-        }
-
-        txtCorreo.setText(a.getCorreo());
-        //cmbCarrera.setSelectedItem(a.getCarerra());
-
-        String carreraGuardada = texto(a.getCarerra()).trim();
-        boolean encontrada = false;
-        for (int i = 0; i < cmbCarrera.getItemCount(); i++)
-        {
-            if (cmbCarrera.getItemAt(i).trim().equalsIgnoreCase(carreraGuardada))
-            {
-                cmbCarrera.setSelectedIndex(i);
-                encontrada = true;
-                break;
-            }
-        }
-        if (!encontrada && !carreraGuardada.isEmpty())
-        {
-            cmbCarrera.addItem(carreraGuardada);
-            cmbCarrera.setSelectedItem(carreraGuardada);
-        }
-
-        txtPromedio.setText(String.valueOf(a.getPromedio()));
-        dcFechaNac.setDate(a.getFechaNaciomiento());
-        seleccionarMaterias(a.getMaterias());
-
-    }
-
-    private static List<String> nombres(List<ItemCatalogo> items)
-    {
-        List<String> r = new ArrayList<>();
-        if (items != null)
-        {
-            for (ItemCatalogo it : items)
-            {
-                r.add(it.getNombre());
-            }
-        }
-        return r;
-    }
-
-    private static List<ItemCatalogo> aItems(List<String> nombres)
-    {
-        List<ItemCatalogo> r = new ArrayList<>();
-        if (nombres != null)
-        {
-            for (String n : nombres)
-            {
-                r.add(new ItemCatalogo(0, n));
-            }
-        }
-        return r;
-    }
-
-    private void seleccionarMaterias(List<ItemCatalogo> materias)
-    {
-        List<Integer> idx = new ArrayList<>();
-        List<String> nombresMat = nombres(materias);
-        ListModel<String> m = lstMaterias.getModel();
-        for (int i = 0; i < m.getSize(); i++)
-        {
-            if (nombresMat.contains(m.getElementAt(i)))
-            {
-                idx.add(i);
-            }
-        }
-        lstMaterias.setSelectedIndices(idx.stream().mapToInt(Integer::intValue).toArray());
-    }
-
-    private void error(String titulo, String msg)
-    {
-        JOptionPane.showMessageDialog(this, msg, titulo, JOptionPane.ERROR_MESSAGE);
-    }
-
-    private boolean fechaAnterior1950(Date f)
-    {
-        java.util.Calendar c = java.util.Calendar.getInstance();
-        c.setTime(f);
-        return c.get(java.util.Calendar.YEAR) < 1950;
-    }
-
-    private boolean validarFormulario()
-    {
-        String nombre = txtNombre.getText().trim();
-        String correo = txtCorreo.getText().trim();
-        String promedio = txtPromedio.getText().trim();
-        Date fecha = dcFechaNac.getDate();
-
-        if (ValidadorAlumno.esVacio(nombre))
-        {
-            error("Campo requerido", "El nombre es OBLIGATORIO");
-            return false;
-        }
-        if (!ValidadorAlumno.nombreValido(nombre))
-        {
-            error("Error de validación", "El nombre solo puede contener letras y espacios.");
-            return false;
-        }
-
-        if (ValidadorAlumno.esVacio(txtApPat.getText().trim()) || !ValidadorAlumno.nombreValido(txtApPat.getText().trim()))
-        {
-            error("Campo requerido", "Apellido paterno obligatorio y válido");
-            return false;
-        }
-        if (ValidadorAlumno.esVacio(txtApMaterno.getText().trim()) || !ValidadorAlumno.nombreValido(txtApMaterno.getText().trim()))
-        {
-            error("Campo requerido", "Apellido materno obligatorio y válido");
-            return false;
-        }
-
-        if (ValidadorAlumno.esVacio(correo))
-        {
-            error("Campo requerido", "El correo es OBLIGATORIO");
-            return false;
-        }
-        if (!ValidadorAlumno.correoValido(correo))
-        {
-            error("Error de validación", "El formato del correo no es válido. Ejemplo: usuario@dominio.com");
-            txtCorreo.requestFocus();
-            return false;
-        }
-        if (ValidadorAlumno.seleccionCb(cmbCarrera.getSelectedIndex()))
-        {
-            error("Campo requerido", "La carrera es OBLIGATORIA");
-            return false;
-        }
-
-        // Validación adaptada del promedio usando la nueva firma de ValidadorAlumno
-        if (ValidadorAlumno.esVacio(promedio))
-        {
-            error("Campo requerido", "No puede quedar vacío el Promedio");
-            return false;
-        }
-        if (ValidadorAlumno.promedioValido(promedio) == null)
-        {
-            error("Error de validación", "El promedio debe ser numérico y estar en un rango de 0 a 100");
-            return false;
-        }
-
-        if (ValidadorAlumno.fechaVacia(fecha))
-        {
-            error("Campo requerido", "Debe ingresar la fecha de nacimiento");
-            return false;
-        }
-
-        // Validación adaptada de la fecha usando fechaPasada en lugar de fechaAnterior1950
-        if (ValidadorAlumno.fechaFutura(fecha) || ValidadorAlumno.fechaPasada(fecha))
-        {
-            error("Error en fecha", "La fecha no puede ser futura ni anterior a 1950");
-            return false;
-        }
-
-        if (ValidadorAlumno.materiasVacias(lstMaterias.getSelectedValuesList()))
-        {
-            error("Campo requerido", "Debe seleccionar al menos una materia");
-            return false;
-        }
-        return true;
-    }
-
-    private void agregarSiCambio(DefaultTableModel m, String campo, String antes, String despues)
-    {
-        if (!java.util.Objects.equals(antes, despues))
-        {
-            m.addRow(new Object[]
-            {
-                campo, antes, despues
-            });
-        }
-    }
-
-    private String nombreCompletoEd()
-    {
-        return (txtNombre.getText().trim() + " "
-                + txtApPat.getText().trim() + " "
-                + txtApMaterno.getText().trim()).trim().replaceAll("\\s+", " ");
-    }
-
-    private void cargarTablaCambios()
-    {
-        DefaultTableModel m = new DefaultTableModel(new String[]
-        {
-            "Campo", "Antes", "Después"
-        }, 0)
-        {
-            @Override
-            public boolean isCellEditable(int r, int c)
-            {
-                return false;
-            }
-        };
-        Alumno a = alumnoOriginal;
-        SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
-
-        agregarSiCambio(m, "Nombre", a.getNombre(), nombreCompletoEd());
-        agregarSiCambio(m, "Correo", a.getCorreo(), txtCorreo.getText().trim());
-        agregarSiCambio(m, "Carrera", texto(a.getCarerra()), (String) cmbCarrera.getSelectedItem());
-        agregarSiCambio(m, "Promedio", String.valueOf(a.getPromedio()),
-                String.valueOf(Double.parseDouble(txtPromedio.getText().trim())));
-        agregarSiCambio(m, "Fecha nac.", f.format(a.getFechaNaciomiento()), f.format(dcFechaNac.getDate()));
-        agregarSiCambio(m, "Materias", String.join(", ", nombres(a.getMaterias())),
-                String.join(", ", lstMaterias.getSelectedValuesList()));
-        agregarSiCambio(m, "Materias", String.join(", ", nombres(a.getMaterias())),
-                String.join(", ", lstMaterias.getSelectedValuesList())
-        );
-
-        tblCambios.setModel(m);
-        lblResumen.setText(m.getRowCount() == 0 ? "Sin cambios" : m.getRowCount() + " campo(s) modificado(s)");
-        chkConfirmo.setSelected(false);
-        btnGuardar.setEnabled(false);
-    }
-
-    private void limpiarRegistro()
-    {
-        jTxt_nombre.setText("");
-        jTxt_ApellidoPat.setText("");
-        jTxt_ApellidoMat.setText("");
-        jDC_Nacimiento.setDate(null);
-        jTxt_Semestre.setText("");
-        jTxt_Promedio.setText("");
-        jTxt_Correo.setText("");
-        jPF_contraseña.setText("");
-        jTb_Materias.clearSelection();
-        jTxt_NoControl.setText("");
-
-        jTxt_Correo.setText("");
-        jCB_Carrera.setSelectedIndex(0);
-        jTxt_Promedio.setText("");
-        jTb_Materias.clearSelection();
-
-    }
-
-    public void cargarTabla()
-    {
-        String[] columnas
-                =
-                {
-                    "Materia",
-                    "Horario",
-                    "Agregar Mat."
-                };
-        DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
-        //declaro un n de tipo alumno de la carpeta model
-        //me la vole UwU
-
-        String[] mat1
-                =
-                {
-                    "Top. Avan. Prog.",
-                    "Mar/Jue 7 am - 9 am",
-                    "Agregar"
-                };
-        String[] mat2
-                =
-                {
-                    "Simulacion",
-                    "Mar/Jue 9 am - 11 am",
-                    "Agregar"
-                };
-        String[] mat3
-                =
-                {
-                    "Metodos Numericos",
-                    "Mie/Vie 1 pm - 3 pm",
-                    "Agregar"
-                };
-        String[] mat4
-                =
-                {
-                    "Prolog",
-                    "Mie/Vie 11 am - 1 pm",
-                    "Agregar"
-                };
-        String[] mat5
-                =
-                {
-                    "Arq.Computadoras.",
-                    "Lun/Mie/Vie 7 am - 9 am",
-                    "Agregar"
-                };
-
-        modelo.addRow(mat1);
-        modelo.addRow(mat2);
-        modelo.addRow(mat3);
-        modelo.addRow(mat4);
-        modelo.addRow(mat5);
-
-        //Se hace que el JPanel ocupe todo el espacio de la tabla
-        /* modelo.addRow(mensaje);
-        
-
-               
-                modelo.addRow(fila);
-         */
-        //no mover las columnas de lugar
-        jTb_Materias.getTableHeader().setReorderingAllowed(false);
-        //no cambiarles la longitud
-        jTb_Materias.getTableHeader().setResizingAllowed(false);
-        jTb_Materias.setModel(modelo); //muestrala
-
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
