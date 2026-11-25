@@ -76,8 +76,8 @@ public class VtnAdministrador extends javax.swing.JFrame
     private final AlumnoController controllerAdministracion;
     private final CatalogoController catalogo = new CatalogoController();
 
-    private List<String> carreras = new ArrayList<>();       // catálogo (sin el "Seleccione")
-    private List<String> materiasCatalogo = new ArrayList<>(); // catálogo de materias
+    private List<ItemCatalogo> carreras = new ArrayList<>();       // catálogo (sin el "Seleccione")
+    private List<ItemCatalogo> materiasCatalogo = new ArrayList<>(); // catálogo de materias
     private final List<Alumno> visibles = new ArrayList<>();  // alumnos que muestra la tabla
     private boolean cargando = false;
     private boolean editando = false; // true mientras el formulario está abierto
@@ -540,7 +540,7 @@ public class VtnAdministrador extends javax.swing.JFrame
     {
         try
         {
-            List<String> lista = catalogo.obtenerCarreras();
+            List<ItemCatalogo> lista = catalogo.obtenerCarreras();
             // el primer elemento es el texto "Seleccione una carrera"
             carreras = new ArrayList<>(lista.subList(Math.min(1, lista.size()), lista.size()));
         } catch (AppException e)
@@ -552,7 +552,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         {
             for (ItemCatalogo m : catalogo.obtenerMaterias())
             {
-                materiasCatalogo.add(m.getNombre());
+                materiasCatalogo.add(m);
             }
         } catch (AppException e)
         {
@@ -563,9 +563,9 @@ public class VtnAdministrador extends javax.swing.JFrame
         cargando = true;
         DefaultComboBoxModel<String> mCarreras = new DefaultComboBoxModel<>();
         mCarreras.addElement(TODAS);
-        for (String c : carreras)
+        for (ItemCatalogo c : carreras)
         {
-            mCarreras.addElement(c);
+            mCarreras.addElement(c.getNombre());
         }
         cmbCarrera.setModel(mCarreras);
         cargando = false;
@@ -580,6 +580,10 @@ public class VtnAdministrador extends javax.swing.JFrame
         cargando = true;
         Object materiaPrevia = cmbMateria.getSelectedItem();
         TreeSet<String> materias = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+        for (ItemCatalogo m : materiasCatalogo)
+        {
+            materias.add(m.getNombre());
+        }
         for (Alumno a : controllerAdministracion.consultarAlumno())
         {
             materias.addAll(nombresMaterias(a.getMaterias()));

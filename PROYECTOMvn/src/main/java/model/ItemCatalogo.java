@@ -36,4 +36,24 @@ public class ItemCatalogo
         return nombre;
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (!(o instanceof ItemCatalogo))
+        {
+            return false;
+        }
+        return id == ((ItemCatalogo) o).id;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Integer.hashCode(id);
+    }
+
 }

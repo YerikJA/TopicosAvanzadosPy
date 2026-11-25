@@ -64,7 +64,7 @@ public class PnlAlumno extends JPanel
 
     private static final Color ROJO = new Color(0xB42318);
     private static final Color AMBAR = new Color(0xC27C0E);
-    private static final String SELECCIONE = "Seleccione una carrera";
+    private static final ItemCatalogo SELECCIONE = new ItemCatalogo(0, "Seleccione una carrera");
 
     /**
      * Materias de respaldo si la base de datos no responde (las mismas que
@@ -85,7 +85,7 @@ public class PnlAlumno extends JPanel
     private final JTextField txtApMat = VtnAdministrador.campoTexto("Ej. Peña", 16);
     private final JDateChooser dcNacimiento = new JDateChooser();
     private final JTextField txtNoControl = VtnAdministrador.campoTexto("Solo números", 16);
-    private final JComboBox<String> cmbCarrera = new JComboBox<>();
+    private final JComboBox<ItemCatalogo> cmbCarrera = new JComboBox<>();
     private final JTextField txtCorreo = VtnAdministrador.campoTexto("usuario@dominio.com", 16);
     private final JTextField txtPromedio = VtnAdministrador.campoTexto("Ej. 85.5", 6);
     private final List<JCheckBox> chkMaterias = new ArrayList<>();
@@ -101,8 +101,8 @@ public class PnlAlumno extends JPanel
     private final JButton btnCancelar = new JButton("Cancelar");
     private final JButton btnGuardar = new JButton();
 
-    public PnlAlumno(AlumnoController controller, List<String> carreras,
-            List<String> materias, Alumno original, Consumer<Alumno> alTerminar)
+    public PnlAlumno(AlumnoController controller, List<ItemCatalogo> carreras,
+            List<ItemCatalogo> materias, Alumno original, Consumer<Alumno> alTerminar)
     {
         super(new BorderLayout());
         this.controller = controller;
@@ -153,7 +153,7 @@ public class PnlAlumno extends JPanel
     // ==================================================================
     // INTERFAZ
     // ==================================================================
-    private void construir(List<String> carreras, List<String> materias)
+    private void construir(List<ItemCatalogo> carreras, List<ItemCatalogo> materias)
     {
         JPanel raiz = this;
         setBackground(Estilos.CREMA_CLARO);
@@ -213,10 +213,10 @@ public class PnlAlumno extends JPanel
         panelMaterias.setBackground(Estilos.CREMA_CLARO);
         panelMaterias.setOpaque(true);
         panelMaterias.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
-        List<String> lista = (materias == null || materias.isEmpty()) ? List.of(MATERIAS_RESPALDO) : materias;
-        for (String m : lista)
+        List<ItemCatalogo> lista = materiasMarcadas();
+        for (ItemCatalogo m : lista)
         {
-            agregarCasilla(m);
+            agregarCasilla(m.getNombre());
         }
         JScrollPane spMaterias = new JScrollPane(panelMaterias);
         Estilos.estilizarScroll(spMaterias);
@@ -239,11 +239,11 @@ public class PnlAlumno extends JPanel
         raiz.add(scroll, BorderLayout.CENTER);
 
         // ---- carrera ----
-        DefaultComboBoxModel<String> mCarreras = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<ItemCatalogo> mCarreras = new DefaultComboBoxModel<>();
         mCarreras.addElement(SELECCIONE);
         if (carreras != null)
         {
-            for (String c : carreras)
+            for (ItemCatalogo c : carreras)
             {
                 mCarreras.addElement(c);
             }
@@ -385,8 +385,8 @@ public class PnlAlumno extends JPanel
         txtCorreo.setText(a.getCorreo());
         txtPromedio.setText(String.valueOf(a.getPromedio()));
 
-        String carrera = VtnAdministrador.texto(a.getCarerra());
-        if (((DefaultComboBoxModel<String>) cmbCarrera.getModel()).getIndexOf(carrera) < 0 && !carrera.isEmpty())
+        ItemCatalogo carrera = a.getCarerra();
+        if (((DefaultComboBoxModel<ItemCatalogo>) cmbCarrera.getModel()).getIndexOf(carrera) < 0 && carrera !=null)
         {
             cmbCarrera.addItem(carrera); // carrera que ya no está en el catálogo
         }
@@ -420,14 +420,14 @@ public class PnlAlumno extends JPanel
         return null;
     }
 
-    private List<String> materiasMarcadas()
+    private List<ItemCatalogo> materiasMarcadas()
     {
-        List<String> marcadas = new ArrayList<>();
+        List<ItemCatalogo> marcadas = new ArrayList<>();
         for (JCheckBox chk : chkMaterias)
         {
             if (chk.isSelected())
             {
-                marcadas.add(chk.getText());
+                marcadas.add((ItemCatalogo) chk.getClientProperty("materia"));
             }
         }
         return marcadas;
@@ -618,10 +618,10 @@ public class PnlAlumno extends JPanel
         {
             marcarError(txtPromedio, "Número entre 0 y 100");
         }
-        if (ValidadorAlumno.materiasVacias(materiasMarcadas()))
-        {
-            marcarError((JComponent) panelMaterias.getParent().getParent(), "Marca al menos una materia");
-        }
+//        if (ValidadorAlumno.materiasVacias(materiasMarcadas()))
+//        {
+//            marcarError((JComponent) panelMaterias.getParent().getParent(), "Marca al menos una materia");
+//        }
 
         // llevar el cursor al primer campo con error
         for (Map.Entry<JComponent, JLabel> e : errores.entrySet())
@@ -671,16 +671,16 @@ public class PnlAlumno extends JPanel
         {
             return;
         }
-        List<ItemCatalogo> materias = new ArrayList<>();
-        for (String m : materiasMarcadas())
-        {
-            materias.add(new ItemCatalogo(0, m));
-        }
+        List<ItemCatalogo> materias = materiasMarcadas();
+//        for (ItemCatalogo m : materiasMarcadas())
+//        {
+//            materias.add(new ItemCatalogo(0, m));
+//        }
         Alumno alumno = new Alumno(
                 txtNoControl.getText().trim(),
                 nombreCompleto(),
                 txtCorreo.getText().trim(),
-                new ItemCatalogo(0, (String) cmbCarrera.getSelectedItem()),
+                (ItemCatalogo) cmbCarrera.getSelectedItem(),
                 ValidadorAlumno.promedioValido(txtPromedio.getText().trim()),
                 dcNacimiento.getDate(),
                 materias);

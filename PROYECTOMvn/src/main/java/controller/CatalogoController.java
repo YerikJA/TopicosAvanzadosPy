@@ -17,10 +17,10 @@ public class CatalogoController {
     
     private CatalogoDAO catalogoDAO= new CatalogoDAO();
 
-    public List<String> obtenerCarreras() throws AppException
+    public List<ItemCatalogo> obtenerCarreras() throws AppException
     {
-        List<String> carreras = new ArrayList<>();
-        carreras.add("Seleccone una carrera");
+        List<ItemCatalogo> carreras = new ArrayList<>();
+        carreras.add(new ItemCatalogo(0, "Seleccione una carrera"));
         carreras.addAll(catalogoDAO.obtenerCarreras());
         return carreras;
     }
