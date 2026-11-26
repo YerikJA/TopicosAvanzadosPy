@@ -6,7 +6,6 @@ import estilos.Estilos;
 import exception.AppException;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -54,12 +53,11 @@ import utils.Pdf;
 /**
  * Ventana principal de administración de alumnos (diseño "lista + detalle").
  *
- * Todo el CRUD se hace desde una sola pantalla, sin ventanas emergentes: -
- * Consulta: tabla con filtros (se actualiza mientras escribes) y ficha del
- * alumno en el panel derecho. - Alta: "Nuevo alumno" (Ctrl+N) cambia el panel
- * derecho al formulario (PnlAlumno). - Edición: "Editar", doble clic o Enter
- * muestra el formulario con los datos. - Baja: "Dar de baja" o tecla Supr,
- * con confirmación.
+ * Todo el CRUD se hace desde una sola pantalla: - Consulta: tabla con filtros
+ * (se actualiza mientras escribes) y ficha del alumno a la derecha. - Alta:
+ * botón "Nuevo alumno" (Ctrl+N) abre DlgAlumno. - Edición: botón "Editar",
+ * doble clic o Enter sobre la tabla abre DlgAlumno con los datos. - Baja: botón
+ * "Dar de baja" o tecla Supr, con confirmación.
  *
  * Así el usuario busca al alumno UNA sola vez y actúa sobre él, sin volver a
  * escribir el No. de control en otra pantalla.
@@ -80,13 +78,6 @@ public class VtnAdministrador extends javax.swing.JFrame
     private List<ItemCatalogo> materiasCatalogo = new ArrayList<>(); // catálogo de materias
     private final List<Alumno> visibles = new ArrayList<>();  // alumnos que muestra la tabla
     private boolean cargando = false;
-    private boolean editando = false; // true mientras el formulario está abierto
-
-    // panel derecho: muestra la ficha (consulta) o el formulario (alta / edición)
-    private static final int ANCHO_FICHA = 360;
-    private static final int ANCHO_FORMULARIO = 520;
-    private final JPanel panelDerecho = new JPanel(new java.awt.CardLayout());
-    private final JPanel tarjetaFormulario = new JPanel(new BorderLayout());
 
     // ---------- COMPONENTES ----------
     private final JButton btnNuevo = new JButton("Nuevo alumno");
@@ -122,6 +113,18 @@ public class VtnAdministrador extends javax.swing.JFrame
     };
     private final JTable tabla = new JTable(modelo);
     private final JLabel lblContador = new JLabel();
+
+    // área de la tabla: muestra la tabla o un aviso cuando no hay nada que mostrar
+    private final JPanel areaTabla = new JPanel(new java.awt.CardLayout());
+    private final JLabel lblAvisoIcono = new JLabel();
+    private final JLabel lblAvisoTitulo = new JLabel();
+    private final JLabel lblAvisoTexto = new JLabel();
+    private final JButton btnAviso = new JButton();
+    private final JLabel lblAvisoAtajo = new JLabel();
+    private boolean avisoSinAlumnos = true; // true: "aún no hay"; false: "sin resultados"
+
+    // ficha: muestra los datos del alumno o un aviso si no hay selección
+    private final JPanel areaFicha = new JPanel(new java.awt.CardLayout());
 
     // ficha (panel derecho)
     private final JLabel lblFNombre = new JLabel();
@@ -169,12 +172,7 @@ public class VtnAdministrador extends javax.swing.JFrame
         centro.setOpaque(false);
         centro.setBorder(BorderFactory.createEmptyBorder(16, 16, 12, 16));
         centro.add(crearTabla(), BorderLayout.CENTER);
-        panelDerecho.setOpaque(false);
-        panelDerecho.add(crearFicha(), "ficha");
-        Estilos.estilizarPanelConSombra(tarjetaFormulario);
-        panelDerecho.add(tarjetaFormulario, "formulario");
-        panelDerecho.setPreferredSize(new Dimension(ANCHO_FICHA, 0));
-        centro.add(panelDerecho, BorderLayout.EAST);
+        centro.add(crearFicha(), BorderLayout.EAST);
         raiz.add(centro, BorderLayout.CENTER);
 
         lblContador.setFont(TEXTO.deriveFont(13f));
@@ -190,7 +188,7 @@ public class VtnAdministrador extends javax.swing.JFrame
     {
         JPanel barra = new JPanel(new BorderLayout());
         barra.setBackground(Estilos.AZUL_OSCURO);
-        barra.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
+        barra.setBorder(BorderFactory.createEmptyBorder(12, 20, 12, 20));
 
         JPanel izq = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         izq.setOpaque(false);
@@ -230,13 +228,27 @@ public class VtnAdministrador extends javax.swing.JFrame
         btnPdf.addActionListener(e -> generarReportePdf());
         btnRegresar.addActionListener(e -> regresar());
 
+        // grupos: [Nuevo] | [Editar, Dar de baja]  ...  [Reporte PDF, Regresar]
         izq.add(btnNuevo);
+        izq.add(separadorVertical());
         izq.add(btnEditar);
         izq.add(btnBaja);
-        izq.add(btnPdf);
 
-        barra.add(izq, BorderLayout.WEST);
-        barra.add(btnRegresar, BorderLayout.EAST);
+        JPanel der = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        der.setOpaque(false);
+        der.add(btnPdf);
+        der.add(btnRegresar);
+
+        // centrado vertical para que los dos grupos queden a la misma altura
+        JPanel derCentrado = new JPanel(new GridBagLayout());
+        derCentrado.setOpaque(false);
+        derCentrado.add(der);
+        JPanel izqCentrado = new JPanel(new GridBagLayout());
+        izqCentrado.setOpaque(false);
+        izqCentrado.add(izq);
+
+        barra.add(izqCentrado, BorderLayout.WEST);
+        barra.add(derCentrado, BorderLayout.EAST);
         return barra;
     }
 
@@ -255,7 +267,7 @@ public class VtnAdministrador extends javax.swing.JFrame
             {
                 GridBagConstraints g = new GridBagConstraints();
                 g.gridx = col++;
-                g.insets = new Insets(8, 4, 8, 4);
+                g.insets = new Insets(12, 5, 12, 5);
                 g.fill = GridBagConstraints.HORIZONTAL;
                 g.weightx = (c == txtBuscar) ? 1 : 0;
                 super.add(c, g);
@@ -265,32 +277,43 @@ public class VtnAdministrador extends javax.swing.JFrame
         filtros.setBackground(Estilos.CREMA_CLARO);
         filtros.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 2, 0, Estilos.NEGRO),
-                BorderFactory.createEmptyBorder(2, 10, 2, 10)));
+                BorderFactory.createEmptyBorder(0, 14, 0, 14)));
 
         JLabel lupa = etiqueta("Buscar");
         Estilos.icono(lupa, FontAwesomeSolid.SEARCH, 16);
         filtros.add(lupa);
         Estilos.estilizarCampo(txtBuscar);
         txtBuscar.setFont(TEXTO);
-        txtBuscar.setMinimumSize(new Dimension(180, txtBuscar.getPreferredSize().height));
-        txtBuscar.setPreferredSize(new Dimension(260, txtBuscar.getPreferredSize().height));
+        txtBuscar.setMinimumSize(new Dimension(150, txtBuscar.getPreferredSize().height));
+        txtBuscar.setPreferredSize(new Dimension(240, txtBuscar.getPreferredSize().height));
         txtBuscar.setToolTipText("Escribe un nombre, un No. de control o un correo");
         filtros.add(txtBuscar);
+
+        // separador y texto "Filtrar por": la búsqueda queda separada de los filtros
+        JPanel divisor = new JPanel();
+        divisor.setBackground(Estilos.AZUL_SUAVE);
+        divisor.setPreferredSize(new Dimension(1, 28));
+        divisor.setMinimumSize(new Dimension(1, 28));
+        filtros.add(divisor);
+        JLabel filtrarPor = new JLabel("Filtrar por");
+        filtrarPor.setFont(TEXTO.deriveFont(13f));
+        filtrarPor.setForeground(Estilos.GRIS_TEXTO);
+        filtros.add(filtrarPor);
 
         JLabel lCarrera = etiqueta("Carrera");
         Estilos.icono(lCarrera, FontAwesomeSolid.BOOK, 16);
         filtros.add(lCarrera);
         Estilos.estilizarCombo(cmbCarrera);
-        cmbCarrera.setPreferredSize(new Dimension(190, cmbCarrera.getPreferredSize().height));
-        cmbCarrera.setMinimumSize(new Dimension(130, cmbCarrera.getPreferredSize().height));
+        cmbCarrera.setPreferredSize(new Dimension(170, cmbCarrera.getPreferredSize().height));
+        cmbCarrera.setMinimumSize(new Dimension(110, cmbCarrera.getPreferredSize().height));
         filtros.add(cmbCarrera);
 
         JLabel lMateria = etiqueta("Materia");
         Estilos.icono(lMateria, FontAwesomeSolid.GRADUATION_CAP, 16);
         filtros.add(lMateria);
         Estilos.estilizarCombo(cmbMateria);
-        cmbMateria.setPreferredSize(new Dimension(170, cmbMateria.getPreferredSize().height));
-        cmbMateria.setMinimumSize(new Dimension(120, cmbMateria.getPreferredSize().height));
+        cmbMateria.setPreferredSize(new Dimension(150, cmbMateria.getPreferredSize().height));
+        cmbMateria.setMinimumSize(new Dimension(100, cmbMateria.getPreferredSize().height));
         filtros.add(cmbMateria);
 
         JLabel lPromedio = etiqueta("Promedio");
@@ -304,9 +327,19 @@ public class VtnAdministrador extends javax.swing.JFrame
         filtros.add(etiqueta("a"));
         filtros.add(spMax);
 
-        Estilos.estilizarBoton(btnLimpiar);
-        compactar(btnLimpiar, 18);
-        Estilos.icono(btnLimpiar, FontAwesomeSolid.BROOM, 16);
+        // "Limpiar filtros" como enlace: es una acción secundaria
+        btnLimpiar.setText("Limpiar filtros");
+        java.util.Map<java.awt.font.TextAttribute, Object> subrayado = new java.util.HashMap<>();
+        subrayado.put(java.awt.font.TextAttribute.UNDERLINE, java.awt.font.TextAttribute.UNDERLINE_ON);
+        btnLimpiar.setFont(TEXTO.deriveFont(14f).deriveFont(subrayado));
+        btnLimpiar.setMargin(new Insets(0, 0, 0, 0));
+        btnLimpiar.setForeground(Estilos.AZUL);
+        btnLimpiar.setContentAreaFilled(false);
+        btnLimpiar.setBorderPainted(false);
+        btnLimpiar.setFocusPainted(false);
+        btnLimpiar.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
+        Estilos.icono(btnLimpiar, FontAwesomeSolid.BROOM, 14);
+        btnLimpiar.setMinimumSize(btnLimpiar.getPreferredSize()); // que nunca se corte
         btnLimpiar.addActionListener(e -> limpiarFiltros());
         filtros.add(btnLimpiar);
 
@@ -342,11 +375,14 @@ public class VtnAdministrador extends javax.swing.JFrame
         // tabla con el estilo del proyecto: encabezado negro y selección turquesa
         Estilos.estilizarTabla(tabla);
         tabla.setFont(TEXTO);               // filas en letra normal (más legible)
-        tabla.setGridColor(Estilos.AZUL_SUAVE);
         tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tabla.setFillsViewportHeight(true);
         tabla.getTableHeader().setReorderingAllowed(false);
-        tabla.getTableHeader().setPreferredSize(new Dimension(0, 36));
+        tabla.getTableHeader().setPreferredSize(new Dimension(0, 40));
+        tabla.setRowHeight(40);
+        tabla.setShowVerticalLines(false);
+        tabla.setGridColor(new Color(0xE3EEEE));
+        tabla.setIntercellSpacing(new Dimension(0, 1));
         tabla.getTableHeader().setToolTipText("Clic en un encabezado para ordenar");
 
         // clic en el encabezado = ordenar (reemplaza el combo "Ordenar por")
@@ -358,23 +394,20 @@ public class VtnAdministrador extends javax.swing.JFrame
         tabla.getColumnModel().getColumn(2).setPreferredWidth(180);
         tabla.getColumnModel().getColumn(3).setPreferredWidth(80);
 
-        DefaultTableCellRenderer derecha = new DefaultTableCellRenderer()
+        // celdas con espacio a los lados y renglones alternados (más fácil seguir una fila)
+        DefaultTableCellRenderer celda = new CeldaTabla(false);
+        for (int i = 0; i < 3; i++)
         {
-            @Override
-            protected void setValue(Object valor)
-            {
-                setText(valor instanceof Double ? String.format(Locale.US, "%.1f", (Double) valor) : "");
-            }
-        };
-        derecha.setHorizontalAlignment(SwingConstants.RIGHT);
-        tabla.getColumnModel().getColumn(3).setCellRenderer(derecha);
+            tabla.getColumnModel().getColumn(i).setCellRenderer(celda);
+        }
+        tabla.getColumnModel().getColumn(3).setCellRenderer(new CeldaTabla(true));
 
         tabla.getSelectionModel().addListSelectionListener(e ->
-        {
-            if (!e.getValueIsAdjusting())
-            {
-                mostrarFicha(seleccionado());
-            }
+                {
+                    if (!e.getValueIsAdjusting())
+                    {
+                        mostrarFicha(seleccionado());
+                    }
         });
         tabla.addMouseListener(new MouseAdapter()
         {
@@ -395,8 +428,121 @@ public class VtnAdministrador extends javax.swing.JFrame
         // tarjeta con borde negro y sombra, como las demás pantallas
         JPanel tarjeta = new JPanel(new BorderLayout());
         Estilos.estilizarPanelConSombra(tarjeta);
-        tarjeta.add(scroll, BorderLayout.CENTER);
+        areaTabla.setOpaque(false);
+        areaTabla.add(scroll, "tabla");
+        areaTabla.add(crearAvisoTabla(), "aviso");
+        tarjeta.add(areaTabla, BorderLayout.CENTER);
         return tarjeta;
+    }
+
+    /**
+     * Aviso que ocupa el lugar de la tabla cuando está vacía: así el inicio
+     * no se ve "roto" y el usuario sabe qué hacer.
+     */
+    private JPanel crearAvisoTabla()
+    {
+        JPanel aviso = new JPanel(new GridBagLayout());
+        aviso.setBackground(Estilos.CREMA_CLARO);
+
+        lblAvisoIcono.setOpaque(false);
+        lblAvisoIcono.setHorizontalAlignment(SwingConstants.CENTER);
+        lblAvisoIcono.setForeground(Estilos.AZUL);
+        lblAvisoIcono.setPreferredSize(new Dimension(92, 92));
+        lblAvisoIcono.setBorder(BorderFactory.createEmptyBorder());
+
+        lblAvisoTitulo.setFont(Estilos.fuente(Font.PLAIN, 32));
+        lblAvisoTitulo.setForeground(Estilos.NEGRO);
+        lblAvisoTexto.setFont(TEXTO);
+        lblAvisoTexto.setForeground(Estilos.GRIS_TEXTO);
+        lblAvisoTexto.setHorizontalAlignment(SwingConstants.CENTER);
+        lblAvisoAtajo.setFont(TEXTO.deriveFont(13f));
+        lblAvisoAtajo.setForeground(Estilos.GRIS_TEXTO);
+
+        Estilos.estilizarBotonPrincipal(btnAviso);
+        compactar(btnAviso, 22);
+        btnAviso.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Estilos.NEGRO, 2),
+                BorderFactory.createEmptyBorder(8, 20, 8, 20)));
+        btnAviso.addActionListener(e ->
+        {
+            if (avisoSinAlumnos)
+            {
+                nuevoAlumno();
+            } else
+            {
+                limpiarFiltros();
+            }
+        });
+
+        GridBagConstraints g = new GridBagConstraints();
+        g.gridx = 0;
+        g.insets = new Insets(0, 0, 14, 0);
+        g.gridy = 0;
+        aviso.add(circulo(lblAvisoIcono), g);
+        g.gridy = 1;
+        g.insets = new Insets(0, 0, 8, 0);
+        aviso.add(lblAvisoTitulo, g);
+        g.gridy = 2;
+        g.insets = new Insets(0, 0, 18, 0);
+        aviso.add(lblAvisoTexto, g);
+        g.gridy = 3;
+        g.insets = new Insets(0, 0, 8, 0);
+        aviso.add(btnAviso, g);
+        g.gridy = 4;
+        aviso.add(lblAvisoAtajo, g);
+        return aviso;
+    }
+
+    /**
+     * Pone el ícono dentro de un círculo de color suave.
+     */
+    private JPanel circulo(JLabel icono)
+    {
+        JPanel c = new JPanel(new BorderLayout())
+        {
+            @Override
+            protected void paintComponent(java.awt.Graphics g)
+            {
+                java.awt.Graphics2D g2 = (java.awt.Graphics2D) g.create();
+                g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING,
+                        java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(Estilos.HOVER_SUAVE);
+                g2.fillOval(0, 0, getWidth() - 1, getHeight() - 1);
+                g2.dispose();
+            }
+        };
+        c.setOpaque(false);
+        c.setPreferredSize(new Dimension(92, 92));
+        c.add(icono, BorderLayout.CENTER);
+        return c;
+    }
+
+    /**
+     * Ajusta el aviso: sin alumnos registrados, o sin resultados por filtros.
+     */
+    private void mostrarAviso(boolean sinAlumnos)
+    {
+        avisoSinAlumnos = sinAlumnos;
+        if (sinAlumnos)
+        {
+            Estilos.icono(lblAvisoIcono, FontAwesomeSolid.USERS, 44);
+            lblAvisoTitulo.setText("AÚN NO HAY ALUMNOS REGISTRADOS");
+            lblAvisoTexto.setText("<html><div style='text-align:center;width:340px'>Cuando registres alumnos aparecerán aquí. "
+                    + "Podrás buscarlos, filtrarlos y ver su ficha con un clic.</div></html>");
+            btnAviso.setText("Registrar el primer alumno");
+            Estilos.icono(btnAviso, FontAwesomeSolid.USER_PLUS, 18);
+            lblAvisoAtajo.setText("o presiona Ctrl + N");
+        } else
+        {
+            Estilos.icono(lblAvisoIcono, FontAwesomeSolid.SEARCH, 40);
+            lblAvisoTitulo.setText("NINGÚN ALUMNO COINCIDE");
+            lblAvisoTexto.setText("<html><div style='text-align:center;width:340px'>Prueba con otro nombre o número de control, "
+                    + "o quita algunos filtros.</div></html>");
+            btnAviso.setText("Limpiar filtros");
+            Estilos.icono(btnAviso, FontAwesomeSolid.BROOM, 18);
+            lblAvisoAtajo.setText(" ");
+        }
+        ((java.awt.CardLayout) areaTabla.getLayout()).show(areaTabla, "aviso");
     }
 
     /**
@@ -406,17 +552,16 @@ public class VtnAdministrador extends javax.swing.JFrame
     {
         JPanel tarjeta = new JPanel(new BorderLayout());
         Estilos.estilizarPanelConSombra(tarjeta);
-        tarjeta.setPreferredSize(new Dimension(360, 0));
-        JPanel ficha = new JPanel(new GridBagLayout());
+        tarjeta.setPreferredSize(new Dimension(350, 0));
+        JPanel ficha = new PanelAjustable(new GridBagLayout());
         ficha.setOpaque(false);
-        ficha.setBorder(BorderFactory.createEmptyBorder(16, 18, 22, 22));
-        tarjeta.add(ficha, BorderLayout.CENTER);
+        ficha.setBorder(BorderFactory.createEmptyBorder(18, 22, 4, 22));
 
-        lblFNombre.setFont(Estilos.fuente(Font.PLAIN, 26));
+        lblFNombre.setFont(Estilos.fuente(Font.PLAIN, 30));
         lblFNombre.setForeground(Estilos.NEGRO);
-        lblFControl.setFont(TEXTO);
-        lblFControl.setForeground(Estilos.AZUL_OSCURO);
-        lblFPromedio.setFont(Estilos.fuente(Font.PLAIN, 40));
+        lblFControl.setFont(TEXTO.deriveFont(14f));
+        lblFControl.setForeground(Estilos.GRIS_TEXTO);
+        lblFPromedio.setFont(Estilos.fuente(Font.PLAIN, 44));
         lblFPromedio.setForeground(Estilos.AZUL);
 
         txtFMaterias.setFont(TEXTO);
@@ -424,81 +569,129 @@ public class VtnAdministrador extends javax.swing.JFrame
         txtFMaterias.setEditable(false);
         txtFMaterias.setLineWrap(true);
         txtFMaterias.setWrapStyleWord(true);
-        txtFMaterias.setBackground(Estilos.CREMA);
-        txtFMaterias.setBorder(BorderFactory.createEmptyBorder(6, 8, 6, 8));
+        txtFMaterias.setOpaque(false);
+        txtFMaterias.setBorder(BorderFactory.createEmptyBorder());
 
         GridBagConstraints g = new GridBagConstraints();
         g.gridx = 0;
-        g.gridwidth = 2;
-        g.anchor = GridBagConstraints.WEST;
+        g.anchor = GridBagConstraints.NORTHWEST;
         g.fill = GridBagConstraints.HORIZONTAL;
         g.weightx = 1;
-        g.insets = new Insets(0, 0, 2, 0);
+
         g.gridy = 0;
+        g.insets = new Insets(0, 0, 2, 0);
         ficha.add(lblFNombre, g);
         g.gridy = 1;
-        g.insets = new Insets(0, 0, 14, 0);
+        g.insets = new Insets(0, 0, 10, 0);
         ficha.add(lblFControl, g);
 
-        g.gridwidth = 1;
-        g.insets = new Insets(0, 0, 8, 10);
-        agregarDato(ficha, g, 2, "Carrera", FontAwesomeSolid.BOOK, lblFCarrera);
-        agregarDato(ficha, g, 3, "Correo", FontAwesomeSolid.ENVELOPE, lblFCorreo);
-        agregarDato(ficha, g, 4, "Nacimiento", FontAwesomeSolid.CALENDAR_ALT, lblFFecha);
-        agregarDato(ficha, g, 5, "Promedio", FontAwesomeSolid.CHART_LINE, lblFPromedio);
+        // promedio destacado entre dos líneas
+        JPanel prom = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        prom.setOpaque(false);
+        prom.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 0, 1, 0, new Color(0xE3EEEE)),
+                BorderFactory.createEmptyBorder(4, 0, 4, 0)));
+        prom.add(lblFPromedio);
+        JLabel lProm = new JLabel("PROMEDIO");
+        lProm.setFont(Estilos.fuente(Font.PLAIN, 16));
+        lProm.setForeground(Estilos.GRIS_TEXTO);
+        prom.add(lProm);
+        g.gridy = 2;
+        g.insets = new Insets(0, 0, 12, 0);
+        ficha.add(prom, g);
 
-        g.gridx = 0;
-        g.gridwidth = 2;
+        // cada dato con su título arriba y el valor abajo (menos amontonado)
+        g.insets = new Insets(0, 0, 10, 0);
+        g.gridy = 3;
+        ficha.add(dato("Carrera", FontAwesomeSolid.BOOK, lblFCarrera), g);
+        g.gridy = 4;
+        ficha.add(dato("Correo", FontAwesomeSolid.ENVELOPE, lblFCorreo), g);
+        g.gridy = 5;
+        ficha.add(dato("Nacimiento", FontAwesomeSolid.CALENDAR_ALT, lblFFecha), g);
         g.gridy = 6;
-        g.insets = new Insets(8, 0, 4, 0);
-        JLabel lMaterias = etiqueta("Materias");
-        Estilos.icono(lMaterias, FontAwesomeSolid.GRADUATION_CAP, 16);
-        ficha.add(lMaterias, g);
+        ficha.add(dato("Materias", FontAwesomeSolid.GRADUATION_CAP, txtFMaterias), g);
+        // relleno: deja los datos arriba
         g.gridy = 7;
         g.weighty = 1;
-        g.fill = GridBagConstraints.BOTH;
-        g.insets = new Insets(0, 0, 12, 0);
-        JScrollPane spMaterias = new JScrollPane(txtFMaterias);
-        spMaterias.setBorder(BorderFactory.createEmptyBorder());
-        ficha.add(spMaterias, g);
+        ficha.add(javax.swing.Box.createVerticalGlue(), g);
 
-        JPanel acciones = new JPanel(new java.awt.GridLayout(2, 1, 0, 8));
+        JPanel acciones = new JPanel(new java.awt.GridLayout(1, 2, 10, 0));
         acciones.setOpaque(false);
         Estilos.estilizarBotonPrincipal(btnFEditar);
         Estilos.estilizarBoton(btnFBaja);
-        compactar(btnFEditar, 18);
-        compactar(btnFBaja, 18);
+        compactar(btnFEditar, 19);
+        compactar(btnFBaja, 19);
         Estilos.icono(btnFEditar, FontAwesomeSolid.PENCIL_ALT, 16);
         Estilos.icono(btnFBaja, FontAwesomeSolid.TRASH, 16);
         btnFEditar.addActionListener(e -> editarSeleccionado());
         btnFBaja.addActionListener(e -> darBajaSeleccionado());
         acciones.add(btnFEditar);
         acciones.add(btnFBaja);
-        g.gridy = 8;
-        g.weighty = 0;
-        g.fill = GridBagConstraints.HORIZONTAL;
-        g.insets = new Insets(0, 0, 0, 0);
-        ficha.add(acciones, g);
+        acciones.setBorder(BorderFactory.createEmptyBorder(10, 22, 20, 22));
+
+        // si la ventana es chica, los datos se desplazan y los botones siguen a la vista
+        JScrollPane scrollFicha = new JScrollPane(ficha,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollFicha.setBorder(BorderFactory.createEmptyBorder());
+        scrollFicha.setOpaque(false);
+        scrollFicha.getViewport().setOpaque(false);
+        scrollFicha.getVerticalScrollBar().setUnitIncrement(16);
+        JPanel conBotones = new JPanel(new BorderLayout());
+        conBotones.setOpaque(false);
+        conBotones.add(scrollFicha, BorderLayout.CENTER);
+        conBotones.add(acciones, BorderLayout.SOUTH);
+
+        // aviso cuando no hay alumno seleccionado
+        JPanel vacia = new JPanel(new GridBagLayout());
+        vacia.setOpaque(false);
+        JLabel icono = new JLabel();
+        icono.setForeground(new Color(0x9FB8B8));
+        Estilos.icono(icono, FontAwesomeSolid.SEARCH, 38);
+        JLabel titulo = new JLabel("FICHA DEL ALUMNO");
+        titulo.setFont(Estilos.fuente(Font.PLAIN, 24));
+        titulo.setForeground(Estilos.GRIS_TEXTO);
+        JLabel texto = new JLabel("<html><div style='text-align:center;width:230px'>"
+                + "Aquí verás los datos del alumno que selecciones en la tabla.</div></html>");
+        texto.setFont(TEXTO.deriveFont(14f));
+        texto.setForeground(Estilos.GRIS_TEXTO);
+        GridBagConstraints v = new GridBagConstraints();
+        v.gridx = 0;
+        v.gridy = 0;
+        v.insets = new Insets(0, 0, 12, 0);
+        vacia.add(icono, v);
+        v.gridy = 1;
+        v.insets = new Insets(0, 0, 8, 0);
+        vacia.add(titulo, v);
+        v.gridy = 2;
+        vacia.add(texto, v);
+
+        areaFicha.setOpaque(false);
+        areaFicha.add(conBotones, "datos");
+        areaFicha.add(vacia, "vacia");
+        tarjeta.add(areaFicha, BorderLayout.CENTER);
         return tarjeta;
     }
 
-    private void agregarDato(JPanel p, GridBagConstraints g, int fila, String nombre,
-            org.kordamp.ikonli.Ikon icono, JLabel valor)
+    /**
+     * Un dato de la ficha: título pequeño con ícono arriba y el valor abajo.
+     */
+    private JPanel dato(String nombre, org.kordamp.ikonli.Ikon icono, JComponent valor)
     {
-        g.gridy = fila;
-        g.gridx = 0;
-        g.weightx = 0;
-        JLabel l = etiqueta(nombre);
-        Estilos.icono(l, icono, 14);
-        p.add(l, g);
-        g.gridx = 1;
-        g.weightx = 1;
-        if (valor != lblFPromedio)
+        JPanel p = new JPanel(new BorderLayout(0, 3));
+        p.setOpaque(false);
+        JLabel l = new JLabel(nombre.toUpperCase());
+        l.setFont(Estilos.fuente(Font.PLAIN, 16));
+        l.setForeground(Estilos.GRIS_TEXTO);
+        Estilos.icono(l, icono, 13);
+        l.setIconTextGap(6);
+        p.add(l, BorderLayout.NORTH);
+        if (valor instanceof JLabel)
         {
             valor.setFont(TEXTO);
+            valor.setForeground(Estilos.NEGRO);
         }
-        valor.setForeground(Estilos.NEGRO);
-        p.add(valor, g);
+        p.add(valor, BorderLayout.CENTER);
+        return p;
     }
 
     /**
@@ -508,13 +701,7 @@ public class VtnAdministrador extends javax.swing.JFrame
     private void configurarAtajos()
     {
         JComponent r = getRootPane();
-        atajo(r, KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK), "nuevo", () ->
-        {
-            if (!editando)
-            {
-                nuevoAlumno();
-            }
-        });
+        atajo(r, KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK), "nuevo", this::nuevoAlumno);
         atajo(r, KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_DOWN_MASK), "buscar", txtBuscar::requestFocusInWindow);
         // Enter y Supr solo cuando la tabla tiene el foco (para no estorbar al escribir)
         tabla.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "editar");
@@ -524,12 +711,12 @@ public class VtnAdministrador extends javax.swing.JFrame
         // Flecha abajo desde el buscador baja a la tabla
         txtBuscar.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "aTabla");
         txtBuscar.getActionMap().put("aTabla", accion(() ->
-        {
-            tabla.requestFocusInWindow();
-            if (tabla.getRowCount() > 0 && tabla.getSelectedRow() < 0)
-            {
-                tabla.setRowSelectionInterval(0, 0);
-            }
+                {
+                    tabla.requestFocusInWindow();
+                    if (tabla.getRowCount() > 0 && tabla.getSelectedRow() < 0)
+                    {
+                        tabla.setRowSelectionInterval(0, 0);
+                    }
         }));
     }
 
@@ -662,8 +849,29 @@ public class VtnAdministrador extends javax.swing.JFrame
             mostrarFicha(null);
         }
 
+        // tabla o aviso, según haya algo que mostrar
+        if (todos.isEmpty())
+        {
+            mostrarAviso(true);
+        } else if (visibles.isEmpty())
+        {
+            mostrarAviso(false);
+        } else
+        {
+            ((java.awt.CardLayout) areaTabla.getLayout()).show(areaTabla, "tabla");
+        }
+        // sin alumnos no tiene caso filtrar ni sacar PDF
+        for (JComponent c : new JComponent[]
+        {
+            txtBuscar, cmbCarrera, cmbMateria, spMin, spMax, btnLimpiar
+        })
+        {
+            c.setEnabled(!todos.isEmpty());
+        }
+        btnPdf.setEnabled(!visibles.isEmpty());
+
         lblContador.setText(todos.isEmpty()
-                ? "Aún no hay alumnos. Pulsa «Nuevo alumno» (Ctrl+N) para registrar el primero."
+                ? "0 alumnos registrados"
                 : "Mostrando " + visibles.size() + " de " + todos.size() + " alumnos"
                 + "   ·   Doble clic o Enter para editar   ·   Supr para dar de baja");
     }
@@ -718,21 +926,18 @@ public class VtnAdministrador extends javax.swing.JFrame
         btnFEditar.setEnabled(hay);
         btnFBaja.setEnabled(hay);
 
+        java.awt.CardLayout cl = (java.awt.CardLayout) areaFicha.getLayout();
         if (!hay)
         {
-            lblFNombre.setText("Selecciona un alumno");
-            lblFControl.setText("Elige una fila de la tabla para ver sus datos");
-            lblFCarrera.setText("-");
-            lblFCorreo.setText("-");
-            lblFFecha.setText("-");
-            lblFPromedio.setText("-");
-            txtFMaterias.setText("");
+            cl.show(areaFicha, "vacia");
             return;
         }
+        cl.show(areaFicha, "datos");
         // <html> permite que un nombre largo baje de renglón en vez de cortarse
         lblFNombre.setText("<html>" + texto(a.getNombre()) + "</html>");
         lblFControl.setText("No. de control " + texto(a.getNo_control()));
-        lblFCarrera.setText(texto(a.getCarerra()));
+        // <html> deja que una carrera larga baje de renglón en vez de cortarse
+        lblFCarrera.setText("<html>" + texto(a.getCarerra()) + "</html>");
         lblFCorreo.setText(texto(a.getCorreo()));
         lblFCorreo.setToolTipText(texto(a.getCorreo()));
         lblFFecha.setText(a.getFechaNaciomiento() == null ? "-" : FORMATO_FECHA.format(a.getFechaNaciomiento()));
@@ -747,93 +952,35 @@ public class VtnAdministrador extends javax.swing.JFrame
     // ==================================================================
     private void nuevoAlumno()
     {
-        abrirFormulario(null);
+        DlgAlumno dlg = new DlgAlumno(this, controllerAdministracion, carreras, materiasCatalogo, null);
+        dlg.setVisible(true);
+        Alumno guardado = dlg.getResultado();
+        if (guardado != null)
+        {
+            limpiarFiltros(); // para que el alumno nuevo se vea seguro
+            recargar(guardado.getNo_control());
+        }
     }
 
     private void editarSeleccionado()
     {
         Alumno a = seleccionado();
-        if (a != null && !editando)
+        if (a == null)
         {
-            abrirFormulario(a);
+            return;
         }
-    }
-
-    /**
-     * Cambia el panel derecho de la ficha al formulario (alta si original es
-     * null, edición si trae un alumno). Mientras está abierto, la tabla, los
-     * filtros y los botones de arriba se bloquean.
-     */
-    private void abrirFormulario(Alumno original)
-    {
-        PnlAlumno formulario = new PnlAlumno(controllerAdministracion, carreras, materiasCatalogo,
-                original, guardado -> cerrarFormulario(original, guardado));
-        tarjetaFormulario.removeAll();
-        tarjetaFormulario.add(formulario, BorderLayout.CENTER);
-
-        bloquear(true);
-        panelDerecho.setPreferredSize(new Dimension(ANCHO_FORMULARIO, 0));
-        ((java.awt.CardLayout) panelDerecho.getLayout()).show(panelDerecho, "formulario");
-        panelDerecho.revalidate();
-        panelDerecho.repaint();
-        formulario.enfocar();
-    }
-
-    /**
-     * Regresa el panel derecho a la ficha. guardado = alumno guardado, o null
-     * si se canceló.
-     */
-    private void cerrarFormulario(Alumno original, Alumno guardado)
-    {
-        bloquear(false);
-        panelDerecho.setPreferredSize(new Dimension(ANCHO_FICHA, 0));
-        ((java.awt.CardLayout) panelDerecho.getLayout()).show(panelDerecho, "ficha");
-        tarjetaFormulario.removeAll();
-        panelDerecho.revalidate();
-        panelDerecho.repaint();
-
-        if (guardado != null)
+        DlgAlumno dlg = new DlgAlumno(this, controllerAdministracion, carreras, materiasCatalogo, a);
+        dlg.setVisible(true);
+        if (dlg.getResultado() != null)
         {
-            if (original == null)
-            {
-                limpiarFiltros(); // para que el alumno nuevo se vea seguro
-            }
-            recargar(guardado.getNo_control());
-        } else
-        {
-            mostrarFicha(seleccionado());
-        }
-        tabla.requestFocusInWindow();
-    }
-
-    /**
-     * Bloquea (o desbloquea) todo lo que no es el formulario.
-     */
-    private void bloquear(boolean b)
-    {
-        editando = b;
-        for (JComponent c : new JComponent[]
-        {
-            btnNuevo, btnEditar, btnBaja, btnPdf, btnRegresar,
-            txtBuscar, cmbCarrera, cmbMateria, spMin, spMax, btnLimpiar, tabla
-        })
-        {
-            c.setEnabled(!b);
-        }
-        tabla.setForeground(b ? Estilos.GRIS_TEXTO : Estilos.NEGRO);
-        tabla.getTableHeader().setEnabled(!b); // tampoco se puede reordenar
-        if (!b)
-        {
-            Alumno a = seleccionado();
-            btnEditar.setEnabled(a != null);
-            btnBaja.setEnabled(a != null);
+            recargar(a.getNo_control());
         }
     }
 
     private void darBajaSeleccionado()
     {
         Alumno a = seleccionado();
-        if (a == null || editando)
+        if (a == null)
         {
             return;
         }
@@ -892,20 +1039,8 @@ public class VtnAdministrador extends javax.swing.JFrame
         dispose();
     }
 
-    // ==================================================================
-    // UTILIDADES (también las usa PnlAlumno)
-    // ==================================================================
-    /**
-     * Letra normal para datos que el usuario lee o escribe (nombres, correos,
-     * tablas). Los títulos, etiquetas y botones usan la fuente de Estilos.
-     */
     static final Font TEXTO = new Font("Segoe UI", Font.PLAIN, 15);
 
-    /**
-     * Botón de Estilos en tamaño compacto (misma fuente, colores y efecto al
-     * pasar el mouse; borde un poco más delgado). Llamar DESPUÉS de
-     * Estilos.estilizarBoton / estilizarBotonPrincipal.
-     */
     static void compactar(JButton b, int tam)
     {
         b.setFont(Estilos.fuente(Font.PLAIN, tam));
@@ -913,6 +1048,100 @@ public class VtnAdministrador extends javax.swing.JFrame
         b.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Estilos.NEGRO, 2),
                 BorderFactory.createEmptyBorder(5, 14, 5, 14)));
+    }
+
+    /**
+     * Panel que se ajusta al ancho visible: así los textos largos de la ficha
+     * bajan de renglón y solo se desplaza hacia abajo si no cabe.
+     */
+    private static class PanelAjustable extends JPanel implements javax.swing.Scrollable
+    {
+
+        PanelAjustable(java.awt.LayoutManager layout)
+        {
+            super(layout);
+        }
+
+        @Override
+        public Dimension getPreferredScrollableViewportSize()
+        {
+            return getPreferredSize();
+        }
+
+        @Override
+        public int getScrollableUnitIncrement(java.awt.Rectangle r, int orientacion, int dir)
+        {
+            return 16;
+        }
+
+        @Override
+        public int getScrollableBlockIncrement(java.awt.Rectangle r, int orientacion, int dir)
+        {
+            return r.height;
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportWidth()
+        {
+            return true;
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportHeight()
+        {
+            // si sobra alto, ocupa todo (los botones quedan abajo); si falta, se desplaza
+            return getParent() != null && getParent().getHeight() > getPreferredSize().height;
+        }
+    }
+
+    /**
+     * Línea vertical para separar grupos de botones en la barra superior.
+     */
+    private static JComponent separadorVertical()
+    {
+        JPanel sep = new JPanel();
+        sep.setBackground(new Color(0x2E5A60));
+        sep.setPreferredSize(new Dimension(2, 30));
+        JPanel envoltura = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 4));
+        envoltura.setOpaque(false);
+        envoltura.add(sep);
+        return envoltura;
+    }
+
+    /**
+     * Celda de la tabla con espacio a los lados y renglones alternados. Si es
+     * la columna de promedio, va a la derecha, con un decimal y en negritas.
+     */
+    private static class CeldaTabla extends DefaultTableCellRenderer
+    {
+
+        private static final Color ALTERNO = new Color(0xF4F9FA);
+        private final boolean promedio;
+
+        CeldaTabla(boolean promedio)
+        {
+            this.promedio = promedio;
+            setHorizontalAlignment(promedio ? SwingConstants.RIGHT : SwingConstants.LEFT);
+        }
+
+        @Override
+        public java.awt.Component getTableCellRendererComponent(JTable t, Object valor,
+                boolean sel, boolean foco, int fila, int col)
+        {
+            super.getTableCellRendererComponent(t, valor, sel, false, fila, col);
+            setBorder(BorderFactory.createEmptyBorder(0, 14, 0, 14));
+            setFont(promedio ? TEXTO.deriveFont(Font.BOLD) : TEXTO);
+            if (promedio)
+            {
+                setText(valor instanceof Double ? String.format(Locale.US, "%.1f", (Double) valor) : "");
+            }
+            if (!sel)
+            {
+                setBackground(fila % 2 == 0 ? Color.WHITE : ALTERNO);
+                setForeground(t.isEnabled() ? Estilos.NEGRO : Estilos.GRIS_TEXTO);
+            }
+            return this;
+        }
     }
 
     /**
@@ -950,6 +1179,7 @@ public class VtnAdministrador extends javax.swing.JFrame
                 }
             }
 
+            
             {
                 // repintar al entrar/salir para mostrar u ocultar la ayuda
                 addFocusListener(new java.awt.event.FocusAdapter()

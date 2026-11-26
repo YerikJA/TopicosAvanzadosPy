@@ -61,8 +61,9 @@ public class DlgAlumno extends JDialog
     private static final Logger log = LoggerFactory.getLogger(DlgAlumno.class);
 
     private static final Color ROJO = new Color(0xB42318);
+    private static final int ALTO_CAMPO = 40; // misma altura para todos los campos
     private static final Color AMBAR = new Color(0xC27C0E);
-    private static final String SELECCIONE = "Seleccione una carrera";
+    private static final ItemCatalogo SELECCIONE = new ItemCatalogo(0, "Seleccione una carrera");
 
     /**
      * Materias de respaldo si la base de datos no responde (las mismas que
@@ -83,7 +84,7 @@ public class DlgAlumno extends JDialog
     private final JTextField txtApMat = VtnAdministrador.campoTexto("Ej. Peña", 16);
     private final JDateChooser dcNacimiento = new JDateChooser();
     private final JTextField txtNoControl = VtnAdministrador.campoTexto("Solo números", 16);
-    private final JComboBox<String> cmbCarrera = new JComboBox<>();
+    private final JComboBox<ItemCatalogo> cmbCarrera = new JComboBox<>();
     private final JTextField txtCorreo = VtnAdministrador.campoTexto("usuario@dominio.com", 16);
     private final JTextField txtPromedio = VtnAdministrador.campoTexto("Ej. 85.5", 6);
     private final List<JCheckBox> chkMaterias = new ArrayList<>();
@@ -99,8 +100,8 @@ public class DlgAlumno extends JDialog
     private final JButton btnCancelar = new JButton("Cancelar");
     private final JButton btnGuardar = new JButton();
 
-    public DlgAlumno(JFrame duenio, AlumnoController controller, List<String> carreras,
-            List<String> materias, Alumno original)
+    public DlgAlumno(JFrame duenio, AlumnoController controller, List<ItemCatalogo> carreras,
+            List<ItemCatalogo> materias, Alumno original)
     {
         super(duenio, original == null ? "Nuevo alumno" : "Editar alumno · " + original.getNo_control(), true);
         this.controller = controller;
@@ -131,7 +132,7 @@ public class DlgAlumno extends JDialog
     // ==================================================================
     // INTERFAZ
     // ==================================================================
-    private void construir(List<String> carreras, List<String> materias)
+    private void construir(List<ItemCatalogo> carreras, List<ItemCatalogo> materias)
     {
         JPanel raiz = new JPanel(new BorderLayout());
         raiz.setBackground(Estilos.CREMA_CLARO);
@@ -154,13 +155,31 @@ public class DlgAlumno extends JDialog
             if (c instanceof JTextField)
             {
                 c.setFont(VtnAdministrador.TEXTO); // la fuente de títulos cortaba la fecha
+                ((JTextField) c).setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
+            } else if (c instanceof JButton)
+            {
+                // botón del calendario dentro del borde, separado por una línea
+                JButton b = (JButton) c;
+                b.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Estilos.NEGRO));
+                b.setPreferredSize(new Dimension(36, 36));
+                b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }
+        }
+
+        // todos los campos con la misma altura: la fecha ya no se ve cortada
+        for (JComponent c : new JComponent[]
+        {
+            txtNombre, txtApPat, txtApMat, txtNoControl, txtCorreo, txtPromedio, cmbCarrera, dcNacimiento
+        })
+        {
+            c.setPreferredSize(new Dimension(200, ALTO_CAMPO));
+            c.setMinimumSize(new Dimension(120, ALTO_CAMPO));
         }
 
         // ---- formulario en 2 columnas ----
         JPanel form = new JPanel(new GridBagLayout());
         form.setOpaque(false);
-        form.setBorder(BorderFactory.createEmptyBorder(18, 22, 8, 22));
+        form.setBorder(BorderFactory.createEmptyBorder(20, 28, 10, 28));
         GridBagConstraints g = new GridBagConstraints();
         g.fill = GridBagConstraints.HORIZONTAL;
         g.anchor = GridBagConstraints.NORTHWEST;
@@ -178,17 +197,27 @@ public class DlgAlumno extends JDialog
         campo(form, g, 8, 0, "Correo", txtCorreo);
         campo(form, g, 8, 1, "Promedio (0 a 100)", txtPromedio);
 
-        // materias: casillas en 3 columnas (se ven todas, sin Ctrl+clic)
-        panelMaterias = new JPanel(new GridLayout(0, 3, 10, 4));
+        // materias: casillas en 2 columnas (caben nombres largos del catálogo)
+        panelMaterias = new JPanel(new GridLayout(0, 2, 20, 10));
         panelMaterias.setBackground(Estilos.CREMA_CLARO);
         panelMaterias.setOpaque(true);
-        panelMaterias.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
-        List<String> lista = (materias == null || materias.isEmpty()) ? List.of(MATERIAS_RESPALDO) : materias;
-        for (String m : lista)
+        panelMaterias.setBorder(BorderFactory.createEmptyBorder(12, 14, 12, 14));
+        List<ItemCatalogo> lista = materias;
+        if (lista == null || lista.isEmpty())
+        {
+            // respaldo si la BD no responde (ids negativos para no chocar con los reales)
+            lista = new ArrayList<>();
+            for (int i = 0; i < MATERIAS_RESPALDO.length; i++)
+            {
+                lista.add(new ItemCatalogo(-(i + 1), MATERIAS_RESPALDO[i]));
+            }
+        }
+        for (ItemCatalogo m : lista)
         {
             agregarCasilla(m);
         }
-        JScrollPane spMaterias = new JScrollPane(panelMaterias);
+        JScrollPane spMaterias = new JScrollPane(panelMaterias,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         Estilos.estilizarScroll(spMaterias);
         spMaterias.setPreferredSize(new Dimension(0, 110));
         spMaterias.getVerticalScrollBar().setUnitIncrement(16);
@@ -207,11 +236,11 @@ public class DlgAlumno extends JDialog
         raiz.add(form, BorderLayout.CENTER);
 
         // ---- carrera ----
-        DefaultComboBoxModel<String> mCarreras = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<ItemCatalogo> mCarreras = new DefaultComboBoxModel<>();
         mCarreras.addElement(SELECCIONE);
         if (carreras != null)
         {
-            for (String c : carreras)
+            for (ItemCatalogo c : carreras)
             {
                 mCarreras.addElement(c);
             }
@@ -276,7 +305,7 @@ public class DlgAlumno extends JDialog
         g.gridx = 0;
         g.gridy = fila;
         g.gridwidth = 2;
-        g.insets = new Insets(fila == 0 ? 0 : 12, 0, 10, 0);
+        g.insets = new Insets(fila == 0 ? 0 : 16, 0, 12, 0);
         p.add(l, g);
         g.gridwidth = 1;
     }
@@ -300,7 +329,7 @@ public class DlgAlumno extends JDialog
 
         g.gridx = col;
         g.gridy = fila;
-        g.insets = new Insets(0, col == 0 ? 0 : 14, 4, col == 0 ? 14 : 0);
+        g.insets = new Insets(0, col == 0 ? 0 : 14, 8, col == 0 ? 14 : 0);
         p.add(celda, g);
 
         errores.put(c, error);
@@ -308,9 +337,10 @@ public class DlgAlumno extends JDialog
         titulos.put(c, titulo);
     }
 
-    private JCheckBox agregarCasilla(String materia)
+    private JCheckBox agregarCasilla(ItemCatalogo materia)
     {
-        JCheckBox chk = new JCheckBox(materia);
+        JCheckBox chk = new JCheckBox(materia.getNombre());
+        chk.putClientProperty("materia", materia); // se guarda el id para la BD
         chk.setOpaque(false);
         chk.setFont(VtnAdministrador.TEXTO);
         chk.setForeground(Estilos.NEGRO);
@@ -337,19 +367,32 @@ public class DlgAlumno extends JDialog
         txtCorreo.setText(a.getCorreo());
         txtPromedio.setText(String.valueOf(a.getPromedio()));
 
-        String carrera = VtnAdministrador.texto(a.getCarerra());
-        if (((DefaultComboBoxModel<String>) cmbCarrera.getModel()).getIndexOf(carrera) < 0 && !carrera.isEmpty())
+        // la carrera se busca por nombre (el id puede venir en 0 de datos viejos)
+        ItemCatalogo carrera = a.getCarerra();
+        ItemCatalogo enLista = null;
+        for (int i = 1; i < cmbCarrera.getItemCount(); i++)
+        {
+            if (carrera != null && cmbCarrera.getItemAt(i).getNombre().equalsIgnoreCase(carrera.getNombre()))
+            {
+                enLista = cmbCarrera.getItemAt(i);
+            }
+        }
+        if (enLista == null && carrera != null && carrera.getNombre() != null)
         {
             cmbCarrera.addItem(carrera); // carrera que ya no está en el catálogo
+            enLista = carrera;
         }
-        cmbCarrera.setSelectedItem(carrera);
+        cmbCarrera.setSelectedItem(enLista);
 
         List<String> suyas = VtnAdministrador.nombresMaterias(a.getMaterias());
-        for (String m : suyas)
+        if (a.getMaterias() != null)
         {
-            if (buscarCasilla(m) == null)
+            for (ItemCatalogo m : a.getMaterias())
             {
-                agregarCasilla(m); // materia que ya no está en el catálogo
+                if (m != null && m.getNombre() != null && buscarCasilla(m.getNombre()) == null)
+                {
+                    agregarCasilla(m); // materia que ya no está en el catálogo
+                }
             }
         }
         for (JCheckBox chk : chkMaterias)
@@ -617,16 +660,20 @@ public class DlgAlumno extends JDialog
         {
             return;
         }
+        // materias marcadas con su id del catálogo
         List<ItemCatalogo> materias = new ArrayList<>();
-        for (String m : materiasMarcadas())
+        for (JCheckBox chk : chkMaterias)
         {
-            materias.add(new ItemCatalogo(0, m));
+            if (chk.isSelected())
+            {
+                materias.add((ItemCatalogo) chk.getClientProperty("materia"));
+            }
         }
         Alumno alumno = new Alumno(
                 txtNoControl.getText().trim(),
                 nombreCompleto(),
                 txtCorreo.getText().trim(),
-                new ItemCatalogo(0, (String) cmbCarrera.getSelectedItem()),
+                (ItemCatalogo) cmbCarrera.getSelectedItem(),
                 ValidadorAlumno.promedioValido(txtPromedio.getText().trim()),
                 dcNacimiento.getDate(),
                 materias);
